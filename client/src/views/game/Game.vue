@@ -130,7 +130,7 @@ export default {
 
     this.$socket.emit("gameRoomLeft", socketData);
 
-    document.title = "Cosmic Conquest";
+    document.title = "Cosmic Odyssey";
   },
   methods: {
     async attemptLogin() {

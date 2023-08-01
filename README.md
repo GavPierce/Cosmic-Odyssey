@@ -1,4 +1,4 @@
-# Cosmic Conquest
+# Cosmic Odyssey
 
 CC is a slow-burn browser game heavily inspired by [Neptune's Pride](https://np.ironhelmet.com) and [Subterfuge](http://subterfuge-game.com/).
 

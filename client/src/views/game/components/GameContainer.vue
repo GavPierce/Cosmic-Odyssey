@@ -151,7 +151,7 @@ export default {
           "Support The Project",
           `Hello there,
 
-Cosmic Conquest is free, open source and does not have ads. Please consider donating or purchasing Galactic Credits to support the continued development of the project.
+Cosmic Odyssey is free, open source and does not have ads. Please consider donating or purchasing Galactic Credits to support the continued development of the project.
 
 Thank you,
 Gavin`,

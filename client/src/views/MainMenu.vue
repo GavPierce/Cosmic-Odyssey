@@ -13,7 +13,7 @@
           (Please Attack Spencer)
         </p>
         <p class="mb-2 mt-2">
-          Play <span class="text-warning">Cosmic Conquest</span> on
+          Play <span class="text-warning">Cosmic Odyssey</span> on
           <a href="https://solaris.games" target="_blank" title="Web"
             ><i class="fab fa-chrome me-1"></i>Web</a
           >

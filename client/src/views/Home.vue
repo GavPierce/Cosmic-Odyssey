@@ -1,8 +1,13 @@
 <template>
-  <div class="full-container">
+  <div
+    class="full-container parallax"
+    :style="{
+      backgroundImage: `url(${require('@/assets/pics/' + backgroundImage)})`
+    }"
+  >
     <view-container :hideTopBar="true">
       <view-title
-        title="Welcome to Cosmic Conquest"
+        title="Welcome to Cosmic Odyssey"
         :hideHomeButton="true"
         :showSocialLinks="true"
       />
@@ -35,7 +40,7 @@
       <div class="row bg-dark">
         <div class="col text-center">
           <p class="mb-2 mt-2">
-            Play <span class="text-warning">Cosmic Conquest</span> on
+            Play <span class="text-warning">Cosmic Odyssey</span> on
             <a href="https://solaris.games" target="_blank" title="Web"
               ><i class="fab fa-chrome me-1"></i>Web</a
             >
@@ -43,8 +48,6 @@
         </div>
       </div>
     </view-container>
-
-    <parallax />
   </div>
 </template>
 
@@ -67,10 +70,15 @@ export default {
   },
   data() {
     return {
-      isAutoLoggingIn: false
+      isAutoLoggingIn: false,
+      backgroundImage: "art-2.jpg"
     };
   },
   async mounted() {
+    // change backgroundImage to a random image every 15 seconds,
+    setInterval(() => {
+      this.backgroundImage = `art-${Math.floor(Math.random() * 2) + 1}.jpg`;
+    }, 15000);
     this.isAutoLoggingIn = true;
 
     try {
@@ -101,6 +109,18 @@ export default {
 </script>
 
 <style scoped>
+.parallax {
+  position: absolute;
+  left: 0;
+  top: 0%;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-position: 50% 50%;
+  z-index: -1;
+}
 .full-container {
   background-color: black !important;
 }
