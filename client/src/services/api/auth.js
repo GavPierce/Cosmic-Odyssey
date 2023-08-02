@@ -25,9 +25,9 @@ class AuthService extends BaseApiService {
 
   verify() {
     return axios.post(
-      `${this.BASE_URL}auth/verify`,
+      "auth/verify",
       {},
-      { withCredentials: true }
+      { withCredentials: true, baseURL: this.BASE_URL }
     );
   }
 
