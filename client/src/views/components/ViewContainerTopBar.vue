@@ -3,7 +3,6 @@
     <div class="brand">
       <a href="javascript:;" class="brand-logo" @click="goHome">
         <span class="brand-img"></span>
-        <span class="brand-text">Cosmic Odyssey</span>
       </a>
     </div>
 
@@ -131,6 +130,9 @@ export default {
 </script>
 
 <style scoped>
+.app-header {
+  background-color: black !important;
+}
 .brand {
   justify-content: center;
   font-family: "Bangers", cursive;
@@ -140,6 +142,8 @@ export default {
 }
 .brand-img {
   background-image: url("../../assets/CO_LOGO.jpg") !important;
+  width: 10.625rem !important;
+  height: 2.625rem !important;
 }
 .row {
   padding-bottom: 15px;
