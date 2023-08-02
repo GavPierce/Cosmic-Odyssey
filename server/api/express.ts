@@ -36,6 +36,7 @@ export default async (config: Config, app, container: DependencyContainer) => {
       resave: false,
       saveUninitialized: false,
       cookie: {
+        sameSite: "none",
         secure: config.sessionSecureCookies, // Requires HTTPS
         maxAge: 1000 * 60 * 60 * 24 * 365, // 1 Year
       },
