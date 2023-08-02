@@ -43,6 +43,7 @@ export default async (config: Config, app, container: DependencyContainer) => {
     })
   );
 
+  console.log(config.clientUrl);
   // ---------------
   // Enable CORS
   app.use((req, res, next) => {
