@@ -2,7 +2,6 @@
   <div id="header" class="app-header">
     <div class="brand">
       <a href="javascript:;" class="brand-logo" @click="goHome">
-        // create span and set background image to CO_LOGO.jpg
         <span class="brand-img"></span>
         <span class="brand-text">Cosmic Odyssey</span>
       </a>
@@ -133,7 +132,7 @@ export default {
 
 <style scoped>
 .brand-img {
-  background-image: url("../../assets/CO_LOGO.jpg");
+  background-image: url("../../assets/CO_LOGO.jpg") !important;
 }
 .row {
   padding-bottom: 15px;

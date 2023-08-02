@@ -11,10 +11,7 @@
         <div class="col">
           <p>Galactic Credits</p>
           <p>
-            <small
-              >Purchase credits in the shop or earn credits by winning official
-              games.</small
-            >
+            <small>Earn credits by winning official games.</small>
           </p>
         </div>
         <div class="col-auto">
@@ -23,11 +20,6 @@
             <strong>{{ info.credits }}</strong> credit<span
               v-if="info.credits !== 1"
               >s</span
-            >
-            <router-link
-              :to="{ name: 'galactic-credits-shop' }"
-              class="btn btn-success ms-2"
-              ><i class="fas fa-shopping-cart"></i> Store</router-link
             >
           </p>
         </div>
