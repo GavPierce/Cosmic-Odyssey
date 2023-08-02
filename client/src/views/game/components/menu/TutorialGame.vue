@@ -1,79 +1,83 @@
 <template>
-    <div>
-        <div class="row">
-            <div class="col-sm-12 col-md-6 col-lg-6">
-                <div class="card bg-dark text-white tutorial-game p-1" @click="viewTutorial()">
-                    <img class="card-img" :src="require('../../../../assets/screenshots/tutorial.png')" alt="View Tutorial">
-                    <div class="card-img-overlay">
-                        <h5 class="card-title tutorial-card-title">
-                            <i class="fas fa-user-graduate"></i>
-                            <span class="ms-2">Tutorial</span>
-                        </h5>
-                        <p class="card-title card-subtitle">
-                            Learn to Play
-                        </p>
-                    </div>
-                    <div class="card-arrow">
-                        <div class="card-arrow-top-left"></div>
-                        <div class="card-arrow-top-right"></div>
-                        <div class="card-arrow-bottom-left"></div>
-                        <div class="card-arrow-bottom-right"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-12 col-md-6 col-lg-6 pl-md-0">
-                <div class="row">
-                    <div class="col-12">
-                        <h4>Learn to Play</h4>
-                        <p>
-                            New to <span class="text-info">Solaris</span>? Learn the basics by completing the tutorial and when you're ready, join a standard game to fight against real players.
-                        </p>
-                    </div>
-                    <div class="col-12">
-                        <div class="row">
-                            <div class="col"></div>
-                            <div class="col-auto">
-                                <a href="https://steamcommunity.com/app/1623930/discussions/" target="_blank" title="Forum" class="btn btn-info me-2 mb-1 float-end">
-                                    <i class="far fa-comments"></i>
-                                </a>
-                                <a href="https://discord.com/invite/v7PD33d" target="_blank" title="Discord" class="btn btn-success me-2 mb-1 float-end">
-                                    <i class="fab fa-discord"></i> Discord
-                                </a>
-                                <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2828060521" target="_blank" title="Getting Started" class="btn btn-outline-warning me-2 mb-1 float-end">
-                                    <i class="fas fa-handshake-angle"></i> Getting Started
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div>
+    <div class="row">
+      <div class="col-sm-12 col-md-6 col-lg-6">
+        <div
+          class="card bg-dark text-white tutorial-game p-1"
+          @click="viewTutorial()"
+        >
+          <img
+            class="card-img"
+            :src="require('../../../../assets/screenshots/tutorial.png')"
+            alt="View Tutorial"
+          />
+          <div class="card-img-overlay">
+            <h5 class="card-title tutorial-card-title">
+              <i class="fas fa-user-graduate"></i>
+              <span class="ms-2">Tutorial</span>
+            </h5>
+            <p class="card-title card-subtitle">
+              Learn to Play
+            </p>
+          </div>
+          <div class="card-arrow">
+            <div class="card-arrow-top-left"></div>
+            <div class="card-arrow-top-right"></div>
+            <div class="card-arrow-bottom-left"></div>
+            <div class="card-arrow-bottom-right"></div>
+          </div>
         </div>
+      </div>
+      <div class="col-sm-12 col-md-6 col-lg-6 pl-md-0">
+        <div class="row">
+          <div class="col-12">
+            <h4>Learn to Play</h4>
+            <p>
+              New to <span class="text-info">Cosmic Odyssey</span>? Learn the
+              basics by completing the tutorial and when you're ready, join a
+              standard game to fight against real players.
+            </p>
+          </div>
+          <div class="col-12">
+            <div class="row">
+              <div class="col"></div>
+              <div class="col-auto"></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
-import router from '../../../../router'
-import gameService from '../../../../services/api/game'
+import router from "../../../../router";
+import gameService from "../../../../services/api/game";
 
 export default {
-    methods: {
-        async viewTutorial () {
-            if (!await this.$confirm(`Start Tutorial`, `You are about to start the tutorial, are you sure you want to continue?`)) {
-                return
-            }
-            
-            try {
-                let response = await gameService.createTutorialGame()
+  methods: {
+    async viewTutorial() {
+      if (
+        !(await this.$confirm(
+          `Start Tutorial`,
+          `You are about to start the tutorial, are you sure you want to continue?`
+        ))
+      ) {
+        return;
+      }
 
-                if (response.status === 201) {
-                    router.push({ name: 'game', query: { id: response.data } })
-                }
-            } catch (err) {
-                console.error(err)
-            }
+      try {
+        let response = await gameService.createTutorialGame();
+
+        if (response.status === 201) {
+          router.push({ name: "game", query: { id: response.data } });
         }
+      } catch (err) {
+        console.error(err);
+      }
     }
-}
+  }
+};
 </script>
 
 <style scoped>
@@ -108,11 +112,11 @@ export default {
   bottom: 0;
   left: 0;
   margin: 8px;
-  background-color: #3498DB;
+  background-color: #3498db;
 }
 
 .tutorial-card-title {
-  background-color: #3498DB;
+  background-color: #3498db;
 }
 
 .tutorial-game {

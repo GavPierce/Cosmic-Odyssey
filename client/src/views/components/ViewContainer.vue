@@ -15,38 +15,6 @@
             >
               <i class="fas fa-file-alt"></i>
             </router-link>
-            <a
-              href="https://github.com/solaris-games/solaris"
-              target="_blank"
-              title="Code"
-              class="me-2"
-            >
-              <i class="fab fa-github"></i>
-            </a>
-            <a
-              href="https://store.steampowered.com/app/1623930/Solaris/"
-              target="_blank"
-              title="Steam"
-              class="me-2"
-            >
-              <i class="fab fa-steam"></i>
-            </a>
-            <a
-              href="https://discord.com/invite/v7PD33d"
-              target="_blank"
-              title="Discord"
-              class="me-2"
-            >
-              <i class="fab fa-discord"></i>
-            </a>
-            <a
-              href="https://steamcommunity.com/app/1623930/discussions/"
-              target="_blank"
-              title="Forum"
-              class="me-2"
-            >
-              <i class="far fa-comments"></i>
-            </a>
           </div>
           <div class="col-auto">
             <router-link

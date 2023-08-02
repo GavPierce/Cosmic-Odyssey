@@ -1,9 +1,6 @@
 <template>
   <view-container :hideTopBar="true">
-    <view-title
-      title="Privacy Policy"
-      :showSocialLinks="false"
-    />
+    <view-title title="Privacy Policy" :showSocialLinks="false" />
 
     <p>Last updated: January 31, 2022</p>
     <p>
@@ -37,7 +34,7 @@
         <p>
           <strong>Company</strong> (referred to as either &quot;the
           Company&quot;, &quot;We&quot;, &quot;Us&quot; or &quot;Our&quot; in
-          this Agreement) refers to Solaris.
+          this Agreement) refers to Cosmic Odyssey.
         </p>
       </li>
       <li>
@@ -85,12 +82,12 @@
       </li>
       <li>
         <p>
-          <strong>Website</strong> refers to Solaris, accessible from
+          <strong>Website</strong> refers to Cosmic Odyssey, accessible from
           <a
-            href="https://solaris.games"
+            href="https://cosmic-odyssey.io/"
             rel="external nofollow noopener"
             target="_blank"
-            >https://solaris.games</a
+            >https://cosmic-odyssey.io/</a
           >
         </p>
       </li>
@@ -451,22 +448,22 @@
     </p>
     <h3>Contact Us</h3>
     <p>
-      If you have any questions about this Privacy Policy, please contact us via one of the community channels.
+      If you have any questions about this Privacy Policy, please contact us via
+      one of the community channels.
     </p>
   </view-container>
 </template>
 
 <script>
-import ViewContainer from "./components/ViewContainer"
-import ViewTitle from "./components/ViewTitle"
+import ViewContainer from "./components/ViewContainer";
+import ViewTitle from "./components/ViewTitle";
 
 export default {
   components: {
     "view-container": ViewContainer,
-    "view-title": ViewTitle,
+    "view-title": ViewTitle
   }
-}
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

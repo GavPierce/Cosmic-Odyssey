@@ -174,7 +174,7 @@ export default {
           );
 
           document.title =
-            galaxyResponse.data.settings.general.name + " - Solaris";
+            galaxyResponse.data.settings.general.name + " - Cosmic Odyssey";
         }
       } catch (err) {
         console.error(err);

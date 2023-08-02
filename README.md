@@ -16,7 +16,7 @@ CC is a slow-burn browser game heavily inspired by [Neptune's Pride](https://np.
 - Play on any device that has a web browser.
 - Its completely free!
 
-Visit [solaris.games](https://solaris.games) to play now!
+Visit [Cosmic Odyssey.games](https://cosmic-odyssey.io/) to play now!
 
 ### Server
 
@@ -57,7 +57,7 @@ To keep up to date with the latest changes, you must run the database migations 
 
 1. `npm run start-db-migrate:dev` in `server/` to update your local database to the latest schema.
 
-_Note: This script assumes that you have a `solaris` database on your system. If not, perform the **Development Environment Setup** above first._
+_Note: This script assumes that you have a `Cosmic Odyssey` database on your system. If not, perform the **Development Environment Setup** above first._
 
 ### Development Environment Automation (Optional)
 

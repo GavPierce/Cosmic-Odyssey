@@ -1,4 +1,4 @@
-use solaris;
+use Cosmic Odyssey;
 
 // Remove identifiable user info.
 db.users.updateMany({}, {
@@ -111,7 +111,7 @@ let index = 0;
 
 db.users.find({}).forEach(function(user) {
     user.username = 'test' + index.toString();
-    user.email = 'test' + index.toString() + '@solaris.games';
+    user.email = 'test' + index.toString() + '@Cosmic Odyssey.games';
 
     index++;
 
