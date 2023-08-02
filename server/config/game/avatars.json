@@ -10,7 +10,7 @@
   {
     "id": 1,
     "file": "1.png",
-    "name": "Averonic Expedition",
+    "name": "Averynic Expedition",
     "description": "The Averonic Expedition claims to have been sent from a higher dimension to study this reality. Members of the Expedition are haughty, looking upon other lifeforms in disdain. They value intelligence above all else and have nearly unmatched intellect.",
     "price": null,
     "isPatronAvatar": false
@@ -18,7 +18,7 @@
   {
     "id": 2,
     "file": "2.png",
-    "name": "Averonic Expedition",
+    "name": "Averynic Expedition",
     "description": "The Averonic Expedition claims to have been sent from a higher dimension to study this reality. Members of the Expedition are haughty, looking upon other lifeforms in disdain. They value intelligence above all else and have nearly unmatched intellect.",
     "price": null,
     "isPatronAvatar": false
@@ -123,7 +123,7 @@
     "id": 15,
     "file": "15.png",
     "name": "Fooyanians",
-    "description": "The Chesh are a fierce race who have made it their mission to win at all costs. The are deadly hunters and will stop at nothing to achieve their goals.",
+    "description": "The Fooyanians are a fierce race who have made it their mission to win at all costs. The are deadly hunters and will stop at nothing to achieve their goals.",
     "price": null,
     "isPatronAvatar": false
   },
@@ -131,7 +131,7 @@
     "id": 16,
     "file": "16.png",
     "name": "Fooyanians",
-    "description": "The Chesh are a fierce race who have made it their mission to win at all costs. The are deadly hunters and will stop at nothing to achieve their goals.",
+    "description": "The Fooyanians are a fierce race who have made it their mission to win at all costs. The are deadly hunters and will stop at nothing to achieve their goals.",
     "price": null,
     "isPatronAvatar": false
   },
@@ -328,11 +328,11 @@
     "isPatronAvatar": false
   },
   {
-    "id": 42,
-    "file": "42.png",
+    "id": 41,
+    "file": "43.png",
     "name": "Hammeroid",
     "description": "ORIGIN: UNKNOWN\nMOTIVE: UNKNOWN",
-    "price": 10,
+    "price": null,
     "isPatronAvatar": false
   }
 ]
