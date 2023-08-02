@@ -131,6 +131,13 @@ export default {
 </script>
 
 <style scoped>
+.brand {
+  justify-content: center;
+  font-family: "Bangers", cursive;
+}
+.brand-logo {
+  justify-content: center;
+}
 .brand-img {
   background-image: url("../../assets/CO_LOGO.jpg") !important;
 }
