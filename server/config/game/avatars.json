@@ -19,7 +19,7 @@
     "id": 2,
     "file": "2.png",
     "name": "The Verdant Mandate",
-    "description": "The Nephiv, a peaceful arboreal species, once inhabited two lush worlds, Sylphia Major and Minor. Tragedy struck when the Wraithen Conflict erupted, leading to Sylphia Minor's ruin. Now, on thriving Sylphia Major, they prepare to protect their home and seek the Galactic Throne, guided by the wisdom of King Sylandros. This ancient race is known for their terraforming expertise and negotiation skills. Their faction, the Verdant Mandate, aims to prevent future calamities and secure peace in the cosmos.",
+    "description": "Nephiv, an ancient arboreal race excels in terraforming and banking. Survivors of the Wraithen Conflict, they've fortified themselves under King Sylandros' rule. Their goal: the Galactic Throne.",
     "price": null,
     "isPatronAvatar": false
   },
@@ -34,8 +34,8 @@
   {
     "id": 4,
     "file": "4.png",
-    "name": "The Kingdom of Tro'pas",
-    "description": "Tropians are a race of avian humanoids that value beauty above all else. They take to the stars in an attempt to establish their grand works as the highest form of art and culture the galaxy can achieve.",
+    "name": "The Luminous Collective",
+    "description": "Home to bioluminescent rainforests, the Luminous Collective is an enlightened society of Kraveena. Their intricate light patterns illuminate conversations while empathic powers shape diplomatic outcomes.",
     "price": null,
     "isPatronAvatar": false
   },
