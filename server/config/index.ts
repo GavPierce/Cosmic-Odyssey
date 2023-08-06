@@ -12,6 +12,8 @@ const config: Config = {
   clientUrl: process.env.CLIENT_URL,
   cacheEnabled: process.env.CACHE_ENABLED == "true",
   smtp: {
+    mailGunApi: process.env.MAILGUN_API_KEY,
+    mailGunDomain: process.env.MAILGUN_DOMAIN,
     enabled: process.env.SMTP_ENABLED == "true",
     host: process.env.SMTP_HOST,
     port: process.env.SMTP_PORT,
