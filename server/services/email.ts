@@ -460,7 +460,7 @@ export default class EmailService {
     }
 
     let user = await this.userService.getEmailById(player.userId!);
-
+    console.log("Sending Email To Player...", user?.email, template, args);
     if (user && user.emailEnabled) {
       try {
         await this.sendTemplate(user.email, template, args);
