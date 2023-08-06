@@ -159,7 +159,7 @@ export default class EmailService {
         api_key: this.config.smtp.mailGunApi,
         domain: this.config.smtp.mailGunDomain,
       };
-
+      console.log("Getting Trasnport for", auth);
       return nodemailer.createTransport(mailgun(auth));
     } else {
       return getFakeTransport();
