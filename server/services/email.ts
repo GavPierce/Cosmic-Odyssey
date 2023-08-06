@@ -155,12 +155,17 @@ export default class EmailService {
     // If emails are disabled, return a fake transport which
     //outputs the message to the console.
     if (this.isEnabled()) {
-      const auth = {
-        api_key: this.config.smtp.mailGunApi,
-        domain: this.config.smtp.mailGunDomain,
-      };
-      console.log("Getting Trasnport for", auth);
-      const transport = nodemailer.createTransport(mailgun(auth));
+      console.log(
+        "Getting Trasnport for",
+        this.config.smtp.mailGunDomain,
+        this.config.smtp.mailGunApi
+      );
+      const transport = nodemailer.createTransport(
+        mailgun({
+          api_key: this.config.smtp.mailGunApi,
+          domain: this.config.smtp.mailGunDomain,
+        })
+      );
       return transport;
     } else {
       return getFakeTransport();
