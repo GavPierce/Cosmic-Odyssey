@@ -7,11 +7,9 @@ export interface Config {
   clientUrl?: string;
   cacheEnabled: boolean;
   smtp: {
-    mailGunApi?: string;
-    mailGunDomain?: string;
     enabled: boolean;
-    host?: string;
-    port?: string;
+    mailGunUsername?: string;
+    mailGunPassword?: string;
     from?: string;
   };
   google: {
