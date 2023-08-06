@@ -51,7 +51,7 @@
     "id": 6,
     "file": "6.png",
     "name": "The Myriad of the Maelstrom",
-    "description": "Amid the cosmic theatre of the Prism Nebula, The Myriad of the Maelstrom rises, the voracious Kryzlak, teeming from Zephyria's emerald storm. Masters of destruction, their leviathan armada swarms, a deadly ballet danced on the ruins of civilizations.",
+    "description": "Amid the cosmic theatre of the Prism Nebula, The Myriad of the Maelstrom rises, the voracious Kryzlak, teeming from Zephyria's emerald storm. Masters of destruction, their leviathan armada swarms, leaving ruins of civilizations in their wake.",
     "price": null,
     "isPatronAvatar": false
   },
@@ -75,7 +75,7 @@
     "id": 9,
     "file": "9.png",
     "name": "The Lazurian Legacy",
-    "description": "Born in icy wastes, the Voltari are a resilient species, unyielding to psychic influence, and masters of frigid colonization. Bearing the Lazurian Legacy, they guard ancient wisdom and ambition, preparing for a galactic resurrection.",
+    "description": "Born in icy wastes, the Voltari are a resilient species, unyielding to psionic influence, and masters of frigid colonization. Bearing the Lazurian Legacy, they guard ancient wisdom and ambition, preparing for a galactic resurrection.",
     "price": null,
     "isPatronAvatar": false
   },
@@ -90,8 +90,8 @@
   {
     "id": 11,
     "file": "11.png",
-    "name": "The Biso Combine",
-    "description": "The Biso Combine are master strategists. Resources were sparse on their homeworld, and as such they learned how to inflict the most damage at the least cost. They know well the value of a well placed fleet and are dangerous foes.",
+    "name": "The Omnisentience",
+    "description": "Cosmic voyagers, the Heligon, thrive in the vacuum of space, harnessing energy from stars. Known as watchers, they guard ancient secrets, their intent unknown.",
     "price": null,
     "isPatronAvatar": false
   },
@@ -179,7 +179,7 @@
     "id": 22,
     "file": "22.png",
     "name": "The Chroma Celestials",
-    "description": "Chroma Celestials, psionic masters of the cosmos. Expert experimenters and dominators, these Heligon plot a comeback, casting an ominous glow across galaxies.",
+    "description": "Chroma Celestials, psionic masters of the cosmos. Expert experimenters and dominators, the Celestari plot a comeback, casting an ominous glow across galaxies.",
     "price": null,
     "isPatronAvatar": false
   },
