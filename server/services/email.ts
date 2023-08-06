@@ -160,7 +160,8 @@ export default class EmailService {
         domain: this.config.smtp.mailGunDomain,
       };
       console.log("Getting Trasnport for", auth);
-      return nodemailer.createTransport(mailgun(auth));
+      const transport = nodemailer.createTransport(mailgun(auth));
+      return transport;
     } else {
       return getFakeTransport();
     }
