@@ -15,7 +15,7 @@ import { BaseGameEvent } from "./types/events/BaseGameEvent";
 import GameJoinService, { GameJoinServiceEvents } from "./gameJoin";
 import PlayerReadyService, { PlayerReadyServiceEvents } from "./playerReady";
 
-const mailgun = require("nodemailer-mailgun-transport");
+const mailgun = require("mailgun-js");
 const nodemailer = require("nodemailer");
 const fs = require("fs");
 const path = require("path");
@@ -155,17 +155,12 @@ export default class EmailService {
     // If emails are disabled, return a fake transport which
     //outputs the message to the console.
     if (this.isEnabled()) {
-      console.log(
-        "Getting Trasnport for",
-        this.config.smtp.mailGunDomain,
-        this.config.smtp.mailGunApi
-      );
-      const transport = nodemailer.createTransport(
-        mailgun({
-          api_key: this.config.smtp.mailGunApi,
-          domain: this.config.smtp.mailGunDomain,
-        })
-      );
+      const mg = mailgun({
+        apiKey: this.config.smtp.mailGunApi,
+        domain: this.config.smtp.mailGunDomain,
+      });
+
+      const transport = nodemailer.createTransport(mg);
       return transport;
     } else {
       return getFakeTransport();
