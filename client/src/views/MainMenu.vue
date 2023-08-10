@@ -9,8 +9,7 @@
     <div class="row pb-0 achievements">
       <div class="col-sm-12 col-md-6 col-lg-5">
         <p class="mb-1">
-          A space strategy game filled with conquest, betrayal and subterfuge.
-          (Please Attack Spencer)
+          A grand space strategy game filled with exploration, diplomacy, subterfuge and conquest.
         </p>
         <p class="mb-2 mt-2">
           Play <span class="text-warning">Cosmic Odyssey</span> on
@@ -141,7 +140,7 @@
           <div class="card-img-overlay">
             <h5 class="card-title card-title-success">
               <i class="fas fa-shopping-basket"></i>
-              <span class="ms-2">Avatar Shop</span>
+              <span class="ms-2">Unlockable Factions</span>
             </h5>
           </div>
           <div class="card-arrow">

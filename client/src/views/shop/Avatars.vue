@@ -1,9 +1,9 @@
 <template>
   <view-container>
-    <view-title title="Avatar Shop" />
+    <view-title title="Faction Collection" />
 
     <p>
-      Unlock new races to play with
+      Unlock new factions and species to play with
       <strong class="text-warning">Galactic Credits</strong>.Earn credits by
       winning official games.
     </p>
@@ -129,8 +129,8 @@ export default {
 
       if (
         !(await this.$confirm(
-          `Purchase Avatar`,
-          `Are you sure you want to purchase this avatar for ${avatar.price} credits?`
+          `Purchase Faction`,
+          `Are you sure you want to purchase this faction for ${avatar.price} credits?`
         ))
       ) {
         return;
