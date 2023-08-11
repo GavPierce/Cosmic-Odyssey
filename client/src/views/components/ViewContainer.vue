@@ -2,10 +2,10 @@
   <!--  id="content" class="app-content" -->
   <div id="content">
     <view-container-top-bar v-if="!hideTopBar" />
-    <!-- <logo></logo> -->
+    <logo></logo>
     <div class="container pb-3 col-xs-12 col-sm-10 col-md-10 col-lg-6">
       <slot></slot>
-      <footer class="mt-3">
+      <footer class="">
         <div class="row">
           <div class="col">
             <router-link
@@ -46,8 +46,4 @@ export default {
 };
 </script>
 
-<style scoped>
-#content {
-  padding-top: 52px !important;
-}
-</style>
+<style scoped></style>
