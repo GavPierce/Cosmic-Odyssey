@@ -160,13 +160,20 @@ export default {
 
 <style scoped>
 @import url("https://fonts.cdnfonts.com/css/anurati");
+
 .top-logo {
   position: absolute;
   top: 0;
   width: 100%;
-  height: 10em;
+  height: 5em;
   background-color: transparent;
   margin-top: 2em;
+}
+@media (min-width: 622px) {
+  .top-logo {
+    height: 10em;
+    margin-top: 2em;
+  }
 }
 .top-logo img {
   width: 100%;
@@ -236,6 +243,7 @@ export default {
 }
 .login-box {
   height: min-content;
+  padding-top: 2em;
 }
 .full-container {
   background-color: transparent;
