@@ -38,7 +38,6 @@ export default {
     hideTopBar: Boolean
   },
   components: {
-    logo: LogoVue,
     "view-container-top-bar": ViewContainerTopBarVue
   }
 };
