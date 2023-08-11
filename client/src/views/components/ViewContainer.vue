@@ -2,7 +2,6 @@
   <!--  id="content" class="app-content" -->
   <div id="content">
     <view-container-top-bar v-if="!hideTopBar" />
-    <logo></logo>
     <div class="container pb-3 col-xs-12 col-sm-10 col-md-10 col-lg-6">
       <slot></slot>
       <footer class="">
@@ -32,7 +31,6 @@
 </template>
 
 <script>
-import LogoVue from "./Logo";
 import ViewContainerTopBarVue from "./ViewContainerTopBar.vue";
 
 export default {
