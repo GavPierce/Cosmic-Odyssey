@@ -51,7 +51,7 @@
               @click="buyCreditPack(1)"
               :disabled="isLoading"
             >
-              <i class="fas fa-money-bill-wave"></i> £1
+              <i class="fas fa-money-bill-wave"></i> $1
             </button>
           </div>
         </div>
@@ -81,7 +81,7 @@
               @click="buyCreditPack(5)"
               :disabled="isLoading"
             >
-              <i class="fas fa-money-bill-wave"></i> £5
+              <i class="fas fa-money-bill-wave"></i> $5
             </button>
           </div>
         </div>
@@ -111,7 +111,7 @@
               @click="buyCreditPack(10)"
               :disabled="isLoading"
             >
-              <i class="fas fa-money-bill-wave"></i> £9
+              <i class="fas fa-money-bill-wave"></i> $9
             </button>
           </div>
         </div>
@@ -144,7 +144,7 @@
               @click="buyCreditPack(25)"
               :disabled="isLoading"
             >
-              <i class="fas fa-money-bill-wave"></i> £20
+              <i class="fas fa-money-bill-wave"></i> $20
             </button>
           </div>
         </div>
@@ -174,7 +174,7 @@
               @click="buyCreditPack(50)"
               :disabled="isLoading"
             >
-              <i class="fas fa-money-bill-wave"></i> £35
+              <i class="fas fa-money-bill-wave"></i> $35
             </button>
           </div>
         </div>
@@ -204,7 +204,7 @@
               @click="buyCreditPack(100)"
               :disabled="isLoading"
             >
-              <i class="fas fa-money-bill-wave"></i> £50
+              <i class="fas fa-money-bill-wave"></i> $50
             </button>
           </div>
         </div>

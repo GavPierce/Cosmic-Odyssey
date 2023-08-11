@@ -98,8 +98,8 @@
   {
     "id": 12,
     "file": "12.png",
-    "name": "The Biso Combine",
-    "description": "The Biso Combine are master strategists. Resources were sparse on their homeworld, and as such they learned how to inflict the most damage at the least cost. They know well the value of a well placed fleet and are dangerous foes.",
+    "name": "The Silicate Singularity",
+    "description": "Born from silicate dust, Orraxians of the Silicate Singularity thrive in harsh landscapes. Once a dying empire, now a technological titan, they carry scars of a virus-riddled past, yet face an uncertain future with resurgent threats.",
     "price": null,
     "isPatronAvatar": false
   },
@@ -236,7 +236,7 @@
     "file": "29.png",
     "name": "G.W.A.I.N Procedure T12",
     "description": "Robotic stewards of a race that have ascended to the digital plane. They surround stars with computational spheres that host their makers' simulated environments. These beings are ruthless and obey their prime directive only.",
-    "price": 3,
+    "price": null,
     "isPatronAvatar": false
   },
   {
@@ -244,7 +244,7 @@
     "file": "30.png",
     "name": "Pichek",
     "description": "The Pichek's home system is littered with asteroids, resulting in hazardous space that's difficult to navigate. By looting these stranded vessels the Pichek literally stole their way to the stars, bringing that same spirit of piracy with them.",
-    "price": 1,
+    "price": null,
     "isPatronAvatar": false
   },
   {
@@ -252,7 +252,7 @@
     "file": "31.png",
     "name": "Pichek",
     "description": "The Pichek's home system is littered with asteroids, resulting in hazardous space that's difficult to navigate. By looting these stranded vessels the Pichek literally stole their way to the stars, bringing that same spirit of piracy with them.",
-    "price": 1,
+    "price": null,
     "isPatronAvatar": false
   },
   {
@@ -260,7 +260,7 @@
     "file": "32.png",
     "name": "The Cha'gun Empire",
     "description": "The Cha'gun rarely stay in one place for very long for they are a restless race, and many feel called to the vast dark expanse between the stars. Little else is known about the Cha'gun as they are exceedingly secretive and distrustful of outsiders, preferring to keep to their own kind.",
-    "price": 1,
+    "price": null,
     "isPatronAvatar": false
   },
   {

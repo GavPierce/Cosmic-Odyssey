@@ -9,9 +9,9 @@
     <p class="mb-2">
         <small>
             If the reason is not listed, please contact a developer or community manager on
-            <a href="https://discord.com/invite/v7PD33d" target="_blank" title="Discord">
+            <a href="https://discord.gg/q52NCKaP" target="_blank" title="Discord">
                 <i class="fab fa-discord"></i>
-                <span class="ms-1">Discord</span>
+                <span class="ms-1">Cosmic Odyssey's Discord</span>
             </a>
         </small>
     </p>

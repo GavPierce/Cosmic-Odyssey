@@ -10,7 +10,7 @@
     <p>
       Head on over to the
       <router-link :to="{ name: 'avatars' }"
-        ><i class="fas fa-shopping-basket"></i> Avatar Store</router-link
+        ><i class="fas fa-shopping-basket"></i> Factions Collection</router-link
       >
       to spend your credits!
     </p>
