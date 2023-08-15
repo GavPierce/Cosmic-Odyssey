@@ -278,7 +278,6 @@ export default class TechnologyService {
     let weapons = defenders.sort(
       (a, b) => b.research.weapons.level - a.research.weapons.level
     )[0].research.weapons.level;
-    console.log("- base level: " + weapons);
     let defenderBonus = this.getDefenderBonus(game, star);
     let buffs: number[] = [];
 
@@ -287,10 +286,8 @@ export default class TechnologyService {
         this.getCarrierWeaponsBuff(c, true, false, defenders.length)
       );
     }
-    console.log("- buffs from CARRIERS: " + buffs);
     let starBuffs = this.getStarWeaponsBuff(star);
     buffs.push(starBuffs);
-    console.log("- buffs from STAR: " + starBuffs);
 
     return this._calculateActualWeaponsBuff(weapons, buffs, defenderBonus);
   }
@@ -328,12 +325,9 @@ export default class TechnologyService {
     additionalBuff: number
   ) {
     let buff = Math.max(0, buffs.sort((a, b) => b - a)[0]);
-    console.log("- total weapons buffs: " + buff);
     let debuff = buffs.sort((a, b) => a - b)[0];
-    console.log("- total weapons debuffs: " + debuff);
 
     let actualBuff = debuff < 0 ? debuff + buff : buff;
-    console.log("- actual buff: " + actualBuff);
 
     return Math.max(1, weapons + actualBuff + additionalBuff);
   }

@@ -83,9 +83,7 @@ export default class CombatService extends EventEmitter {
         attackPower = 1;
       }
     }
-    console.log(
-      "------------------------- \n Calucluating Combat... \n -------------------------"
-    );
+
     const defenderAdditionalTurns = isTurnBased ? 1 : 0;
 
     const defenderTurns = Math.ceil(attacker.ships / defendPower);
@@ -146,7 +144,6 @@ export default class CombatService extends EventEmitter {
     if (calculateNeeded) {
       result.needed = needed;
     }
-    console.log("Results are in:", result);
 
     return result;
   }
@@ -236,20 +233,10 @@ export default class CombatService extends EventEmitter {
     // Calculate the total number of attacking ships
     let totalAttackers = attackerCarriers.reduce((sum, c) => sum + c.ships!, 0);
 
-    console.log(
-      "\x1b[33m%s\x1b[0m",
-      "New combat: " +
-        totalDefenders +
-        " defenders vs " +
-        totalAttackers +
-        " attackers"
-    );
-
     // Calculate the defender weapons tech level based on any specialists present at stars or carriers.
     let defenderWeaponsTechLevel: number;
 
     if (isCarrierToStarCombat) {
-      console.log("Getting Defenders Weapon Levels...");
       defenderWeaponsTechLevel =
         this.technologyService.getStarEffectiveWeaponsLevel(
           game,
@@ -257,10 +244,6 @@ export default class CombatService extends EventEmitter {
           star!,
           defenderCarriers
         );
-      console.log(
-        "--- Defender Weapons level after all Buffs :" +
-          defenderWeaponsTechLevel
-      );
     } else {
       defenderWeaponsTechLevel =
         this.technologyService.getCarriersEffectiveWeaponsLevel(
@@ -271,7 +254,6 @@ export default class CombatService extends EventEmitter {
           false
         );
     }
-    console.log("Getting Attackers Weapon Levels...");
 
     // Calculate the weapons tech level for the attacker
     let attackerWeaponsTechLevel =
@@ -282,17 +264,12 @@ export default class CombatService extends EventEmitter {
         isCarrierToStarCombat,
         true
       );
-    console.log(
-      "--- Attacker Weapons level after all Buffs :" + attackerWeaponsTechLevel
-    );
-    console.log("Checking for more Weapon Debuffs...");
+
     // Check for deductions to weapons to either side
     let defenderWeaponsDeduction =
       this.technologyService.getCarriersWeaponsDebuff(attackerCarriers);
     let attackerWeaponsDeduction =
       this.technologyService.getCarriersWeaponsDebuff(defenderCarriers);
-    console.log("- Attacker Weapons Debuff: " + attackerWeaponsDeduction);
-    console.log("- Defender Weapons Debuff: " + defenderWeaponsDeduction);
 
     // Ensure that both sides fight with AT LEAST level 1 weapons
     defenderWeaponsTechLevel = Math.max(
@@ -454,7 +431,6 @@ export default class CombatService extends EventEmitter {
       star: null,
       carriers: [],
     };
-    console.log(" Will now show carriers that were involved in combat");
     // Add all of the carriers to the combat result with a snapshot of
     // how many ships they had before combat occurs.
     // We will update this as we go along with combat.
@@ -479,8 +455,6 @@ export default class CombatService extends EventEmitter {
         scrambled,
       };
     });
-    console.log(combatResult.carriers);
-    console.log(" Will now show the star that was involved in combat");
 
     if (star) {
       let specialist = this.specialistService.getByIdStarTrim(
@@ -499,7 +473,6 @@ export default class CombatService extends EventEmitter {
         after: Math.floor(star.shipsActual!),
         scrambled,
       };
-      console.log(combatResult.star);
     }
 
     let defenderObjects: (Star | Carrier)[] = [...defenderCarriers];
@@ -507,9 +480,7 @@ export default class CombatService extends EventEmitter {
     if (star) {
       defenderObjects.push(star);
     }
-    console.log(
-      "We now need to distrubute the damage evenly across all objects that are involved in combat"
-    );
+
     // Distribute damage evenly across all objects that are involved in combat.
     this._distributeDamage(
       combatResult,
@@ -550,9 +521,6 @@ export default class CombatService extends EventEmitter {
         defenderCarriers.splice(defenderCarriers.indexOf(carrier), 1);
       }
     }
-    console.log(
-      "If the defender has been eliminated at the star then the attacker who travelled the shortest distance in the last tick"
-    );
 
     // If the defender has been eliminated at the star then the attacker who travelled the shortest distance in the last tick
     // captures the star. Repeat star combat until there is only one player remaining.
@@ -571,9 +539,7 @@ export default class CombatService extends EventEmitter {
         attackerCarriers
       );
     }
-    console.log(
-      "Deducting reputation for all attackers that the defender is fighting and vice versa."
-    );
+
     // Deduct reputation for all attackers that the defender is fighting and vice versa.
     for (let defenderPlayer of defenders) {
       for (let attackerPlayer of attackers) {
