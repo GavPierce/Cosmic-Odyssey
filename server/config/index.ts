@@ -7,6 +7,7 @@ const config: Config = {
   port: process.env.PORT,
   sessionSecret: process.env.SESSION_SECRET,
   sessionSecureCookies: process.env.SESSION_SECURE_COOKIES == "true",
+  sameSite: process.env.SAME_SITE,
   connectionString: process.env.CONNECTION_STRING,
   serverUrl: process.env.SERVER_URL,
   clientUrl: process.env.CLIENT_URL,

@@ -2,6 +2,7 @@ export interface Config {
   port?: string;
   sessionSecret?: string;
   sessionSecureCookies: boolean;
+  sameSite?: string;
   connectionString?: string;
   serverUrl?: string;
   clientUrl?: string;
