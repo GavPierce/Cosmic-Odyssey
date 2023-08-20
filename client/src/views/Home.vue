@@ -77,7 +77,7 @@ export default {
   data() {
     return {
       isAutoLoggingIn: false,
-      words: ["BLAST-OFF", "EXPLORE", "CONQUER", "TEAM-UP", "DECEIVE"],
+      words: ["BLAST-OFF", "EXPLORE", "CONQUER", "TEAM-UP", "ADAPT", "BUILD", "COMMUNICATE", "TRADE", "DISCOVER", "DEVELOP", "DECIMATE", "DEFEAT", "DETHRONE", "DRIFT", "DESTROY", "DEFEND", "DETECT", "TERRAFORM", "COLONIZE", "ADMINISTER", "ANTICIPATE", "ASCEND", "ATTACK", "ACHIEVE", "ACCOMPLISH", "ACTIVATE", "ACQUIRE", "ADVANCE", "AMAZE", "ASSIST", "AMBUSH", "ANALYZE"],
       wordIndex: 0,
       letterIndex: 0,
       currentText: "",
