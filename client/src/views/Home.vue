@@ -145,7 +145,7 @@ export default {
           this.letterIndex--;
         } else {
           this.typing = true;
-          this.wordIndex = (this.wordIndex + 1) % this.words.length; // Move to the next word or loop back to the start
+          this.wordIndex = Math.floor(Math.random() * this.words.length); // Randomly select a word from the list
           setTimeout(() => {
             this.typeEffect();
           }, 500); // Wait for 0.5 seconds before starting to type the next word
