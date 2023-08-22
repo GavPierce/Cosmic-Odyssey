@@ -3,7 +3,7 @@
         {
             "id": 1,
             "key": "mecha-head",
-            "name": "Admiral",
+            "name": "Courier",
             "description": "Increases carrier speed by x1.5. Deducts -1 Weapons from your side in combat and -2 Hyperspace Range to the carrier.",
             "active": {
                 "official": true,
@@ -44,42 +44,42 @@
         {
             "id": 3,
             "key": "android-mask",
-            "name": "Colonel",
-            "description": "Adds +2 Weapons to your side in combat. Deducts -1 Hyperspace Range from the carrier and decreases carrier speed to x0.75.",
+            "name": "Commander",
+            "description": "Adds +2 Weapons to your side in combat. Deducts -1 Hyperspace Range from the carrier and decreases carrier speed to x0.8.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 300,
-            "baseCostCreditsSpecialists": 3,
+            "baseCostCredits": 400,
+            "baseCostCreditsSpecialists": 4,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
                 "local": {
                     "weapons": 2,
                     "hyperspace": -1,
-                    "speed": 0.75
+                    "speed": 0.8
                 }
             }
         },
         {
             "id": 4,
             "key": "hazmat-suit",
-            "name": "General",
-            "description": "Adds +3 Weapons to your side in combat. Deducts -1 Hyperspace Range from the carrier and decreases carrier speed to x0.5.",
+            "name": "Captain",
+            "description": "Adds +3 Weapons to your side in combat. Deducts -2 Hyperspace Range from the carrier and decreases carrier speed to x0.6.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 500,
-            "baseCostCreditsSpecialists": 5,
+            "baseCostCredits": 600,
+            "baseCostCreditsSpecialists": 6,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
                 "local": {
                     "weapons": 3,
-                    "hyperspace": -1,
-                    "speed": 0.5
+                    "hyperspace": -2,
+                    "speed": 0.6
                 }
             }
         },
@@ -128,8 +128,8 @@
         {
             "id": 7,
             "key": "spaceship",
-            "name": "Destroyer",
-            "description": "Adds +5 Weapons to your side in combat. Deducts -3 Hyperspace Range from the carrier and decreases carrier speed to x0.5.",
+            "name": "Fleet Admiral",
+            "description": "Adds +5 Weapons to your side in combat. Deducts -4 Hyperspace Range from the carrier and decreases carrier speed to x0.2.",
             "active": {
                 "official": true,
                 "custom": true
@@ -140,9 +140,9 @@
             "expireTicks": null,
             "modifiers": {
                 "local": {
-                    "hyperspace": -3,
+                    "hyperspace": -4,
                     "weapons": 5,
-                    "speed": 0.5
+                    "speed": 0.2
                 }
             }
         },
@@ -458,6 +458,27 @@
                     "starCaptureRewardMultiplier": 1.5
                 }
             }
+        },
+        {
+            "id": 4,
+            "key": "hazmat-suit",
+            "name": "Admiral",
+            "description": "Adds +4 Weapons to your side in combat. Deducts -3 Hyperspace Range from the carrier and decreases carrier speed to x0.4.",
+            "active": {
+                "official": true,
+                "custom": true
+            },
+            "baseCostCredits": 800,
+            "baseCostCreditsSpecialists": 8,
+            "oneShot": false,
+            "expireTicks": null,
+            "modifiers": {
+                "local": {
+                    "weapons": 4,
+                    "hyperspace": -3,
+                    "speed": 0.4
+                }
+            }
         }
     ],
     "star": [
@@ -523,7 +544,7 @@
         {
             "id": 4,
             "key": "defense-satellite",
-            "name": "Orbital Cannon",
+            "name": "Orbital Defense Cannon",
             "description": "Adds +1 Defender Bonus to the star.",
             "active": {
                 "official": true,
@@ -735,7 +756,7 @@
         {
             "id": 14,
             "key": "energy-tank",
-            "name": "Mineral Extractor",
+            "name": "Terraforming Processor",
             "description": "Adds +2 Terraforming to the star.",
             "active": {
                 "official": true,
@@ -754,8 +775,8 @@
         {
             "id": 15,
             "key": "cryo-chamber",
-            "name": "Cryo Chamber",
-            "description": "When a carrier is built at this star, a General carrier specialist is automatically assigned to the carrier.",
+            "name": "Star Fleet Academy",
+            "description": "When a carrier is built at this star, a Star Fleet officer is automatically assigned to the carrier.",
             "active": {
                 "official": true,
                 "custom": true
@@ -825,6 +846,122 @@
             "modifiers": {
                 "special": {
                     "wormHoleConstructor": true
+                }
+            }
+        },
+        {
+            "id": 19,
+            "key": "energy-tank",
+            "name": "Terraform Manipulator",
+            "description": "Adds +4 terraforming to the star.",
+            "active": {
+                "official": true,
+                "custom": true
+            },
+            "baseCostCredits": 300,
+            "baseCostCreditsSpecialists": 3,
+            "oneShot": false,
+            "expireTicks": null,
+            "modifiers": {
+                "local": {
+                    "terraforming": 4
+                }
+            }
+        },
+        {
+            "id": 20,
+            "key": "energy-tank",
+            "name": "Terraform Transformer",
+            "description": "Adds +6 terraforming to the star.",
+            "active": {
+                "official": true,
+                "custom": true
+            },
+            "baseCostCredits": 700,
+            "baseCostCreditsSpecialists": 7,
+            "oneShot": false,
+            "expireTicks": null,
+            "modifiers": {
+                "local": {
+                    "terraforming": 6
+                }
+            }
+        },
+        {
+            "id": 21,
+            "key": "radar-dish",
+            "name": "Quantum Optics Array",
+            "description": "Adds +5 Scanning Range to the star. Deducts -5 Weapons from your side in combat.",
+            "active": {
+                "official": true,
+                "custom": true
+            },
+            "baseCostCredits": 1200,
+            "baseCostCreditsSpecialists": 12,
+            "oneShot": false,
+            "expireTicks": null,
+            "modifiers": {
+                "local": {
+                    "scanning": 5,
+                    "weapons": -5
+                }
+            }
+        },
+        {
+            "id": 22,
+            "key": "radar-dish",
+            "name": "Refracting Neutrino Array",
+            "description": "Adds +7 Scanning Range to the star. Deducts -7 Weapons from your side in combat.",
+            "active": {
+                "official": true,
+                "custom": true
+            },
+            "baseCostCredits": 2400,
+            "baseCostCreditsSpecialists": 24,
+            "oneShot": false,
+            "expireTicks": null,
+            "modifiers": {
+                "local": {
+                    "scanning": 7,
+                    "weapons": -7
+                }
+            }
+        },
+        {
+            "id": 4,
+            "key": "defense-satellite",
+            "name": "Oribital Dark Energy Cannon",
+            "description": "Adds +1 Defender Bonus to the star.",
+            "active": {
+                "official": true,
+                "custom": true
+            },
+            "baseCostCredits": 500,
+            "baseCostCreditsSpecialists": 5,
+            "oneShot": false,
+            "expireTicks": null,
+            "modifiers": {
+                "special": {
+                    "defenderBonus": 2
+                }
+            }
+        },
+        {
+            "id": 4,
+            "key": "defense-satellite",
+            "name": "Orbital Supernova Cannon",
+            "description": "Adds +3 Defender Bonus to the star.",
+            "active": {
+                "official": true,
+                "custom": true
+            },
+            "baseCostCredits": 1000,
+            "baseCostCreditsSpecialists": 10,
+            "oneShot": false,
+            "expireTicks": null,
+            "modifiers": {
+                "special": {
+                    "defenderBonus": 3
                 }
             }
         }
