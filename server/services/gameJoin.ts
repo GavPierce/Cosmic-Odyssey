@@ -108,12 +108,13 @@ export default class GameJoinService extends EventEmitter {
       );
 
       // Disallow new players from joining non-new-player-games games if they haven't completed a game yet.
-      if (!isEstablishedPlayer && !this.gameTypeService.isNewPlayerGame(game)) {
-        throw new ValidationError(
-          'You must complete a "New Player" game or a custom game before you can join an official game.'
-        );
-      }
-    }
+  // COMMENTED OUT THE REQUIREMENT FOR PLAYERS TO BE ESTABLISHED TO JOIN AN OFFICIAL GAME
+  //    if (!isEstablishedPlayer && !this.gameTypeService.isNewPlayerGame(game)) {
+  //      throw new ValidationError(
+  //        'You must complete a "New Player" game or a custom game before you can join an official game.'
+  //      );
+  //    }
+  //   }
 
     // Verify that the user has purchased the avatar they selected.
     const userAvatar = await this.avatarService.getUserAvatar(userId, avatar);
