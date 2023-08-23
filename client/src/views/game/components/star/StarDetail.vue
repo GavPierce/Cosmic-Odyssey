@@ -83,7 +83,7 @@
             <i class="fas fa-certificate ms-1"></i>
           </span>
           <span :title="star.warpGate ? 'Warp Gate - Carriers travel faster between active warp gates':'No Warp Gate'" :class="{'no-warp-gate':!star.warpGate}">
-            <i class="fas fa-dungeon ms-2"></i>
+            <i class="fas fa-brands fa-opera ms-2"></i>
           </span>
         </div>
       </div>
