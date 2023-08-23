@@ -43,7 +43,7 @@
         </div>
         <div v-if="(!isCompactUIStyle || !star.ownedByPlayerId) && star.warpGate">
         <hr/>
-          <p class="mb-0">This star has a <span class="text-warning">Warp Gate <i class="fa-brands fa-opera" style="color: #000000;"></i></span>.</p>
+          <p class="mb-0">This star has a <span class="text-warning">Warp Gate <i class="fa-brands fa-opera" style="color: #ffffff;"></i></span>.</p>
           <p class="mb-2 text-info"><small><i>Carriers travel {{ warpSpeedMultiplier }}x faster between active warp gates.</i></small></p>
         </div>
         <div v-if="(!isCompactUIStyle || !star.ownedByPlayerId) && star.isBlackHole">
