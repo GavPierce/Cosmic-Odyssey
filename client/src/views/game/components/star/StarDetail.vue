@@ -43,7 +43,7 @@
         </div>
         <div v-if="(!isCompactUIStyle || !star.ownedByPlayerId) && star.warpGate">
         <hr/>
-          <p class="mb-0">This star has a <span class="text-warning">Warp Gate <i class="fas fa-dungeon"></i></span>.</p>
+          <p class="mb-0">This star has a <span class="text-warning">Warp Gate <i class="fa-brands fa-opera" style="color: #000000;"></i></span>.</p>
           <p class="mb-2 text-info"><small><i>Carriers travel {{ warpSpeedMultiplier }}x faster between active warp gates.</i></small></p>
         </div>
         <div v-if="(!isCompactUIStyle || !star.ownedByPlayerId) && star.isBlackHole">
@@ -83,7 +83,7 @@
             <i class="fas fa-certificate ms-1"></i>
           </span>
           <span :title="star.warpGate ? 'Warp Gate - Carriers travel faster between active warp gates':'No Warp Gate'" :class="{'no-warp-gate':!star.warpGate}">
-            <i class="fas fa-brands fa-opera ms-2"></i>
+            <i class="fa-brands fa-opera" style="color: #000000;"></i>
           </span>
         </div>
       </div>
@@ -329,7 +329,7 @@
                 :disabled="$isHistoricalMode() || userPlayer.credits < star.upgradeCosts.warpGate || isGameFinished" 
                 modalName="buildWarpGateModal" 
                 classText="btn btn-success mb-2">
-                <i class="fas fa-brands fa-opera"></i>
+                <i class="fa-brands fa-opera" style="color: #000000;"></i>
                 Build for ${{star.upgradeCosts.warpGate}}
               </modalButton>
             </div>
