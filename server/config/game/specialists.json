@@ -787,7 +787,7 @@
             "expireTicks": null,
             "modifiers": {
                 "special": {
-                    "autoCarrierSpecialistAssign": 4
+                    "autoCarrierSpecialistAssign": -1
                 }
             }
         },
