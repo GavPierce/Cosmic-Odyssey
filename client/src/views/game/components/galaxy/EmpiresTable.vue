@@ -22,10 +22,10 @@
                   <td></td>
                   <td class="text-end" title="Stars"><a href="javascript:;" @click="sort('totalStars')"><i class="fas fa-star"></i></a></td>
                   <td class="text-end" title="Carriers"><a href="javascript:;" @click="sort('totalCarriers')"><i class="fas fa-rocket"></i></a></td>
-                  <td class="text-end" title="Specialists"><a href="javascript:;" @click="sort('totalSpecialists')"><i class="fas fa-user-astronaut"></i></a></td>
+                  <td class="text-end" title="Specialists"><a href="javascript:;" @click="sort('totalSpecialists')"><i class="fas fa-sketch"></i></a></td>
                   <td class="text-end" title="Ships"><a href="javascript:;" @click="sort('totalShips')">S</a></td>
-                  <td class="text-end" title="Ship Production"><a href="javascript:;" @click="sort('newShips')"><i class="fas fa-industry"></i></a></td>
-                  <td class="text-end" title="Economy"><a href="javascript:;" @click="sort('totalEconomy')"><i class="fas fa-money-bill-wave"></i></a></td>
+                  <td class="text-end" title="Ship Production"><a href="javascript:;" @click="sort('newShips')"><i class="fas fa-gears"></i></a></td>
+                  <td class="text-end" title="Economy"><a href="javascript:;" @click="sort('totalEconomy')"><i class="fas fa-coins"></i></a></td>
                   <td class="text-end" title="Industry"><a href="javascript:;" @click="sort('totalIndustry')"><i class="fas fa-tools"></i></a></td>
                   <td class="text-end" title="Science"><a href="javascript:;" @click="sort('totalScience')"><i class="fas fa-flask"></i></a></td>
               </tr>
