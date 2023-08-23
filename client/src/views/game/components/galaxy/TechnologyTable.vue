@@ -20,14 +20,14 @@
                   <td><i class="fas fa-user"></i></td>
                   <td><a href="javascript:;" @click="sort('alias')">Name</a></td>
                   <td></td>
-                  <td class="text-end" title="Scanning"><a href="javascript:;" @click="sort('scanning')"><i class="fas fa-binoculars"></i></a></td>
-                  <td class="text-end" title="Hyperspace"><a href="javascript:;" @click="sort('hyperspace')"><i class="fas distance-to-travel-between-two-points"></i></a></td>
-                  <td class="text-end" title="Terraforming"><a href="javascript:;" @click="sort('terraforming')"><i class="fas fa-globe-europe"></i></a></td>
-                  <td class="text-end" title="Experimentation"><a href="javascript:;" @click="sort('experimentation')"><i class="fas fa-microscope"></i></a></td>
-                  <td class="text-end" title="Weapons"><a href="javascript:;" @click="sort('weapons')"><i class="fas fa-gun"></i></a></td>
-                  <td class="text-end" title="Banking"><a href="javascript:;" @click="sort('banking')"><i class="fas fa-money-bill-alt"></i></a></td>
-                  <td class="text-end" title="Manufacturing"><a href="javascript:;" @click="sort('manufacturing')"><i class="fas fa-industry"></i></a></td>
-                  <td class="text-end" title="Specialists"><a href="javascript:;" @click="sort('specialists')"><i class="fas fa-user-astronaut"></i></a></td>
+                  <td class="text-end" title="Scanning"><a href="javascript:;" @click="sort('scanning')"><i class="fas fa-satellite"></i></a></td>
+                  <td class="text-end" title="Hyperspace"><a href="javascript:;" @click="sort('hyperspace')"><i class="fas forward"></i></a></td>
+                  <td class="text-end" title="Terraforming"><a href="javascript:;" @click="sort('terraforming')"><i class="fas fa-globe"></i></a></td>
+                  <td class="text-end" title="Experimentation"><a href="javascript:;" @click="sort('experimentation')"><i class="fas fa-flask-vial"></i></a></td>
+                  <td class="text-end" title="Weapons"><a href="javascript:;" @click="sort('weapons')"><i class="fas fa-crosshairs"></i></a></td>
+                  <td class="text-end" title="Banking"><a href="javascript:;" @click="sort('banking')"><i class="fas fa-banking"></i></a></td>
+                  <td class="text-end" title="Manufacturing"><a href="javascript:;" @click="sort('manufacturing')"><i class="fas fa-gears"></i></a></td>
+                  <td class="text-end" title="Specialists"><a href="javascript:;" @click="sort('specialists')"><i class="fas fa-user-sketch"></i></a></td>
               </tr>
           </thead>
           <tbody>
