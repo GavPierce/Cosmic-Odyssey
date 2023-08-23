@@ -114,7 +114,7 @@ export default class CarrierService extends EventEmitter {
                 carrier.specialistId = randomSpecialistId;
                 carrier.specialist = this.specialistService.getByIdCarrier(carrier.specialistId);
             }
-}
+        }
 
         return carrier;
     }

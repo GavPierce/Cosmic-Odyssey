@@ -66,11 +66,7 @@ export default class SpecialistService {
     }
 
 
-    /**
-     * Generates a random specialist ID with weighted probabilities.
-     * 1: 50%, 2: 25%, 3: 14%, 4: 8%, 5: 3%
-     * @returns Random number between 1 and 5 based on the weighted probabilities.
-     */    
+ 
     generateRandomSpecialistsID(): number {
         const randomNumber = Math.random();
 
