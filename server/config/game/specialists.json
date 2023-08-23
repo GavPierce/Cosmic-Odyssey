@@ -45,7 +45,7 @@
             "id": 3,
             "key": "android-mask",
             "name": "Commander",
-            "description": "Adds +2 Weapons to your side in combat. Deducts -1 Hyperspace Range from the carrier and decreases carrier speed to x0.8.",
+            "description": "Adds +2 Weapons to your side in combat. Deducts -2 Hyperspace Range from the carrier and decreases carrier speed to x0.8.",
             "active": {
                 "official": true,
                 "custom": true
@@ -57,7 +57,7 @@
             "modifiers": {
                 "local": {
                     "weapons": 2,
-                    "hyperspace": -1,
+                    "hyperspace": -2,
                     "speed": 0.8
                 }
             }
@@ -66,7 +66,7 @@
             "id": 4,
             "key": "hazmat-suit",
             "name": "Captain",
-            "description": "Adds +3 Weapons to your side in combat. Deducts -2 Hyperspace Range from the carrier and decreases carrier speed to x0.6.",
+            "description": "Adds +3 Weapons to your side in combat. Deducts -3 Hyperspace Range from the carrier and decreases carrier speed to x0.6.",
             "active": {
                 "official": true,
                 "custom": true
@@ -78,7 +78,7 @@
             "modifiers": {
                 "local": {
                     "weapons": 3,
-                    "hyperspace": -2,
+                    "hyperspace": -3,
                     "speed": 0.6
                 }
             }
@@ -129,7 +129,7 @@
             "id": 7,
             "key": "spaceship",
             "name": "Fleet Admiral",
-            "description": "Adds +5 Weapons to your side in combat. Deducts -4 Hyperspace Range from the carrier and decreases carrier speed to x0.2.",
+            "description": "Adds +5 Weapons to your side in combat. Deducts -5 Hyperspace Range from the carrier and decreases carrier speed to x0.2.",
             "active": {
                 "official": true,
                 "custom": true
@@ -140,7 +140,7 @@
             "expireTicks": null,
             "modifiers": {
                 "local": {
-                    "hyperspace": -4,
+                    "hyperspace": -5,
                     "weapons": 5,
                     "speed": 0.2
                 }
@@ -460,10 +460,10 @@
             }
         },
         {
-            "id": 4,
+            "id": 22,
             "key": "hazmat-suit",
             "name": "Admiral",
-            "description": "Adds +4 Weapons to your side in combat. Deducts -3 Hyperspace Range from the carrier and decreases carrier speed to x0.4.",
+            "description": "Adds +4 Weapons to your side in combat. Deducts -4 Hyperspace Range from the carrier and decreases carrier speed to x0.4.",
             "active": {
                 "official": true,
                 "custom": true
@@ -475,7 +475,7 @@
             "modifiers": {
                 "local": {
                     "weapons": 4,
-                    "hyperspace": -3,
+                    "hyperspace": -4,
                     "speed": 0.4
                 }
             }
@@ -736,7 +736,7 @@
         {
             "id": 13,
             "key": "radar-dish",
-            "name": "Telescope Array",
+            "name": "Stellar Telescope Array",
             "description": "Adds +3 Scanning Range to the star. Deducts -3 Weapons from your side in combat.",
             "active": {
                 "official": true,
@@ -781,8 +781,8 @@
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 1500,
-            "baseCostCreditsSpecialists": 15,
+            "baseCostCredits": 3000,
+            "baseCostCreditsSpecialists": 30,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -890,7 +890,7 @@
         {
             "id": 21,
             "key": "radar-dish",
-            "name": "Quantum Optics Array",
+            "name": "Quantum Magnifying Opitical Array",
             "description": "Adds +5 Scanning Range to the star. Deducts -5 Weapons from your side in combat.",
             "active": {
                 "official": true,
@@ -910,7 +910,7 @@
         {
             "id": 22,
             "key": "radar-dish",
-            "name": "Refracting Neutrino Array",
+            "name": "Refracting Neutrino Optics Array",
             "description": "Adds +7 Scanning Range to the star. Deducts -7 Weapons from your side in combat.",
             "active": {
                 "official": true,
@@ -931,7 +931,7 @@
             "id": 4,
             "key": "defense-satellite",
             "name": "Oribital Dark Energy Cannon",
-            "description": "Adds +1 Defender Bonus to the star.",
+            "description": "Adds +2 Defender Bonus to the star.",
             "active": {
                 "official": true,
                 "custom": true

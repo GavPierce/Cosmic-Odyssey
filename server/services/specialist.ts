@@ -65,6 +65,22 @@ export default class SpecialistService {
         return spec;
     }
 
+
+    /**
+     * Generates a random specialist ID with weighted probabilities.
+     * 1: 50%, 2: 25%, 3: 14%, 4: 8%, 5: 3%
+     * @returns Random number between 1 and 5 based on the weighted probabilities.
+     */    
+    generateRandomSpecialistsID(): number {
+        const randomNumber = Math.random();
+
+        if (randomNumber < 0.50) return 2;  // 50% Lieutenant +1
+        if (randomNumber < 0.75) return 3;  // 25% Commander +2
+        if (randomNumber < 0.89) return 4;  // 14% Captain +3
+        if (randomNumber < 0.97) return 22;  // 8% Admiral +4
+        return 7;                            // 3% Fleet Admiral +5
+    }
+
     list(game: Game | null, type: SpecialistType): Specialist[] {
         if (game && game.settings.specialGalaxy.specialistCost === 'none') {
             throw new ValidationError('The game settings has disabled the hiring of specialists.');
