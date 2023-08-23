@@ -21,7 +21,7 @@
                   <td><a href="javascript:;" @click="sort('alias')">Name</a></td>
                   <td></td>
                   <td class="text-end" title="Scanning"><a href="javascript:;" @click="sort('scanning')"><i class="fas fa-binoculars"></i></a></td>
-                  <td class="text-end" title="Hyperspace"><a href="javascript:;" @click="sort('hyperspace')"><i class="fas fa-gas-pump"></i></a></td>
+                  <td class="text-end" title="Hyperspace"><a href="javascript:;" @click="sort('hyperspace')"><i class="fas distance-to-travel-between-two-points"></i></a></td>
                   <td class="text-end" title="Terraforming"><a href="javascript:;" @click="sort('terraforming')"><i class="fas fa-globe-europe"></i></a></td>
                   <td class="text-end" title="Experimentation"><a href="javascript:;" @click="sort('experimentation')"><i class="fas fa-microscope"></i></a></td>
                   <td class="text-end" title="Weapons"><a href="javascript:;" @click="sort('weapons')"><i class="fas fa-gun"></i></a></td>
