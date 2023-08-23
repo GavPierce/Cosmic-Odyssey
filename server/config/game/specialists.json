@@ -149,7 +149,7 @@
         {
             "id": 8,
             "key": "power-generator",
-            "name": "Scrambler",
+            "name": "Cloaking Field Generator",
             "description": "Prevents other players from seeing how many ships the carrier has.",
             "active": {
                 "official": true,
@@ -229,7 +229,7 @@
         {
             "id": 12,
             "key": "alien-stare",
-            "name": "Coward",
+            "name": "Blockade Runner",
             "description": "Increases carrier speed by x2 and the carrier does not participate in carrier-to-carrier combat.",
             "active": {
                 "official": true,
