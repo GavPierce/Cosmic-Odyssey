@@ -62,7 +62,7 @@ export default {
     },
     nextAvatar (e) {
       if (this.avatar == null) {
-        this.avatar = this.avatars.find(a => a.id === 21)
+        this.avatar = this.avatars.find(a => a.id === 0)
       } else {
         let currentIndex = this.avatars.indexOf(this.avatar)
 
