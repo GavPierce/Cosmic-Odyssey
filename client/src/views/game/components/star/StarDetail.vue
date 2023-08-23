@@ -120,7 +120,7 @@
       <div class="row pb-2" v-if="canShowSpecialist || star.ownedByPlayerId">
         <div class="col">
           <span v-if="canShowSpecialist && isOwnedByUserPlayer && canHireSpecialist">
-            <specialist-icon :type="'star'" :defaultIcon="'user-astronaut'" :specialist="star.specialist"></specialist-icon>
+            <specialist-icon :type="'star'" :defaultIcon="'user-sketch'" :specialist="star.specialist"></specialist-icon>
             <a href="javascript:;" @click="onViewHireStarSpecialistRequested">
               <span class="ms-1" v-if="star.specialistId" :title="star.specialist.description">{{star.specialist.name}}</span>
               <span v-if="!star.specialistId">No Specialist</span>
@@ -128,7 +128,7 @@
             <span v-if="star.specialistId && star.specialistExpireTick" class="badge bg-warning ms-1"><i class="fas fa-stopwatch"></i> Expires Tick {{star.specialistExpireTick}}</span>
           </span>
           <span v-if="canShowSpecialist && (!isOwnedByUserPlayer || !canHireSpecialist)">
-            <specialist-icon :type="'star'" :defaultIcon="'user-astronaut'" :specialist="star.specialist"></specialist-icon>
+            <specialist-icon :type="'star'" :defaultIcon="'user-sketch'" :specialist="star.specialist"></specialist-icon>
             <span v-if="star.specialist" class="ms-1">{{star.specialist.name}}</span>
             <span v-if="star.specialistId && star.specialistExpireTick" class="badge bg-warning ms-1"><i class="fas fa-stopwatch"></i> Expires Tick {{star.specialistExpireTick}}</span>
             <span v-if="!star.specialist">No Specialist</span>
@@ -136,12 +136,12 @@
         </div>
         <div class="col-auto">
           <span title="Weapons" v-if="star.ownedByPlayerId">
-            {{star.effectiveTechs.weapons}} <i class="fas fa-gun ms-1"></i>
+            {{star.effectiveTechs.weapons}} <i class="fas fa-crosshairs ms-1"></i>
           </span>
         </div>
         <div class="col-auto">
           <span v-if="star.ownedByPlayerId && !isDeadStar" title="Manufacturing">
-            {{star.effectiveTechs.manufacturing}} <i class="fas fa-industry ms-1"></i>
+            {{star.effectiveTechs.manufacturing}} <i class="fas fa-gears ms-1"></i>
           </span>
         </div>
         <div class="col-auto">
@@ -215,7 +215,7 @@
           </div>
           <div class="col text-end" title="Scanning">
             <span>{{star.effectiveTechs.scanning}}</span>
-            <i class="fas fa-binoculars ms-2"></i>
+            <i class="fas fa-satellite ms-2"></i>
           </div>
       </div>
 
@@ -225,7 +225,7 @@
           </div>
           <div class="col text-end" title="Terraforming">
             <span>{{star.effectiveTechs.terraforming}}</span>
-            <i class="fas fa-globe-europe ms-2"></i>
+            <i class="fas fa-globe ms-2"></i>
           </div>
       </div>
 
@@ -235,7 +235,7 @@
           </div>
           <div class="col text-end" title="Manufacturing">
             <span>{{star.effectiveTechs.manufacturing}}</span>
-            <i class="fas fa-industry ms-2"></i>
+            <i class="fas fa-gears ms-2"></i>
           </div>
       </div>
 
