@@ -23,7 +23,7 @@
 
     <new-player-message />
 
-    <share-link message="Rally your friends and conquer the cosmic expanse as one!"/>
+    <share-link message="Rally your allies and conquer the cosmic expanse as one!"/>
 </div>
 </template>
 
