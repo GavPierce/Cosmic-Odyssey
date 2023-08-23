@@ -928,7 +928,7 @@
             }
         },
         {
-            "id": 4,
+            "id": 23,
             "key": "defense-satellite",
             "name": "Oribital Dark Energy Cannon",
             "description": "Adds +2 Defender Bonus to the star.",
@@ -947,7 +947,7 @@
             }
         },
         {
-            "id": 4,
+            "id": 24,
             "key": "defense-satellite",
             "name": "Orbital Supernova Cannon",
             "description": "Adds +3 Defender Bonus to the star.",
