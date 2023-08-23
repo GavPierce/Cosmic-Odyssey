@@ -329,7 +329,7 @@
                 :disabled="$isHistoricalMode() || userPlayer.credits < star.upgradeCosts.warpGate || isGameFinished" 
                 modalName="buildWarpGateModal" 
                 classText="btn btn-success mb-2">
-                <i class="fas fa-dungeon"></i>
+                <i class="fas fa-brands fa-opera"></i>
                 Build for ${{star.upgradeCosts.warpGate}}
               </modalButton>
             </div>
