@@ -15,7 +15,7 @@
             <research-row
               v-if="isTechnologyEnabled('scanning')"
               research="scanning"
-              iconClass="fa-binoculars"
+              iconClass="fa-satellite"
               title="Scanning"
               :player="player"
               :userPlayer="userPlayer"
@@ -23,7 +23,7 @@
             <research-row
               v-if="isTechnologyEnabled('hyperspace')"
               research="hyperspace"
-              iconClass="fa-gas-pump"
+              iconClass="fa-forward"
               title="Hyperspace Range"
               :player="player"
               :userPlayer="userPlayer"
@@ -31,7 +31,7 @@
             <research-row
               v-if="isTechnologyEnabled('terraforming')"
               research="terraforming"
-              iconClass="fa-globe-europe"
+              iconClass="fa-globe"
               title="Terraforming"
               :player="player"
               :userPlayer="userPlayer"
@@ -39,7 +39,7 @@
             <research-row
               v-if="isTechnologyEnabled('experimentation')"
               research="experimentation"
-              iconClass="fa-microscope"
+              iconClass="fa-flask-vial"
               title="Experimentation"
               :player="player"
               :userPlayer="userPlayer"
@@ -47,7 +47,7 @@
             <research-row
               v-if="isTechnologyEnabled('weapons')"
               research="weapons"
-              iconClass="fa-gun"
+              iconClass="fa-crosshairs"
               title="Weapons"
               :player="player"
               :userPlayer="userPlayer"
@@ -55,7 +55,7 @@
             <research-row
               v-if="isTechnologyEnabled('banking')"
               research="banking"
-              iconClass="fa-money-bill-alt"
+              iconClass="fa-coins"
               title="Banking"
               :player="player"
               :userPlayer="userPlayer"
@@ -63,7 +63,7 @@
             <research-row
               v-if="isTechnologyEnabled('manufacturing')"
               research="manufacturing"
-              iconClass="fa-solid fa-gear"
+              iconClass="fa-gears"
               title="Manufacturing"
               :player="player"
               :userPlayer="userPlayer"
@@ -71,7 +71,7 @@
             <research-row
               v-if="isTechnologyEnabled('specialists')"
               research="specialists"
-              iconClass="fa-user-astronaut"
+              iconClass="fa-sketch"
               title="Specialists"
               :player="player"
               :userPlayer="userPlayer"
