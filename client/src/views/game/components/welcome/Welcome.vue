@@ -23,7 +23,7 @@
 
     <new-player-message />
 
-    <share-link message="Invite your friends and take on the Galaxy together!"/>
+    <share-link message="Rally your friends and conquer the cosmic expanse as one!"/>
 </div>
 </template>
 
