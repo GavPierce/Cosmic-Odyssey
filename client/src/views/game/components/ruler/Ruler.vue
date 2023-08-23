@@ -19,12 +19,12 @@
       </div>
       <div class="col-3 text-center">
           <span title="Required scanning evel">
-            <i class="fas fa-binoculars"></i> {{scanningLevel}}
+            <i class="fas fa-satellite"></i> {{scanningLevel}}
           </span>
       </div>
       <div class="col-3 text-end">
           <span title="Required hyperspace level">
-            <i class="fas fa-gas-pump"></i> {{hyperspaceLevel}}
+            <i class="fas fa-forward"></i> {{hyperspaceLevel}}
           </span>
       </div>
     </div>
@@ -98,7 +98,7 @@
           </div>
           <div class="col-4 text-end">
               <span title="Required hyperspace level">
-                <i class="fas fa-gas-pump"></i> {{hyperspaceLevel}}
+                <i class="fas fa-forward"></i> {{hyperspaceLevel}}
               </span>
           </div>
       </div>
