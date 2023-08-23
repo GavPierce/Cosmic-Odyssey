@@ -21,7 +21,7 @@
                     <td><a href="javascript:;" @click="sort(['name'])">Name</a></td>
                     <td></td>
                     <td></td>
-                    <td class="text-end"><a href="javascript:;" @click="sort(['ships'])"><i class="fas fa-rocket"></i></a></td>
+                    <td class="text-end"><a href="javascript:;" @click="sort(['ships'])"><i class="fas fa-shuttle-space"></i></a></td>
                     <td class="text-end"><a href="javascript:;" @click="sort(['waypoints', 'length'])"><i class="fas fa-map-marker-alt"></i></a></td>
                     <!-- <td></td> -->
                     <td class="text-end"><a href="javascript:;" @click="sort(['ticksEta'])">ETA</a></td>

@@ -22,7 +22,7 @@
             <specialist-ban-list-table v-if="!isLoading"
                 :specialists="carrierSpecialists" 
                 :specialistType="'carrier'" 
-                :specialistDefaultIcon="'rocket'"
+                :specialistDefaultIcon="'shuttle-space'"
                 @onSpecialistBanSelectionChanged="onSpecialistBanSelectionChanged"/>
         </div>
     </div>
