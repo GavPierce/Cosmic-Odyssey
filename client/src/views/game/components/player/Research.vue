@@ -63,7 +63,7 @@
             <research-row
               v-if="isTechnologyEnabled('manufacturing')"
               research="manufacturing"
-              iconClass="fa-industry"
+              iconClass="fa-solid fa-gear"
               title="Manufacturing"
               :player="player"
               :userPlayer="userPlayer"
