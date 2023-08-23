@@ -18,7 +18,7 @@
                 </div>
                 <div class="mb-2 row">
                     <label for="defenderShips" class="col-8 col-form-label">
-                      <i class="fas" :class="{'fa-rocket':!defender.star,'fa-star':defender.star}"></i> 
+                      <i class="fas" :class="{'fa-shuttle-space':!defender.star,'fa-star':defender.star}"></i> 
                       <span class="text-success ms-2">{{defender.star ? defender.star.name : 'Defender'}}</span> Ships
                     </label>
                     <div class="col-4">
@@ -61,7 +61,7 @@
                 </div>
                 <div class="mb-2 row">
                     <label for="attackerShips" class="col-8 col-form-label">
-                      <i class="fas fa-rocket"></i> 
+                      <i class="fas fa-shuttle-space"></i> 
                       <span class="text-danger ms-2">{{attacker.carrier ? attacker.carrier.name : 'Attacker'}}</span> Ships
                     </label>
                     <div class="col-4">

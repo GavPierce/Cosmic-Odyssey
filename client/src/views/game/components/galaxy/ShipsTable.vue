@@ -22,7 +22,7 @@
                   <td></td>
                   <td></td>
                   <td></td>
-                  <td class="text-end"><a href="javascript:;" @click="sort('ships')"><i class="fas fa-rocket"></i></a></td>
+                  <td class="text-end"><a href="javascript:;" @click="sort('ships')"><i class="fas fa-shuttle-space"></i></a></td>
               </tr>
           </thead>
           <tbody>

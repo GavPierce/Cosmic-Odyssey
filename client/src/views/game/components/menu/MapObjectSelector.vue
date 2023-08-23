@@ -13,7 +13,7 @@
                         <specialist-icon :type="'star'" :defaultIcon="'star'" :specialist="mapObject.data.specialist" />
                     </td>
                     <td v-if="mapObject.type === 'carrier'" class="col-auto text-center ps-2 pe-2" @click="onViewObjectRequested(mapObject)">
-                        <specialist-icon :type="'carrier'" :defaultIcon="'rocket'" :specialist="mapObject.data.specialist" />
+                        <specialist-icon :type="'carrier'" :defaultIcon="'shuttle-space'" :specialist="mapObject.data.specialist" />
                     </td>
                     <td class="bg-dark text-center ps-2 pe-2">
                         <span>{{mapObject.data.ships == null ? '???' : mapObject.data.ships}}</span>
@@ -35,7 +35,7 @@
 
                         <button title="Distribute ships evenly to carriers" v-if="mapObject.type === 'star' && hasCarriersInOrbit(mapObject)" type="button" class="btn btn-outline-secondary ms-1" @click="distributeAllShips(mapObject)"><i class="fas fa-arrow-down-wide-short"></i></button>
                         <button title="Transfer all ships to the star" v-if="mapObject.type === 'star' && hasCarriersInOrbit(mapObject)" type="button" class="btn btn-outline-primary ms-1" @click="transferAllToStar(mapObject)"><i class="fas fa-arrow-up-wide-short"></i></button>
-                        <button title="Build a new carrier" v-if="mapObject.type === 'star' && mapObject.data.ships && hasEnoughCredits(mapObject) && mapObject.data.naturalResources && mapObject.data.naturalResources.economy && mapObject.data.naturalResources.industry && mapObject.data.naturalResources.science" type="button" class="btn btn-info ms-1" @click="onBuildCarrierRequested(mapObject.data._id)"><i class="fas fa-rocket"></i></button>
+                        <button title="Build a new carrier" v-if="mapObject.type === 'star' && mapObject.data.ships && hasEnoughCredits(mapObject) && mapObject.data.naturalResources && mapObject.data.naturalResources.economy && mapObject.data.naturalResources.industry && mapObject.data.naturalResources.science" type="button" class="btn btn-info ms-1" @click="onBuildCarrierRequested(mapObject.data._id)"><i class="fas fa-shuttle-space"></i></button>
                       </span>
                     </td>
                 </tr>

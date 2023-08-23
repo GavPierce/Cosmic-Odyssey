@@ -3,7 +3,7 @@
     <td><i class="fas fa-circle" v-if="carrier.ownedByPlayerId" :style="{ 'color': getColour() }"></i></td>
     <td><a href="javascript:;" @click="clickCarrier">{{carrier.name}}</a></td>
     <td><a href="javascript:;" @click="goToCarrier"><i class="far fa-eye"></i></a></td>
-    <td><specialist-icon :type="'carrier'" :defaultIcon="'rocket'" :specialist="carrier.specialist" :hideDefaultIcon="true"></specialist-icon></td>
+    <td><specialist-icon :type="'carrier'" :defaultIcon="'shuttle-space'" :specialist="carrier.specialist" :hideDefaultIcon="true"></specialist-icon></td>
     <td class="text-end">{{carrier.ships == null ? '???' : carrier.ships}}</td>
     <td class="text-end" :class="{'text-warning':carrier.waypointsLooped}" :title="carrier.waypointsLooped?'Looped':'Unlooped'">{{carrier.waypoints.length}}</td>
     <!-- <td><i class="fas fa-sync" v-if="carrier.waypointsLooped"></i></td> -->

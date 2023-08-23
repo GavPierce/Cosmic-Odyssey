@@ -68,7 +68,7 @@
         <div class="col-auto">
           <div class="d-grid gap-2">
             <button type="button" class="btn btn-info" :disabled="$isHistoricalMode() || isBuildingCarrier || starShips < 0 || carrierShips < 0" @click="saveTransfer">
-                <i class="fas fa-rocket"></i>
+                <i class="fas fa-shuttle-space"></i>
                 Build for ${{star.upgradeCosts.carriers}}
             </button>
           </div>

@@ -114,7 +114,7 @@
               Ships
           </div>
           <div class="col text-end">
-              {{carrier.ships == null ? '???' : carrier.ships}} <i class="fas fa-rocket ms-1"></i>
+              {{carrier.ships == null ? '???' : carrier.ships}} <i class="fas fa-shuttle-space ms-1"></i>
           </div>
       </div>
       <div class="row mb-0 pt-1 pb-1">
@@ -122,7 +122,7 @@
               Weapons
           </div>
           <div class="col text-end">
-              {{carrier.effectiveTechs.weapons}} <i class="fas fa-gun ms-1"></i>
+              {{carrier.effectiveTechs.weapons}} <i class="fas fa-crosshairs ms-1"></i>
           </div>
       </div>
       <div class="row mb-0 pt-1 pb-1 bg-dark">
@@ -130,7 +130,7 @@
               Hyperspace Range
           </div>
           <div class="col text-end">
-              {{carrier.effectiveTechs.hyperspace}} <i class="fas fa-gas-pump ms-1"></i>
+              {{carrier.effectiveTechs.hyperspace}} <i class="fas fa-forward ms-1"></i>
           </div>
       </div>
     </div>

@@ -19,7 +19,7 @@
             <p class="mb-0"><i class="fas fa-star me-1"></i>{{star.name}}</p>
         </div>
         <div class="col" v-if="carrier">
-            <p class="mb-0"><i class="fas fa-rocket me-1"></i>{{carrier.name}}</p>
+            <p class="mb-0"><i class="fas fa-shuttle-space me-1"></i>{{carrier.name}}</p>
         </div>
     </div>
 
