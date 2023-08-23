@@ -23,7 +23,7 @@
         },
         {
             "id": 2,
-            "key": "mecha-mask",
+            "key": "lieutenant",
             "name": "Lieutenant",
             "description": "Adds +1 Weapons to your side in combat. Deducts -1 Hyperspace Range from the carrier.",
             "active": {
@@ -64,7 +64,7 @@
         },
         {
             "id": 4,
-            "key": "hazmat-suit",
+            "key": "captain",
             "name": "Captain",
             "description": "Adds +3 Weapons to your side in combat. Deducts -3 Hyperspace Range from the carrier and decreases carrier speed to x0.6.",
             "active": {
