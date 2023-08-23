@@ -43,7 +43,7 @@
         },
         {
             "id": 3,
-            "key": "icons8-stormtrooper",
+            "key": "commander",
             "name": "Commander",
             "description": "Adds +2 Weapons to your side in combat. Deducts -2 Hyperspace Range from the carrier and decreases carrier speed to x0.8.",
             "active": {
