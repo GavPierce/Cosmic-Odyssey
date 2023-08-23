@@ -127,7 +127,7 @@
         },
         {
             "id": 7,
-            "key": "spaceship",
+            "key": "fleet-admiral",
             "name": "Fleet Admiral",
             "description": "Adds +5 Weapons to your side in combat. Deducts -5 Hyperspace Range from the carrier and decreases carrier speed to x0.2.",
             "active": {
