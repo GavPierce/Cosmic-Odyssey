@@ -2,27 +2,6 @@
     "carrier": [
         {
             "id": 1,
-            "key": "mecha-head",
-            "name": "Courier",
-            "description": "Increases carrier speed by x1.5. Deducts -1 Weapons from your side in combat and -2 Hyperspace Range to the carrier.",
-            "active": {
-                "official": true,
-                "custom": true
-            },
-            "baseCostCredits": 300,
-            "baseCostCreditsSpecialists": 3,
-            "oneShot": false,
-            "expireTicks": null,
-            "modifiers": {
-                "local": {
-                    "speed": 1.5,
-                    "weapons": -1,
-                    "hyperspace": -2
-                }
-            }
-        },
-        {
-            "id": 2,
             "key": "lieutenant",
             "name": "Lieutenant",
             "description": "Adds +1 Weapons to your side in combat. Deducts -1 Hyperspace Range from the carrier.",
@@ -42,7 +21,7 @@
             }
         },
         {
-            "id": 3,
+            "id": 2,
             "key": "commander",
             "name": "Commander",
             "description": "Adds +2 Weapons to your side in combat. Deducts -2 Hyperspace Range from the carrier and decreases carrier speed to x0.8.",
@@ -63,7 +42,7 @@
             }
         },
         {
-            "id": 4,
+            "id": 3,
             "key": "captain",
             "name": "Captain",
             "description": "Adds +3 Weapons to your side in combat. Deducts -3 Hyperspace Range from the carrier and decreases carrier speed to x0.6.",
@@ -84,23 +63,44 @@
             }
         },
         {
-            "id": 5,
-            "key": "cyborg-face",
-            "name": "Smuggler",
-            "description": "Increased carrier speed by x2. Deducts -1 Weapons from your side in combat and -1 Hyperspace Range from the carrier.",
+            "id": 4,
+            "key": "admiral",
+            "name": "Admiral",
+            "description": "Adds +4 Weapons to your side in combat. Deducts -4 Hyperspace Range from the carrier and decreases carrier speed to x0.4.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 500,
-            "baseCostCreditsSpecialists": 5,
+            "baseCostCredits": 800,
+            "baseCostCreditsSpecialists": 8,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
                 "local": {
-                    "speed": 2,
-                    "hyperspace": -1,
-                    "weapons": -1
+                    "weapons": 4,
+                    "hyperspace": -4,
+                    "speed": 0.4
+                }
+            }
+        },
+        {
+            "id": 5,
+            "key": "fleet-admiral",
+            "name": "Fleet Admiral",
+            "description": "Adds +5 Weapons to your side in combat. Deducts -5 Hyperspace Range from the carrier and decreases carrier speed to x0.2.",
+            "active": {
+                "official": true,
+                "custom": true
+            },
+            "baseCostCredits": 1000,
+            "baseCostCreditsSpecialists": 10,
+            "oneShot": false,
+            "expireTicks": null,
+            "modifiers": {
+                "local": {
+                    "hyperspace": -5,
+                    "weapons": 5,
+                    "speed": 0.2
                 }
             }
         },
@@ -127,27 +127,48 @@
         },
         {
             "id": 7,
-            "key": "fleet-admiral",
-            "name": "Fleet Admiral",
-            "description": "Adds +5 Weapons to your side in combat. Deducts -5 Hyperspace Range from the carrier and decreases carrier speed to x0.2.",
+            "key": "cyborg-face",
+            "name": "Smuggler",
+            "description": "Increased carrier speed by x2. Deducts -1 Weapons from your side in combat and -1 Hyperspace Range from the carrier.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 1000,
-            "baseCostCreditsSpecialists": 10,
+            "baseCostCredits": 500,
+            "baseCostCreditsSpecialists": 5,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
                 "local": {
-                    "hyperspace": -5,
-                    "weapons": 5,
-                    "speed": 0.2
+                    "speed": 2,
+                    "hyperspace": -1,
+                    "weapons": -1
                 }
             }
         },
         {
             "id": 8,
+            "key": "strike-craft",
+            "name": "Courier",
+            "description": "Increases carrier speed by x1.5. Deducts -1 Weapons from your side in combat and -2 Hyperspace Range to the carrier.",
+            "active": {
+                "official": true,
+                "custom": true
+            },
+            "baseCostCredits": 300,
+            "baseCostCreditsSpecialists": 3,
+            "oneShot": false,
+            "expireTicks": null,
+            "modifiers": {
+                "local": {
+                    "speed": 1.5,
+                    "weapons": -1,
+                    "hyperspace": -2
+                }
+            }
+        },
+        {
+            "id": 9,
             "key": "power-generator",
             "name": "Cloaking Field Generator",
             "description": "Prevents other players from seeing how many ships the carrier has.",
@@ -166,7 +187,7 @@
             }
         },
         {
-            "id": 9,
+            "id": 10,
             "key": "energise",
             "name": "Infiltrator",
             "description": "When participating in combat, deducts -1 Weapons from the opposing side.",
@@ -181,25 +202,6 @@
             "modifiers": {
                 "special": {
                     "deductEnemyWeapons": 1
-                }
-            }
-        },
-        {
-            "id": 10,
-            "key": "afterburn",
-            "name": "Warp Stabilizer",
-            "description": "Warp Scramblers do not affect the carrier.",
-            "active": {
-                "official": true,
-                "custom": true
-            },
-            "baseCostCredits": 500,
-            "baseCostCreditsSpecialists": 5,
-            "oneShot": false,
-            "expireTicks": null,
-            "modifiers": {
-                "special": {
-                    "unlockWarpGates": true
                 }
             }
         },
@@ -461,22 +463,20 @@
         },
         {
             "id": 22,
-            "key": "admiral",
-            "name": "Admiral",
-            "description": "Adds +4 Weapons to your side in combat. Deducts -4 Hyperspace Range from the carrier and decreases carrier speed to x0.4.",
+            "key": "afterburn",
+            "name": "Warp Stabilizer",
+            "description": "Warp Scramblers do not affect the carrier.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 800,
-            "baseCostCreditsSpecialists": 8,
+            "baseCostCredits": 500,
+            "baseCostCreditsSpecialists": 5,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
-                "local": {
-                    "weapons": 4,
-                    "hyperspace": -4,
-                    "speed": 0.4
+                "special": {
+                    "unlockWarpGates": true
                 }
             }
         }
