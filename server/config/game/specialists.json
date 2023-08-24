@@ -789,7 +789,7 @@
             "modifiers": {
                 "special": {
                     "//comment": "Set to -1 if you want it to be random or a specific key for a specific carrier specialists",
-                    "autoCarrierSpecialistAssign": -1
+                    "autoCarrierSpecialistAssign": 15
                 }
             }
         },
