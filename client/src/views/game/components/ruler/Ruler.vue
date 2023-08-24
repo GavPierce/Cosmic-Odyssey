@@ -87,7 +87,7 @@
           </div>
           <div class="col-4 text-end">
               <span title="Required scanning level">
-                <i class="fas fa-binoculars"></i> {{scanningLevel}}
+                <i class="fas fa-satellite"></i> {{scanningLevel}}
               </span>
           </div>
       </div>
@@ -109,6 +109,7 @@
           </div>
           <div class="col-6 text-end">
               <span title="ETA base speed">
+                <i class="fas fa-gauge"></i> 
                 {{totalEta || 'N/A'}}
               </span>
           </div>
@@ -120,6 +121,7 @@
           </div>
           <div class="col-6 text-end">
               <span title="ETA warp speed">
+                <i class="fa-brands fa-opera"></i> 
                 {{totalEtaWarp || 'N/A'}}
               </span>
           </div>

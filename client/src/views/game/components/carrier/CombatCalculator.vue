@@ -9,7 +9,7 @@
             <form class="col-12" @submit="calculate">
                 <div class="mb-2 row">
                     <label for="defenderWeaponTech" class="col-8 col-form-label">
-                      <i class="fas" :class="{'fa-gun':!defender.player,'fa-user':defender.player}"></i> 
+                      <i class="fas" :class="{'fa-crosshairs':!defender.player,'fa-user':defender.player}"></i> 
                       <span class="text-success ms-2">{{defender.player ? defender.player.alias : 'Defender'}}</span> Weapons
                     </label>
                     <div class="col-4">
@@ -18,7 +18,7 @@
                 </div>
                 <div class="mb-2 row">
                     <label for="defenderShips" class="col-8 col-form-label">
-                      <i class="fas" :class="{'fa-shuttle-space':!defender.star,'fa-star':defender.star}"></i> 
+                      <i class="fas" :class="{'fa-rocket':!defender.star,'fa-star':defender.star}"></i> 
                       <span class="text-success ms-2">{{defender.star ? defender.star.name : 'Defender'}}</span> Ships
                     </label>
                     <div class="col-4">
@@ -52,7 +52,7 @@
 
                 <div class="mb-2 row">
                     <label for="attackerWeaponTech" class="col-8 col-form-label">
-                      <i class="fas" :class="{'fa-gun':!attacker.player,'fa-user':attacker.player}"></i> 
+                      <i class="fas" :class="{'fa-crosshairs':!attacker.player,'fa-user':attacker.player}"></i> 
                       <span class="text-danger ms-2">{{attacker.player ? attacker.player.alias : 'Attacker'}}</span> Weapons
                     </label>
                     <div class="col-4">
@@ -61,7 +61,7 @@
                 </div>
                 <div class="mb-2 row">
                     <label for="attackerShips" class="col-8 col-form-label">
-                      <i class="fas fa-shuttle-space"></i> 
+                      <i class="fas fa-rocket"></i> 
                       <span class="text-danger ms-2">{{attacker.carrier ? attacker.carrier.name : 'Attacker'}}</span> Ships
                     </label>
                     <div class="col-4">

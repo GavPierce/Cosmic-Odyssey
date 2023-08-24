@@ -71,7 +71,7 @@
             <research-row
               v-if="isTechnologyEnabled('specialists')"
               research="specialists"
-              iconClass="fa-sketch"
+              iconClass="fa-microchip"
               title="Specialists"
               :player="player"
               :userPlayer="userPlayer"

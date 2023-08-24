@@ -23,12 +23,12 @@
                   <td></td>
                   <td class="text-end">
                     <span class="infrastructure-filters">
-                      <a href="javascript:;" @click="sort(['infrastructure','economy'])"><i class="fas fa-money-bill-wave me-2"></i></a>
-                      <a href="javascript:;" @click="sort(['infrastructure','industry'])"><i class="fas fa-tools me-2"></i></a>
+                      <a href="javascript:;" @click="sort(['infrastructure','economy'])"><i class="fas fa-scale-balanced me-2"></i></a>
+                      <a href="javascript:;" @click="sort(['infrastructure','industry'])"><i class="fas fa-gears me-2"></i></a>
                       <a href="javascript:;" @click="sort(['infrastructure','science'])"><i class="fas fa-flask"></i></a>
                     </span>
                   </td>
-                  <td class="text-end"><a href="javascript:;" @click="sort(['naturalResources','economy'])">Resources</a></td>
+                  <td class="text-end"><a href="javascript:;" @click="sort(['naturalResources','economy'])"><i class="fas fa-gem"></i></a></td>
               </tr>
           </thead>
           <tbody>

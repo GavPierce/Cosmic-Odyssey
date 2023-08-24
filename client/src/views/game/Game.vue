@@ -435,7 +435,7 @@ export default {
                 await this.reloadGame();
 
                 this.$toasted.show(
-                  `The game has ticked. Cycle ${response.data.state.productionTick}, Tick ${response.data.state.tick}.`,
+                  `The cosmos has shifted. Galactic Cycle ${response.data.state.productionTick}, Stellar Pulse ${response.data.state.tick}.`,
                   { type: "success" }
                 );
 

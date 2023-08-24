@@ -15,11 +15,11 @@ export default {
     getStatusIcon (status) {
       switch (status) {
         case 'allies':
-          return 'fas fa-handshake text-success'
+          return 'fas fa-face-smile-beam text-success'
         case 'neutral':
-          return 'fas fa-dove text-info'
+          return 'fas fa-face-meh text-info'
         case 'enemies':
-          return 'fas fa-crosshairs text-danger'
+          return 'fas fa-face-angry text-danger'
       }
     }
   }

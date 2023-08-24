@@ -2,8 +2,8 @@
   <div class="row">
     <div class="col-4 text-center pt-2 pb-1 ps-1 pe-1 card bg-dark">
         <h6>Economy</h6>
-        <h3 v-if="!isSmallHeaders"><i class="fas fa-money-bill-wave text-success me-2"></i>{{ economy }}</h3>
-        <h4 v-if="isSmallHeaders"><i class="fas fa-money-bill-wave text-success me-2"></i>{{ economy }}</h4>
+        <h3 v-if="!isSmallHeaders"><i class="fas fa-scale-balanced text-success me-2"></i>{{ economy }}</h3>
+        <h4 v-if="isSmallHeaders"><i class="fas fa-scale-balanced text-success me-2"></i>{{ economy }}</h4>
         <div class="card-arrow">
           <div class="card-arrow-top-left"></div>
           <div class="card-arrow-top-right"></div>
@@ -13,8 +13,8 @@
     </div>
     <div class="col-4 text-center pt-2 pb-1 ps-1 pe-1 card">
         <h6>Industry</h6>
-        <h3 v-if="!isSmallHeaders"><i class="fas fa-tools text-warning me-2"></i>{{ industry }}</h3>
-        <h4 v-if="isSmallHeaders"><i class="fas fa-tools text-warning me-2"></i>{{ industry }}</h4>
+        <h3 v-if="!isSmallHeaders"><i class="fas fa-gears text-warning me-2"></i>{{ industry }}</h3>
+        <h4 v-if="isSmallHeaders"><i class="fas fa-gears text-warning me-2"></i>{{ industry }}</h4>
         <div class="card-arrow">
           <div class="card-arrow-top-left"></div>
           <div class="card-arrow-top-right"></div>
