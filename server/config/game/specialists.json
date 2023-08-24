@@ -169,8 +169,8 @@
         },
         {
             "id": 9,
-            "key": "habitat-dome",
-            "name": "Cloaking Field Generator",
+            "key": "nested-hexagons",
+            "name": "Cloak Field Generator",
             "description": "Prevents other players from seeing how many ships the carrier has.",
             "active": {
                 "official": true,
@@ -188,7 +188,7 @@
         },
         {
             "id": 10,
-            "key": "stealth-ship",
+            "key": "strike-craft-simple",
             "name": "Infiltrator",
             "description": "When participating in combat, deducts -1 Weapons from the opposing side.",
             "active": {
@@ -352,7 +352,7 @@
         },
         {
             "id": 17,
-            "key": "patrol-ship",
+            "key": "mars-pathfinder",
             "name": "Saboteur",
             "description": "When participating in combat, deducts -3 Weapons from the opposing side. Deducts -2 Hyperspace Range from the carrier and decreases carrier speed to x0.75.",
             "active": {
@@ -485,7 +485,7 @@
     "star": [
         {
             "id": 1,
-            "key": "sattelite",
+            "key": "satellite",
             "name": "Orbital Array",
             "description": "Adds +1 Scanning Range to the star.",
             "active": {
@@ -775,7 +775,7 @@
         },
         {
             "id": 15,
-            "key": "cryo-chamber",
+            "key": "galactic-senate",
             "name": "Star Fleet Academy",
             "description": "When a carrier is built at this star, a Star Fleet officer is automatically assigned to the carrier.",
             "active": {
