@@ -70,11 +70,11 @@ export default class SpecialistService {
     generateRandomSpecialistsID(): number {
         const randomNumber = Math.random();
 
-        if (randomNumber < 0.50) return 2;  // 50% Lieutenant +1
-        if (randomNumber < 0.75) return 3;  // 25% Commander +2
-        if (randomNumber < 0.89) return 4;  // 14% Captain +3
-        if (randomNumber < 0.97) return 22;  // 8% Admiral +4
-        return 7;                            // 3% Fleet Admiral +5
+        if (randomNumber < 0.50) return 1;  // 50% Lieutenant +1
+        if (randomNumber < 0.75) return 2;  // 25% Commander +2
+        if (randomNumber < 0.89) return 3;  // 14% Captain +3
+        if (randomNumber < 0.97) return 4;  // 8% Admiral +4
+        return 5;                            // 3% Fleet Admiral +5
     }
 
     list(game: Game | null, type: SpecialistType): Specialist[] {
