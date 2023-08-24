@@ -128,7 +128,7 @@
         {
             "id": 7,
             "key": "Spaceship-pirate",
-            "name": "Smuggler",
+            "name": "Courier Transport",
             "description": "Increased carrier speed by x2. Deducts -1 Weapons from your side in combat and -1 Hyperspace Range from the carrier.",
             "active": {
                 "official": true,
@@ -149,7 +149,7 @@
         {
             "id": 8,
             "key": "strike-craft",
-            "name": "Courier",
+            "name": "Armed Freighter",
             "description": "Increases carrier speed by x1.5. Deducts -1 Weapons from your side in combat and -2 Hyperspace Range to the carrier.",
             "active": {
                 "official": true,
@@ -208,7 +208,7 @@
         {
             "id": 11,
             "key": "strafe",
-            "name": "Raider",
+            "name": "Assault Frigate",
             "description": "Increases carrier speed by x2 and grants x2 star capture rewards for destroying infrastructure in combat. Deducts -2 Weapons from your side in combat.",
             "active": {
                 "official": true,
@@ -253,7 +253,7 @@
         {
             "id": 13,
             "key": "pirate-destroyer",
-            "name": "Pirate",
+            "name": "Hyperspace Interceptor",
             "description": "Adds +3 Weapons to your side in carrier-to-carrier combat and increases carrier speed by x1.5. Deducts -2 Weapons from your side in carrier-to-star combat.",
             "active": {
                 "official": true,
@@ -302,7 +302,7 @@
         {
             "id": 15,
             "key": "starfighter",
-            "name": "Marauder",
+            "name": "Corsair",
             "description": "Increases carrier speed by x1.5 and the carrier does not participate in carrier-to-carrier combat. Deducts -1 Weapons to your side in combat and -2 Hyperspace Range from the carrier.",
             "active": {
                 "official": true,
@@ -395,7 +395,7 @@
         {
             "id": 19,
             "key": "star-destroyer",
-            "name": "Capital Ship",
+            "name": "Battlecruiser",
             "description": "When attacking a star, adds +2 Weapons for each player on your side in combat. Decreases carrier speed to x0.75.",
             "active": {
                 "official": true,
@@ -446,7 +446,7 @@
         {
             "id": 21,
             "key": "interceptor-ship",
-            "name": "Plunderer",
+            "name": "Assault Lander",
             "description": "Grants x1.5 star capture rewards for destroying infrastructure in combat.",
             "active": {
                 "official": true,
