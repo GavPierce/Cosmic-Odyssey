@@ -128,7 +128,7 @@
                 <img class="card-img" :src="require('../../assets/screenshots/standard_rt.png')" alt="Standard Game">
                 <div class="card-img-overlay">
                   <h6 class="card-title standard-card-title">
-                    <i class="fas fa-user-astronaut"></i>
+                    <i class="fas fa-microchip"></i>
                     <span class="ms-2">{{games.standardRT.settings.general.name}}</span>
                   </h6>
                   <p class="card-title card-subtitle standard-card-subtitle">
@@ -152,7 +152,7 @@
                 <img class="card-img" :src="require('../../assets/screenshots/standard_tb.png')" alt="Standard Turn Based Game">
                 <div class="card-img-overlay">
                   <h6 class="card-title">
-                    <i class="fas fa-user-astronaut"></i>
+                    <i class="fas fa-microchip"></i>
                     <span class="ms-2">{{games.standardTB.settings.general.name}}</span>
                   </h6>
                   <p class="card-title card-subtitle">

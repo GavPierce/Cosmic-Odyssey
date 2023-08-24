@@ -8,7 +8,7 @@
           </h5>
         </div>
         <div v-if="!$isHistoricalMode() && canHireSpecialist && !isGameFinished" class="col-auto">
-            <button class="btn btn-sm btn-success" @click="onViewHireCarrierSpecialistRequested"><i class="fas fa-user-astronaut"></i> Hire Specialist</button>
+            <button class="btn btn-sm btn-success" @click="onViewHireCarrierSpecialistRequested"><i class="fas fa-microchip"></i> Hire Specialist</button>
         </div>
         <div class="col-12 mt-2">
             <p v-if="carrier.specialist">{{carrier.specialist.description}}</p>
