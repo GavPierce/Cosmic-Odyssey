@@ -16,7 +16,7 @@ CO is a slow-burn browser game heavily inspired by [Neptune's Pride](https://np.
 - Play on any device that has a web browser.
 - Its completely free!
 
-Visit [Cosmic Odyssey.games](https://cosmic-odyssey.io/) to play now!
+Visit [Cosmic-Odyssey.io](https://cosmic-odyssey.io/) to play now!
 
 ### Server
 
