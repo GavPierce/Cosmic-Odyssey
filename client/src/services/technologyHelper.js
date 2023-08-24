@@ -47,7 +47,7 @@ class TechnologyHelper {
         case 'manufacturing':
           return 'gears'
         case 'specialists':
-          return 'user-astronaut'
+          return 'microchip'
       }
 
       return 'question'
