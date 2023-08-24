@@ -3,7 +3,7 @@
     <div class="full-container">
       <starfield :lightSpeed="lightSpeed"></starfield>
       <div class="top-logo">
-        <img :src="require('../assets/CO_LOGO.jpg')" />
+        <img :src="require('../assets/CO_LOGO.png')" />
       </div>
       <div class="splash-text">
         WELCOME EXPLORER

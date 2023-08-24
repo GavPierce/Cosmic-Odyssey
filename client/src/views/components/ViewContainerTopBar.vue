@@ -141,7 +141,7 @@ export default {
   justify-content: center;
 }
 .brand-img {
-  background-image: url("../../assets/CO_LOGO.jpg") !important;
+  background-image: url("../../assets/CO_LOGO.png") !important;
   width: 10.625rem !important;
   height: 2.625rem !important;
 }
