@@ -127,7 +127,7 @@
         },
         {
             "id": 7,
-            "key": "spaceship-pirate",
+            "key": "Spaceship-pirate",
             "name": "Smuggler",
             "description": "Increased carrier speed by x2. Deducts -1 Weapons from your side in combat and -1 Hyperspace Range from the carrier.",
             "active": {
@@ -252,7 +252,7 @@
         },
         {
             "id": 13,
-            "key": "Spaceship-two",
+            "key": "pirate-destroyer",
             "name": "Pirate",
             "description": "Adds +3 Weapons to your side in carrier-to-carrier combat and increases carrier speed by x1.5. Deducts -2 Weapons from your side in carrier-to-star combat.",
             "active": {
