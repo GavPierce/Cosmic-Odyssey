@@ -91,10 +91,10 @@
       <div class="row mt-2 pb-2">
         <div class="col">
           <span v-if="star.infrastructure && !isDeadStar" title="Economic infrastructure">
-              <i class="fas fa-money-bill-wave text-success"></i> {{star.infrastructure.economy}}
+              <i class="fas fa-scale-balanced text-success"></i> {{star.infrastructure.economy}}
           </span>
           <span v-if="star.infrastructure && !isDeadStar" title="Industrial infrastructure" class="ms-2">
-              <i class="fas fa-tools text-warning"></i> {{star.infrastructure.industry}}
+              <i class="fas fa-gears text-warning"></i> {{star.infrastructure.industry}}
           </span>
           <span v-if="star.infrastructure && !isDeadStar" title="Scientific infrastructure" class="ms-2">
               <i class="fas fa-flask text-info"></i> {{star.infrastructure.science}}
@@ -102,12 +102,12 @@
         </div>
         <div class="col-auto">
           <span title="Scanning range" v-if="star.ownedByPlayerId">
-            {{star.effectiveTechs.scanning}} <i class="fas fa-binoculars ms-1"></i>
+            {{star.effectiveTechs.scanning}} <i class="fas fa-satellite ms-1"></i>
           </span>
         </div>
         <div class="col-auto">
           <span title="Terraforming" v-if="star.ownedByPlayerId">
-            {{star.effectiveTechs.terraforming}} <i class="fas fa-globe-europe ms-1"></i>
+            {{star.effectiveTechs.terraforming}} <i class="fas fa-globe ms-1"></i>
           </span>
         </div>
         <div class="col-auto">
@@ -120,7 +120,7 @@
       <div class="row pb-2" v-if="canShowSpecialist || star.ownedByPlayerId">
         <div class="col">
           <span v-if="canShowSpecialist && isOwnedByUserPlayer && canHireSpecialist">
-            <specialist-icon :type="'star'" :defaultIcon="'user-sketch'" :specialist="star.specialist"></specialist-icon>
+            <specialist-icon :type="'star'" :defaultIcon="'user-microchip'" :specialist="star.specialist"></specialist-icon>
             <a href="javascript:;" @click="onViewHireStarSpecialistRequested">
               <span class="ms-1" v-if="star.specialistId" :title="star.specialist.description">{{star.specialist.name}}</span>
               <span v-if="!star.specialistId">No Specialist</span>
@@ -128,7 +128,7 @@
             <span v-if="star.specialistId && star.specialistExpireTick" class="badge bg-warning ms-1"><i class="fas fa-stopwatch"></i> Expires Tick {{star.specialistExpireTick}}</span>
           </span>
           <span v-if="canShowSpecialist && (!isOwnedByUserPlayer || !canHireSpecialist)">
-            <specialist-icon :type="'star'" :defaultIcon="'user-sketch'" :specialist="star.specialist"></specialist-icon>
+            <specialist-icon :type="'star'" :defaultIcon="'user-microchip'" :specialist="star.specialist"></specialist-icon>
             <span v-if="star.specialist" class="ms-1">{{star.specialist.name}}</span>
             <span v-if="star.specialistId && star.specialistExpireTick" class="badge bg-warning ms-1"><i class="fas fa-stopwatch"></i> Expires Tick {{star.specialistExpireTick}}</span>
             <span v-if="!star.specialist">No Specialist</span>
@@ -205,7 +205,7 @@
           </div>
           <div class="col text-end" title="Weapons">
             <span>{{star.effectiveTechs.weapons}}</span>
-            <i class="fas fa-gun ms-2"></i>
+            <i class="fas fa-crosshairs ms-2"></i>
           </div>
       </div>
 
@@ -312,7 +312,7 @@
               <button :disabled="$isHistoricalMode() || userPlayer.credits < star.upgradeCosts.carriers || star.ships < 1 || isGameFinished" 
                 class="btn btn-info mb-2" 
                 @click="onBuildCarrierRequested">
-                <i class="fas fa-rocket"></i>
+                <i class="fas fa-shuttle-space"></i>
                 Build for ${{star.upgradeCosts.carriers}}
               </button>
             </div>
