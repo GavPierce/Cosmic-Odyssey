@@ -252,7 +252,7 @@
         },
         {
             "id": 13,
-            "key": "spaceship-two",
+            "key": "Spaceship-two",
             "name": "Pirate",
             "description": "Adds +3 Weapons to your side in carrier-to-carrier combat and increases carrier speed by x1.5. Deducts -2 Weapons from your side in carrier-to-star combat.",
             "active": {
@@ -419,7 +419,7 @@
         {
             "id": 20,
             "key": "metroid",
-            "name": "Unstable Experimental Lifeform",
+            "name": "Experimental Lifeform",
             "description": "When attacking a star, adds +6 Weapons to your side in combat. Does not participate in carrier-to-carrier combat. Dies after 20 ticks. Gains no rewards from invading.",
             "active": {
                 "official": true,
