@@ -352,7 +352,7 @@
         },
         {
             "id": 17,
-            "key": "mars-pathfinder",
+            "key": "spider-bot",
             "name": "Saboteur",
             "description": "When participating in combat, deducts -3 Weapons from the opposing side. Deducts -2 Hyperspace Range from the carrier and decreases carrier speed to x0.75.",
             "active": {
