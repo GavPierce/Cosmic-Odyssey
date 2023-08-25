@@ -112,6 +112,7 @@ class TextureService {
       this._loadSpecialistTexture('airtight-hatch')
       this._loadSpecialistTexture('cannister')
       this._loadSpecialistTexture('defense-satellite')
+      this._loadSpecialistTexture('spaceship-three')
       this._loadSpecialistTexture('infuse')
       this._loadSpecialistTexture('techno-heart')
       this._loadSpecialistTexture('missile-mech')
