@@ -394,7 +394,7 @@
         },
         {
             "id": 19,
-            "key": "stardestroyer",
+            "key": "pirate-destroyer",
             "name": "Mothership",
             "description": "When attacking a star, adds +2 Weapons for each player on your side in combat. Decreases carrier speed to x0.75.",
             "active": {
