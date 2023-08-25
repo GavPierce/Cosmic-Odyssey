@@ -188,7 +188,7 @@
         },
         {
             "id": 10,
-            "key": "strike-craft-simple",
+            "key": "stealth-bomber",
             "name": "Infiltrator",
             "description": "When participating in combat, deducts -1 Weapons from the opposing side.",
             "active": {

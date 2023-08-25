@@ -113,6 +113,7 @@ class TextureService {
       this._loadSpecialistTexture('infuse')
       this._loadSpecialistTexture('techno-heart')
       this._loadSpecialistTexture('missile-mech')
+      this._loadSpecialistTexture('stealth-bomber')
       this._loadSpecialistTexture('spider-bot')
       this._loadSpecialistTexture('spaceship-three')
       this._loadSpecialistTexture('power-generator')
