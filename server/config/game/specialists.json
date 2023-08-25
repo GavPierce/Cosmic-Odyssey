@@ -504,8 +504,8 @@
         },
         {
             "id": 2,
-            "key": "airtight-hatch",
-            "name": "Space Dock",
+            "key": "snowflake-1",
+            "name": "Stellar Space Dock",
             "description": "Adds +2 Manufacturing to the star. Deducts -1 Terraforming from the star.",
             "active": {
                 "official": true,
