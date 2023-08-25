@@ -465,7 +465,7 @@
         {
             "id": 22,
             "key": "afterburn",
-            "name": "Warp Stabilizer",
+            "name": "Warp Space Stabilizer",
             "description": "Warp Scramblers do not affect the carrier.",
             "active": {
                 "official": true,
@@ -564,7 +564,7 @@
         {
             "id": 5,
             "key": "infuse",
-            "name": "Warp Scrambler",
+            "name": "Warp Space Scrambler",
             "description": "Locks the Warp Gate at the star to prevent non-allied players from using it. Deducts -1 Weapons from your side in combat.",
             "active": {
                 "official": true,
@@ -608,8 +608,8 @@
         },
         {
             "id": 7,
-            "key": "missile-pod",
-            "name": "War Machine",
+            "key": "missile-mech",
+            "name": "Mecha Gigafactory",
             "description": "Adds +5 Weapons to your side in combat and +5 Manufacturing to the star. Deducts -1 from the star's natural resources every tick, when the star reaches 0 natural resources, the star dies and the specialist retires.",
             "active": {
                 "official": true,
@@ -632,7 +632,7 @@
         {
             "id": 8,
             "key": "power-generator",
-            "name": "Scrambler",
+            "name": "Scanner Scrambler",
             "description": "Prevents other players from seeing how many ships are garrisoned at the star.",
             "active": {
                 "official": true,
@@ -650,8 +650,8 @@
         },
         {
             "id": 9,
-            "key": "space-suit",
-            "name": "Demolition Controller",
+            "key": "damage-kinetic",
+            "name": "Infastructure Incinerator",
             "description": "If the star is captured, all infrastructure is destroyed.",
             "active": {
                 "official": true,
@@ -670,7 +670,7 @@
         {
             "id": 10,
             "key": "ringed-planet",
-            "name": "Trade Port",
+            "name": "Interstellar Trade Port",
             "description": "The star's economic infrastructure contributes x2 to economy production and adds +1 Scanning to the star. Deducts -3 Weapons from your side in combat and -5 Terraforming from the star.",
             "active": {
                 "official": true,
@@ -737,7 +737,7 @@
         {
             "id": 13,
             "key": "radar-dish",
-            "name": "Stellar Telescope Array",
+            "name": "Orbital Telescope Array",
             "description": "Adds +3 Scanning Range to the star. Deducts -3 Weapons from your side in combat.",
             "active": {
                 "official": true,
