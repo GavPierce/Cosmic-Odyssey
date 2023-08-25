@@ -230,7 +230,7 @@
         },
         {
             "id": 12,
-            "key": "rocket-flight",
+            "key": "scout-ship",
             "name": "Blockade Runner",
             "description": "Increases carrier speed by x2 and the carrier does not participate in carrier-to-carrier combat.",
             "active": {
