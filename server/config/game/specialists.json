@@ -148,8 +148,8 @@
         },
         {
             "id": 8,
-            "key": "strike-craft",
-            "name": "Armed Freighter",
+            "key": "mars-pathfinder",
+            "name": "Freighter",
             "description": "Increases carrier speed by x1.5. Deducts -1 Weapons from your side in combat and -2 Hyperspace Range to the carrier.",
             "active": {
                 "official": true,
