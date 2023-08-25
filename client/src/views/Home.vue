@@ -3,7 +3,7 @@
     <div class="full-container">
       <starfield :lightSpeed="lightSpeed"></starfield>
       <div class="top-logo">
-        <img :src="require('../assets/CO_LOGO.jpg')" />
+        <img :src="require('../assets/CO_LOGO.png')" />
       </div>
       <div class="splash-text">
         WELCOME EXPLORER
@@ -77,7 +77,151 @@ export default {
   data() {
     return {
       isAutoLoggingIn: false,
-      words: ["BLAST-OFF", "EXPLORE", "CONQUER", "TEAM-UP", "DECEIVE"],
+      words: [
+        "EMBARK ON A COSMIC ODYSSEY",
+        "ADAPT TO THE UNEXPECTED",
+        "ADMINISTER AN EMPIRE",
+        "ANTICIPATE INCOMING THREATS",
+        "ASCEND TO THE THRONE",
+        "ATTACK CRITICAL INFASTRUCTURE",
+        "ACHIEVE GREATNESS",
+        "ACCOMPLISH THE IMPOSSIBLE",
+        "ACTIVATE DEFENSES",
+        "ACQUIRE HIDDEN KNOWLEDGE",
+        "ADVANCE YOUR CIVILIZATION",
+        "AMAZE YOURSELF",
+        "ASSIST THE HELPLESS",
+        "AMBUSH INVADERS",
+        "ANALYZE WARP SIGNATURES",
+        "ALLY WITH FORMER ENEMIES",
+        "ASSEMBLE MEGASTRUCTURES",
+        "BLAST-OFF",
+        "BUILD A GALACTIC EMPIRE",
+        "BATTLE SPACE PIRATES",
+        "BRIBE OFFICIALS",
+        "BOMBARD PLANETARY INFASTRUCTURE",
+        "BLOCKADE TRADE ROUTES",
+        "BOUNTY HUNT",
+        "CONQUER YOUR ENEMIES",
+        "COMMUNICATE WITH ALIEN LIFEFORMS",
+        "COLONIZE PLANETS",
+        "COMMAND YOUR ARMADA",
+        "CAPTURE TREASURE",
+        "CHART NEW STAR SYSTEMS",
+        "CALCULATE JUMP COORDINATES",
+        "CAPTAIN YOUR DREADNOUGHT",
+        "CALIBRATE SHIP SYSTEMS",
+        "DISCOVER WHAT IS BEYOND",
+        "DEVELOP STRATEGIES",
+        "DECIMATE ENEMY FLEETS",
+        "DEFEAT EVIL",
+        "DETHRONE EMPERORS",
+        "DRIFT THROUGH ASTROID FIELDS",
+        "DESTROY STARBASES",
+        "DEFEND FROM PIRATES",
+        "DETECT INCOMING THREATS",
+        "DOMINATE THE GALAXY",
+        "DEMOLISH YOUR ENEMY'S ECONOMY",
+        "EXPLORE ANCIENT RUINS",
+        "ELIMINATE THREATS",
+        "ENJOY YOUR ACCOMPLISHMENTS",
+        "EXTRACT MINERALS",
+        "EXPERIMENT WITH TECHNOLOGIES",
+        "EXPLOIT RESOURCES",
+        "ENFORCE YOUR RULE",
+        "EXPERIENCE GRAND STRATEGY",
+        "FIGHT FOR JUSTICE",
+        "FEDERATE WITH YOUR ALLIES",
+        "FIRE ALL TORPEDOES",
+        "FORGE FRIENDSHIPS",
+        "GRANT SAFE PASSAGE",
+        "GUIDE YOUR PEOPLE",
+        "GAIN RICHES",
+        "GATHER RESOURCES",
+        "GENERATE NUCLEAR ENERGY",
+        "HUNT GIANT CREATURES",
+        "HACK MAINFRAMES",
+        "HI-JACK TRADE SHIPS",
+        "INVESTIGATE ANOMALIES",
+        "INVADE PLANETS",
+        "INFILTRATE ENEMY LEADERSHIP",
+        "JAM ENEMY COMMS",
+        "JOURNEY ACROSS THE UNIVERSE",
+        "JUMP THROUGH WORMHOLES",
+        "JOIN FORCES",
+        "KINDLE A REBELLION",
+        "LEAD YOUR EMPIRE",
+        "LAUNCH ALL SQUADRONS",
+        "MARAUDE RICH TRADE WORDS",
+        "MANUFACTURE YOUR FLEET",
+        "MINE ASTEROIDS",
+        "NAVIGATE UNCHARTED STAR",
+        "NEGOTIATE DIPLOMACY",
+        "OPERATE SUPERWEAPONS",
+        "OBTAIN PRESTIGE",
+        "OVERWHELM ENEMY DEFENSES",
+        "OVERCOME NEW CHALLENGES",
+        "OUTLAW CORRUPTION",
+        "OPPOSE TYRANNY",
+        "PILOT YOUR SHIP",
+        "PROTECT YOUR CAPITAL",
+        "PROBE ENEMY DEFENSES",
+        "PLOT IN SECRECY",
+        "QUIET DISSENTERS",
+        "QUASH REBELLIONS",
+        "RECRUIT MERCENARIES",
+        "RAID COLONIES",
+        "RESEARCH NEW TECHNOLOGIES",
+        "REPAIR DAMAGED INFASTRUCTURE",
+        "RULE WITH AN IRONFIST",
+        "REBEL AGAINST OPPRESSION",
+        "SABOTAGE ENEMY REACTORS",
+        "SYNCHRONIZE ATTACKS",
+        "SYNERGIZE TECHNOLOGIES",
+        "SWARM SECTORS",
+        "SIEGE PLANETARY DEFENSES",
+        "SPY ON TOP SECRET PROJECTS",
+        "SALVAGE WRECKAGE",
+        "SMUGGLE CONTRABAND",
+        "STRATEGIZE VICTORY",
+        "SUBJUGATE LESSER LIFEFORMS",
+        "SEIZE YOUR DESTINY",
+        "SPREAD PROPAGANDA",
+        "TRANSMIT STAR CHARTS",
+        "TRANSPORT CARGO",
+        "TEAM-UP WITH NEW FRIENDS",
+        "TRADE GOODS",
+        "TERRAFORM BARREN SYSTEMS",
+        "TERMINATE THE CHOSEN ONE",
+        "TARGET ENEMY ENGINES",
+        "TRAVEL THROUGH ION STORMS",
+        "TRANSFORM REALITY",
+        "TRAVERSE NEBULA",
+        "THRIVE AS A CIVILIZATION",
+        "TELEPORT IN ONE PIECE",
+        "UNITE THE OPPRESSED",
+        "UNLOAD CARGO CONTAINERS",
+        "UNRAVEL ANCIENT MYSTERIES",
+        "UNDERTAKE STELLAR PROJECTS",
+        "VOYAGE INTO THE UNKNOWN",
+        "VENTURE THROUGH NEW WORLDS",
+        "VISIT SHADOW PORTS",
+        "VINDICATE YOUR SOVEREIGNTY",
+        "VIOLATE THE RULES OF PHYSICS",
+        "VETO BILLS IN THE SENATE",
+        "WATCH THE FALL OF EMPIRES",
+        "WAIT FOR THE RIGHT MOMENT",
+        "WARP THOUGH STARGATES",
+        "WAKE THE ANCIENTS",
+        "WEIGH RISKS",
+        "WATCH STARS COLLAPSE",
+        "WHISPER IN THE SHADOWS",
+        "WITHDRAW FROM YOUR ENEMIES SECTOR",
+        "WITNESS A SAGA",
+        "WRITE PEACE TREATIES",
+        "YIELD RESOURCES",
+        "ZOOM THROUGH HYPERSPACE"
+      ],
       wordIndex: 0,
       letterIndex: 0,
       currentText: "",
@@ -145,7 +289,7 @@ export default {
           this.letterIndex--;
         } else {
           this.typing = true;
-          this.wordIndex = (this.wordIndex + 1) % this.words.length; // Move to the next word or loop back to the start
+          this.wordIndex = Math.floor(Math.random() * this.words.length); // Randomly select a word from the list
           setTimeout(() => {
             this.typeEffect();
           }, 500); // Wait for 0.5 seconds before starting to type the next word
@@ -165,16 +309,11 @@ export default {
   position: absolute;
   top: 0;
   width: 100%;
-  height: 5em;
+  height: 3em;
   background-color: transparent;
   margin-top: 2em;
 }
-@media (min-width: 622px) {
-  .top-logo {
-    height: 10em;
-    margin-top: 2em;
-  }
-}
+
 .top-logo img {
   width: 100%;
   height: 100%;
@@ -200,8 +339,8 @@ export default {
 .splash-text {
   text-align: center;
   font-family: "Anurati", sans-serif;
-  max-width: 13em;
-  font-size: 50px; /* or whatever size you need */
+  max-width: 12em;
+  font-size: 25px; /* or whatever size you need */
   font-weight: bold; /* or whatever weight you need */
   height: min-content;
   /* Gradient properties */
@@ -221,7 +360,7 @@ export default {
 .subtext {
   font-weight: 500;
   font-family: "Chakra Petch", sans-serif;
-  font-size: 30px; /* or whatever size you need */
+  font-size: 12px; /* or whatever size you need */
 }
 .subtext span {
   color: rgb(249, 219, 52);
@@ -252,5 +391,22 @@ export default {
   flex-wrap: wrap;
   justify-content: space-around;
   align-content: center;
+}
+@media (min-width: 622px) {
+  .splash-text {
+    text-align: center;
+    font-family: "Anurati", sans-serif;
+    max-width: 12em;
+    font-size: 50px;
+  }
+  .subtext {
+    font-weight: 500;
+    font-family: "Chakra Petch", sans-serif;
+    font-size: 20px; /* or whatever size you need */
+  }
+  .top-logo {
+    height: 5em;
+    margin-top: 2em;
+  }
 }
 </style>

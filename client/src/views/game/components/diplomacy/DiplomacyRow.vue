@@ -15,9 +15,9 @@
   </td>
   <td class="fit pt-3 pb-2 pe-2" v-if="!isGameFinished">
     <div class="btn-group">
-      <button class="btn btn-sm" :class="{'btn-success':diplomaticStatus.statusTo === 'allies', 'btn-outline-success':diplomaticStatus.statusTo !== 'allies'}" @click="declareAlly(diplomaticStatus)" title="Declare this player an ally"><i class="fas fa-handshake"></i></button>
-      <button class="btn btn-sm" :class="{'btn-info':diplomaticStatus.statusTo === 'neutral', 'btn-outline-info':diplomaticStatus.statusTo !== 'neutral'}" @click="declareNeutral(diplomaticStatus)" title="Declare this player as neutral"><i class="fas fa-dove"></i></button>
-      <button class="btn btn-sm" :class="{'btn-danger':diplomaticStatus.statusTo === 'enemies', 'btn-outline-danger':diplomaticStatus.statusTo !== 'enemies'}" @click="declareEnemy(diplomaticStatus)" title="Declare this player as an enemy"><i class="fas fa-crosshairs"></i></button>
+      <button class="btn btn-sm" :class="{'btn-success':diplomaticStatus.statusTo === 'allies', 'btn-outline-success':diplomaticStatus.statusTo !== 'allies'}" @click="declareAlly(diplomaticStatus)" title="Declare this player an ally"><i class="fas fa-face-smile-beam"></i></button>
+      <button class="btn btn-sm" :class="{'btn-info':diplomaticStatus.statusTo === 'neutral', 'btn-outline-info':diplomaticStatus.statusTo !== 'neutral'}" @click="declareNeutral(diplomaticStatus)" title="Declare this player as neutral"><i class="fas fa-face-meh"></i></button>
+      <button class="btn btn-sm" :class="{'btn-danger':diplomaticStatus.statusTo === 'enemies', 'btn-outline-danger':diplomaticStatus.statusTo !== 'enemies'}" @click="declareEnemy(diplomaticStatus)" title="Declare this player as an enemy"><i class="fas fa-face-angry"></i></button>
     </div>
   </td>
 </tr>

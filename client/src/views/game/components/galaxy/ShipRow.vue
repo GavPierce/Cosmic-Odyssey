@@ -5,7 +5,7 @@
     <td><a href="javascript:;" @click="goToShip"><i class="far fa-eye"></i></a></td>
     <td>
       <i v-if="ship.type === 0" class="fas fa-star"></i>
-      <i v-if="ship.type === 1" class="fas fa-rocket"></i>
+      <i v-if="ship.type === 1" class="fas fa-shuttle-space"></i>
     </td>
     <td><specialist-icon :type="ship.type === 0 ? 'star' : 'carrier'" :specialist="ship.specialist" :hideDefaultIcon="true"></specialist-icon></td>
     <td class="text-end">{{ship.ships == null ? '???' : ship.ships}}</td>

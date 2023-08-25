@@ -11,7 +11,7 @@
       <div class="col-7">
         <div class="input-group">
           <span class="input-group-text">
-            <i class="fas fa-user-astronaut"></i>
+            <i class="fas fa-microchip"></i>
           </span>
           <input type="number" class="form-control" v-model="amount"/>
         </div>

@@ -65,6 +65,18 @@ export default class SpecialistService {
         return spec;
     }
 
+
+ 
+    generateRandomSpecialistsID(): number {
+        const randomNumber = Math.random();
+
+        if (randomNumber < 0.50) return 1;  // 50% Lieutenant +1
+        if (randomNumber < 0.75) return 2;  // 25% Commander +2
+        if (randomNumber < 0.89) return 3;  // 14% Captain +3
+        if (randomNumber < 0.97) return 4;  // 8% Admiral +4
+        return 5;                            // 3% Fleet Admiral +5
+    }
+
     list(game: Game | null, type: SpecialistType): Specialist[] {
         if (game && game.settings.specialGalaxy.specialistCost === 'none') {
             throw new ValidationError('The game settings has disabled the hiring of specialists.');

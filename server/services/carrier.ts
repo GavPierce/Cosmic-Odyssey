@@ -105,12 +105,18 @@ export default class CarrierService extends EventEmitter {
         // Check to see if the carrier should be auto-assigned a specialist.
         if (star.specialistId) {
             let starSpecialist = this.specialistService.getByIdStar(star.specialistId);
-    
-            if (starSpecialist?.modifiers.special?.autoCarrierSpecialistAssign) {
-                carrier.specialistId = starSpecialist.modifiers.special!.autoCarrierSpecialistAssign!;
-                carrier.specialist = this.specialistService.getByIdCarrier(carrier.specialistId)
+
+            if (starSpecialist?.modifiers.special?.autoCarrierSpecialistAssign !== undefined) {
+                // If autoCarrierSpecialistAssign is -1, generate a random specialist ID, else use the provided value.
+                const specialistIdValue = starSpecialist.modifiers.special.autoCarrierSpecialistAssign === -1 
+                                        ? this.specialistService.generateRandomSpecialistsID() 
+                                        : starSpecialist.modifiers.special.autoCarrierSpecialistAssign;
+                        
+                // Assign the carrier its respective specialist based on the ID
+                carrier.specialistId = specialistIdValue;
+                carrier.specialist = this.specialistService.getByIdCarrier(carrier.specialistId);
             }
-        }
+        };
 
         return carrier;
     }

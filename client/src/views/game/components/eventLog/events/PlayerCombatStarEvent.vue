@@ -33,7 +33,7 @@
                     </tr>
                     <tr v-for="carrier of defenderCarriers" :key="carrier._id">
                         <td>
-                            <i class="fas fa-rocket me-2"></i>
+                            <i class="fas fa-shuttle-space me-2"></i>
                             <span :style="{ 'color': getCarrierColour(carrier) }" class="name-and-icon">
                               <player-icon-shape :filled="true" :shape="getCarrierShape(carrier)" :iconColour="getCarrierColour(carrier)" />
                               {{carrier.name}}
@@ -68,7 +68,7 @@
                   </tr>
                   <tr v-for="carrier of attackerCarriers" :key="carrier._id">
                       <td>
-                          <i class="fas fa-rocket me-2"></i>
+                          <i class="fas fa-shuttle-space me-2"></i>
                           <span :style="{ 'color': getCarrierColour(carrier) }" class="name-and-icon">
                             <player-icon-shape :filled="true" :iconColour="getCarrierColour(carrier)" :shape="getCarrierShape(carrier)" />
                             {{carrier.name}}

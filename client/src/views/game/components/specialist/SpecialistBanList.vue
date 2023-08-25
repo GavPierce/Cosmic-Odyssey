@@ -14,7 +14,7 @@
             <specialist-ban-list-table
                 :specialists="carrierSpecialists" 
                 :specialistType="'carrier'" 
-                :specialistDefaultIcon="'rocket'"
+                :specialistDefaultIcon="'shuttle-space'"
                 :game="game"/>
         </div>
 

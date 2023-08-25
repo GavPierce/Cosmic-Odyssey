@@ -12,7 +12,7 @@
 
     <div class="row mb-2 pt-1 pb-1 bg-dark" v-if="carrier">
         <div class="col">
-            <a href="javascript:;" @click="onOpenCarrierDetailRequested(carrier)"><i class="fas fa-rocket"></i> {{carrier.name}}</a>
+            <a href="javascript:;" @click="onOpenCarrierDetailRequested(carrier)"><i class="fas fa-shuttle-space"></i> {{carrier.name}}</a>
         </div>
         <div class="col-auto">
             <i class="fas fa-map-marker-alt"></i>
@@ -27,7 +27,7 @@
         <div v-for="specialist in specialists" :key="specialist.id" class="row mb-2 pt-1 pb-1 ">
             <div class="col mt-2">
                 <h5 class="pt-1 text-warning">
-                    <specialist-icon :type="'carrier'" :defaultIcon="'rocket'" :specialist="specialist"/>
+                    <specialist-icon :type="'carrier'" :defaultIcon="'shuttle-space'" :specialist="specialist"/>
                     <span class="ms-1">{{specialist.name}}</span>
                 </h5>
             </div>

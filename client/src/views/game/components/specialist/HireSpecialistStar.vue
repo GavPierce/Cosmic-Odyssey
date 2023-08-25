@@ -15,7 +15,7 @@
             <a href="javascript:;" @click="onOpenStarDetailRequested(star)"><i class="fas fa-star"></i> {{star.name}}</a>
         </div>
         <div class="col-auto">
-            {{star.ships}} <i class="fas fa-rocket ms-1"></i>
+            {{star.ships}} <i class="fas fa-shuttle-space ms-1"></i>
         </div>
     </div>
 

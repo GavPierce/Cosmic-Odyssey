@@ -10,7 +10,7 @@
       </thead>
       <tbody>
           <tr>
-              <td>Stars</td>
+              <td><i class="fas fa-star"></i> Stars</td>
               <td class="text-end">{{player.stats.totalStars}}</td>
               <td class="text-end" v-if="userIsInGame() && !isUserPlayer()"
                 :class="{'text-danger': player.stats.totalStars > userPlayer.stats.totalStars,
@@ -24,35 +24,35 @@
                           'text-success': player.stats.totalHomeStars < userPlayer.stats.totalHomeStars}">{{userPlayer.stats.totalHomeStars}}</td>
           </tr>
           <tr>
-              <td>Carriers</td>
+              <td><i class="fas fa-shuttle-space"></i> Carriers</td>
               <td class="text-end">{{player.stats.totalCarriers}}</td>
               <td class="text-end" v-if="userIsInGame() && !isUserPlayer()"
                 :class="{'text-danger': player.stats.totalCarriers > userPlayer.stats.totalCarriers,
                           'text-success': player.stats.totalCarriers < userPlayer.stats.totalCarriers}">{{userPlayer.stats.totalCarriers}}</td>
           </tr>
           <tr v-if="isSpecialistsEnabled">
-              <td>Specialists</td>
+              <td><i class="fas fa-microchip"></i> Specialists</td>
               <td class="text-end">{{player.stats.totalSpecialists}}</td>
               <td class="text-end" v-if="userIsInGame() && !isUserPlayer()"
                 :class="{'text-danger': player.stats.totalSpecialists > userPlayer.stats.totalSpecialists,
                           'text-success': player.stats.totalSpecialists < userPlayer.stats.totalSpecialists}">{{userPlayer.stats.totalSpecialists}}</td>
           </tr>
           <tr>
-              <td>Ships</td>
+              <td><i class="fas fa-rocket"></i> Ships</td>
               <td class="text-end">{{player.stats.totalShips}}<span v-if="player.stats.totalShipsMax">/{{player.stats.totalShipsMax}}</span></td>
               <td class="text-end" v-if="userIsInGame() && !isUserPlayer()"
                 :class="{'text-danger': player.stats.totalShips > userPlayer.stats.totalShips,
                           'text-success': player.stats.totalShips < userPlayer.stats.totalShips}">{{userPlayer.stats.totalShips}}<span v-if="userPlayer.stats.totalShipsMax">/{{userPlayer.stats.totalShipsMax}}</span></td>
           </tr>
           <tr>
-              <td>New Ships</td>
+              <td><i class="fas fa-wrench"></i> New Ships</td>
               <td class="text-end">{{player.stats.newShips}}</td>
               <td class="text-end" v-if="userIsInGame() && !isUserPlayer()"
                 :class="{'text-danger': player.stats.newShips > userPlayer.stats.newShips,
                           'text-success': player.stats.newShips < userPlayer.stats.newShips}">{{userPlayer.stats.newShips}}</td>
           </tr>
           <tr>
-            <td>Cycle Income</td>
+            <td><i class="fas fa-arrows-rotate"></i> Cycle Income</td>
             <td class="text-end">${{playerIncome}}</td>
             <td class="text-end" v-if="userIsInGame() && !isUserPlayer()"
               :class="{'text-danger': playerIncome > userPlayerIncome,

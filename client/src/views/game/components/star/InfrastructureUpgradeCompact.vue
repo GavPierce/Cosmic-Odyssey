@@ -31,7 +31,7 @@
         <i class="fas fa-dungeon"></i> <i class="fas fa-trash ms-1"></i>
       </button>
       <button :disabled="$isHistoricalMode() || userPlayer.credits < star.upgradeCosts.carriers || star.ships < 1 || isGameFinished" class="btn btn-sm btn-info" @click="onBuildCarrierRequested">
-        <i class="fas fa-rocket me-1"></i>${{star.upgradeCosts.carriers}}
+        <i class="fas fa-shuttle-space me-1"></i>${{star.upgradeCosts.carriers}}
       </button>
     </div>
   </div>

@@ -4,7 +4,7 @@
       <button title="View Settings" tag="button" class="btn btn-sm btn-outline-primary" @click="onViewSettingsRequested"><i class="fas fa-cog"></i></button>
     </menu-title>
 
-    <div class="row bg-info" v-if="game.settings.general.flux" title="This Game's Flux">
+    <div class="row bg-info" v-if="game.settings.general.flux" title="This Game's Cosmic Anomaly">
       <div class="col text-center">
         <!-- <p class="mt-2 mb-2"><small><i class="fas fa-dice-d20 me-1"></i><strong>{{game.settings.general.flux.name}}</strong> - {{game.settings.general.flux.description}} <help-tooltip v-if="game.settings.general.flux.tooltip" :tooltip="game.settings.general.flux.tooltip"/></small></p> -->
         <p class="mt-2 mb-2"><small><i class="fas fa-dice-d20 me-1"></i>{{game.settings.general.flux.description}} <help-tooltip v-if="game.settings.general.flux.tooltip" :tooltip="game.settings.general.flux.tooltip"/></small></p>
@@ -23,7 +23,7 @@
 
     <new-player-message />
 
-    <share-link message="Invite your friends and take on the Galaxy together!"/>
+    <share-link message="Rally your allies and conquer the cosmic expanse as one!"/>
 </div>
 </template>
 
@@ -85,19 +85,19 @@ export default {
       this.errors = []
 
       if (!this.alias) {
-        this.errors.push('Alias is required.')
+        this.errors.push('It is required to pick an alias.')
       }
 
       if (!this.avatar) {
-        this.errors.push('Please select an avatar.')
+        this.errors.push('Please select your faction.')
       }
 
       if (this.alias && this.alias.length < 3) {
-        this.errors.push('Alias must be 3 characters or more.')
+        this.errors.push('Your alias needs be three characters or more.')
       }
 
-      if (this.alias && this.alias.length > 24) {
-        this.errors.push('Alias must less than 24 characters.')
+      if (this.alias && this.alias.length > 20) {
+        this.errors.push('Your alias needs to be less than 20 characters.')
       }
 
       if (this.errors.length) return

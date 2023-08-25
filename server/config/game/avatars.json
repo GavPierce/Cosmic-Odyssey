@@ -98,249 +98,42 @@
   {
     "id": 12,
     "file": "12.png",
-    "name": "The Silicate Singularity",
-    "description": "Born from silicate dust, Orraxians of the Silicate Singularity thrive in harsh landscapes. Once a dying empire, now a technological titan, they carry scars of a virus-riddled past, yet face an uncertain future with resurgent threats.",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 13,
-    "file": "13.png",
-    "name": "The Garan Dominion",
-    "description": "The Garans are a warrior species of proud, tradition-bound beings who value honor and combat. The aggressive Garan culture makes them an interstellar military power to be respected and feared.",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 14,
-    "file": "14.png",
-    "name": "The Garan Dominion",
-    "description": "The Garans are a warrior species of proud, tradition-bound beings who value honor and combat. The aggressive Garan culture makes them an interstellar military power to be respected and feared.",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 15,
-    "file": "15.png",
-    "name": "Fooyanians",
-    "description": "The Fooyanians are a fierce race who have made it their mission to win at all costs. The are deadly hunters and will stop at nothing to achieve their goals.",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 16,
-    "file": "16.png",
-    "name": "Fooyanians",
-    "description": "The Fooyanians are a fierce race who have made it their mission to win at all costs. The are deadly hunters and will stop at nothing to achieve their goals.",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 17,
-    "file": "17.png",
-    "name": "The Dratan Congregation",
-    "description": "Members of the Dratan Congregation are fervent worshippers of their god Dro'koth. Their leaders rule through the mandate of heaven and have made it their mission to convert all other intelligent lifeforms to the true teachings of Kthul'ulu, disciple of Dro'koth.",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 18,
-    "file": "18.png",
-    "name": "The Dratan Congregation",
-    "description": "Members of the Dratan Congregation are fervent worshippers of their god Dro'koth. Their leaders rule through the mandate of heaven and have made it their mission to convert all other intelligent lifeforms to the true teachings of Kthul'ulu, disciple of Dro'koth.",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 19,
-    "file": "19.png",
-    "name": "Nic'koth",
-    "description": "The Nic'koth are an ancient and mysterious race of beings whose physical appearance is seemingly beyond comprehension. They travel from system to system converting planets to formless wastelands, before erecting millions of hulking monoliths.",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 20,
-    "file": "20.png",
-    "name": "Nic'koth",
-    "description": "The Nic'koth are an ancient and mysterious race of beings whose physical appearance is seemingly beyond comprehension. They travel from system to system converting planets to formless wastelands, before erecting millions of hulking monoliths.",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 21,
-    "file": "21.png",
     "name": "The Rakuni Stellar Scavengers",
     "description": "Hailing from Rokou, the Rakuni, grew from humble scavengers to interstellar explorers. Fueled by innate curiosity and resilience, they've overcome planetary cataclysms, transforming their communal fears into an odyssey among the stars.",
     "price": null,
     "isPatronAvatar": false
   },
   {
-    "id": 22,
-    "file": "22.png",
+    "id": 13,
+    "file": "13.png",
     "name": "The Chroma Celestials",
     "description": "Chroma Celestials, psionic masters of the cosmos. Expert experimenters and dominators, the Celestari plot a comeback, casting an ominous glow across galaxies.",
     "price": null,
     "isPatronAvatar": false
   },
   {
-    "id": 23,
-    "file": "23.png",
-    "name": "Ordarans",
-    "description": "The Ordarans fear that galactic war will interfere with the development of more primitive species, and vow to protect these races from savage forces.",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 24,
-    "file": "24.png",
-    "name": "Athrixi Earth Caste",
-    "description": "The Athrixi Earth Caste evolved alongside the Athrixi Air Caste whom they serve. They are an industrious but cowardly race that are constantly seeking to ally themselves with the strongest entity.",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 25,
-    "file": "25.png",
-    "name": "Athrixi Earth Caste",
-    "description": "The Athrixi Earth Caste evolved alongside the Athrixi Air Caste whom they serve. They are an industrious but cowardly race that are constantly seeking to ally themselves with the strongest entity.",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 26,
-    "file": "26.png",
-    "name": "Cult of Nifra",
-    "description": "With each life taken, the Nifrans grow closer to their pantheon of death god's. Once enough blood has been spilled they will earn a place at their master's table.",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 27,
-    "file": "27.png",
-    "name": "Cult of Nifra",
-    "description": "With each life taken, the Nifrans grow closer to their pantheon of death god's. Once enough blood has been spilled they will earn a place at their master's table.",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 28,
-    "file": "28.png",
+    "id": 14,
+    "file": "14.png",
     "name": "The Ember Ascendancy",
     "description": "Forged in the molten heart of Seryntia, the Pyriali of the Ember Ascendancy transmute heat into strength. Once enslaved, now they control the galaxy's fiercest flames.",
     "price": null,
     "isPatronAvatar": false
   },
   {
-    "id": 29,
-    "file": "29.png",
-    "name": "G.W.A.I.N Procedure T12",
-    "description": "Robotic stewards of a race that have ascended to the digital plane. They surround stars with computational spheres that host their makers' simulated environments. These beings are ruthless and obey their prime directive only.",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 30,
-    "file": "30.png",
-    "name": "Pichek",
-    "description": "The Pichek's home system is littered with asteroids, resulting in hazardous space that's difficult to navigate. By looting these stranded vessels the Pichek literally stole their way to the stars, bringing that same spirit of piracy with them.",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 31,
-    "file": "31.png",
-    "name": "Pichek",
-    "description": "The Pichek's home system is littered with asteroids, resulting in hazardous space that's difficult to navigate. By looting these stranded vessels the Pichek literally stole their way to the stars, bringing that same spirit of piracy with them.",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 32,
-    "file": "32.png",
-    "name": "The Cha'gun Empire",
-    "description": "The Cha'gun rarely stay in one place for very long for they are a restless race, and many feel called to the vast dark expanse between the stars. Little else is known about the Cha'gun as they are exceedingly secretive and distrustful of outsiders, preferring to keep to their own kind.",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 33,
-    "file": "33.png",
-    "name": "The Cha'gun Empire",
-    "description": "The Cha'gun rarely stay in one place for very long for they are a restless race, and many feel called to the vast dark expanse between the stars. Little else is known about the Cha'gun as they are exceedingly secretive and distrustful of outsiders, preferring to keep to their own kind.",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 34,
-    "file": "34.png",
-    "name": "The Cha'gun Empire",
-    "description": "The Cha'gun rarely stay in one place for very long for they are a restless race, and many feel called to the vast dark expanse between the stars. Little else is known about the Cha'gun as they are exceedingly secretive and distrustful of outsiders, preferring to keep to their own kind.",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 35,
-    "file": "35.png",
-    "name": "Mihn",
-    "description": "The Mihn see advanced technology as a blight to the natural order. They plan to revert the galaxy to a more primitive state, before dismantling their own ships and continuing as nature intended.",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 36,
-    "file": "36.png",
-    "name": "Mihn",
-    "description": "The Mihn see advanced technology as a blight to the natural order. They plan to revert the galaxy to a more primitive state, before dismantling their own ships and continuing as nature intended.",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 37,
-    "file": "37.png",
-    "name": "Sarad Commonwealth",
-    "description": "The Sarad are well known for their hospitality and leadership. Sacrifice and cooperation are key tenets in Sarad culture and they are always willing to lend a helping hand.",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 38,
-    "file": "38.png",
-    "name": "Sarad Commonwealth",
-    "description": "The Sarad are well known for their hospitality and leadership. Sacrifice and cooperation are key tenets in Sarad culture and they are always willing to lend a helping hand.",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 39,
-    "file": "39.png",
-    "name": "Ghrotlk Merchant Guild",
-    "description": "The Ghrotlk seek supremacy through economic superiority and their business dealings are as slimy as their reptilian scales.  Much of the galaxy's trade flows through at least one Ghrotlk port, they've made sure of it.",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 40,
-    "file": "40.png",
-    "name": "Ghrotlk Merchant Guild",
-    "description": "The Ghrotlk seek supremacy through economic superiority and their business dealings are as slimy as their reptilian scales.  Much of the galaxy's trade flows through at least one Ghrotlk port, they've made sure of it.",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 41,
-    "file": "41.png",
-    "name": "Hammeroid",
-    "description": "ORIGIN: UNKNOWN\nMOTIVE: UNKNOWN",
-    "price": null,
-    "isPatronAvatar": false
-  },
-  {
-    "id": 42,
-    "file": "42.png",
+    "id": 15,
+    "file": "15.png",
     "name": "The Mirage Merchants of Calador",
     "description": "From the star-kissed dunes of Calador, the astute Caladorians thrive. Renowned bankers, they exploit their Quantum Mirage Trading, generating immense wealth from nearby empires. Their society, a blend of ancient customs and high-tech prowess, weaves the tapestry of the cosmos' busiest trade hub.",
     "price": null,
     "isPatronAvatar": false
+  },
+  {
+    "id": 16,
+    "file": "16.png",
+    "name": "TBA",
+    "description": "PLACEHOLDER",
+    "price": null,
+    "isPatronAvatar": false
   }
+
 ]
