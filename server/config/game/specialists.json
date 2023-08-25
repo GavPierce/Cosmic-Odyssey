@@ -128,7 +128,7 @@
         {
             "id": 7,
             "key": "Spaceship-pirate",
-            "name": "Courier Transport",
+            "name": "Hyperspace Transport",
             "description": "Increased carrier speed by x2. Deducts -1 Weapons from your side in combat and -1 Hyperspace Range from the carrier.",
             "active": {
                 "official": true,
@@ -395,7 +395,7 @@
         {
             "id": 19,
             "key": "stardestroyer",
-            "name": "Battlecruiser",
+            "name": "Mothership",
             "description": "When attacking a star, adds +2 Weapons for each player on your side in combat. Decreases carrier speed to x0.75.",
             "active": {
                 "official": true,
@@ -525,7 +525,7 @@
         {
             "id": 3,
             "key": "cannister",
-            "name": "Atmosphere Processor",
+            "name": "Atmospheric Processor",
             "description": "Adds +3 Terraforming to the star. Deducts -1 Scanning from the star.",
             "active": {
                 "official": true,
@@ -694,7 +694,7 @@
         {
             "id": 11,
             "key": "observatory",
-            "name": "Research Station",
+            "name": "Quantum Research Station",
             "description": "The star's scientific infrastructure contributes x2 to research and adds +1 Scanning to the star. Deducts -3 Weapons from your side in combat and -3 Terraforming from the star.",
             "active": {
                 "official": true,
