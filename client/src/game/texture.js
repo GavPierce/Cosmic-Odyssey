@@ -123,7 +123,7 @@ class TextureService {
       this._loadSpecialistTexture('double-ringed-orb')
       this._loadSpecialistTexture('radar-dish')
       this._loadSpecialistTexture('energy-tank')
-      this._loadSpecialistTexture('galactic-senate')
+      this._loadSpecialistTexture('justice-star')
       this._loadSpecialistTexture('rocket-thruster')
       this._loadSpecialistTexture('targeting')
       this._loadSpecialistTexture('star-gate')

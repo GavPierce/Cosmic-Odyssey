@@ -775,7 +775,7 @@
         },
         {
             "id": 15,
-            "key": "galactic-senate",
+            "key": "justice-star",
             "name": "Star Fleet Academy",
             "description": "When a carrier is built at this star, a Star Fleet officer is automatically assigned to the carrier.",
             "active": {
