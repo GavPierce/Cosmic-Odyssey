@@ -911,7 +911,7 @@
         },
         {
             "id": 22,
-            "key": "radar-dish",
+            "key": "space-needle",
             "name": "Neutrino Optics Array",
             "description": "Adds +7 Scanning Range to the star. Deducts -7 Weapons from your side in combat.",
             "active": {
@@ -931,7 +931,7 @@
         },
         {
             "id": 23,
-            "key": "defense-satellite",
+            "key": "beam-satellite",
             "name": "Omega Cannon",
             "description": "Adds +2 Defender Bonus to the star.",
             "active": {
@@ -950,7 +950,7 @@
         },
         {
             "id": 24,
-            "key": "beam-satellite",
+            "key": "laser-blast",
             "name": "Supernova Cannon",
             "description": "Adds +3 Defender Bonus to the star.",
             "active": {
