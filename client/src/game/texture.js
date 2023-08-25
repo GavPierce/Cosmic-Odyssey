@@ -103,7 +103,7 @@ class TextureService {
       this._loadSpecialistTexture('polar-star')
       this._loadSpecialistTexture('mars-pathfinder')
       this._loadSpecialistTexture('space-capsule')
-      this._loadSpecialistTexture('star-destroyer')
+      this._loadSpecialistTexture('stardestroyer')
       this._loadSpecialistTexture('metroid')
       this._loadSpecialistTexture('interceptor-ship')
       this._loadSpecialistTexture('afterburn')
