@@ -91,7 +91,7 @@ class TextureService {
       this._loadSpecialistTexture('captain')
       this._loadSpecialistTexture('commander')
       //this._loadSpecialistTexture('cyborg-face')
-      //this._loadSpecialistTexture('cryo-chamber')
+      this._loadSpecialistTexture('cryo-chamber')
       this._loadSpecialistTexture('damage-kinetic')
       this._loadSpecialistTexture('defense-satellite')
       this._loadSpecialistTexture('double-ringed-orb')
@@ -143,6 +143,7 @@ class TextureService {
       this._loadSpecialistTexture('strafe')
       this._loadSpecialistTexture('targeting')
       this._loadSpecialistTexture('techno-heart')
+      this._loadSpecialistTexture('valve')   
       //this._loadSpecialistTexture('vintage-robot')
     }
 

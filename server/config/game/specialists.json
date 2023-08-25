@@ -775,7 +775,7 @@
         },
         {
             "id": 15,
-            "key": "justice-star",
+            "key": "cryo-chamber",
             "name": "Star Fleet Academy",
             "description": "When a carrier is built at this star, a Star Fleet officer is automatically assigned to the carrier.",
             "active": {
@@ -872,7 +872,7 @@
         },
         {
             "id": 20,
-            "key": "energy-tank",
+            "key": "valve",
             "name": "Terraform Transformer",
             "description": "Adds +6 terraforming to the star.",
             "active": {
