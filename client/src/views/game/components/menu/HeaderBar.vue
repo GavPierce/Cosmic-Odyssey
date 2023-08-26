@@ -20,7 +20,7 @@
             </span>
 
             <span class="pointer me-2" v-if="userPlayer && isSpecialistsCurrencyCreditsSpecialists" title="Total specialist tokens" @click="setMenuState(MENU_STATES.BULK_INFRASTRUCTURE_UPGRADE)">
-                <i class="fas fa-coins text-success"></i> {{userPlayer.creditsSpecialists}}
+                <i class="fas fa-microchip text-success"></i> {{userPlayer.creditsSpecialists}}
             </span>
 
             <research-progress class="d-none d-lg-inline-block me-2" v-if="userPlayer" @onViewResearchRequested="onViewResearchRequested"/>
