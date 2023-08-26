@@ -26,7 +26,7 @@
                   <td class="text-end" title="Experimentation"><a href="javascript:;" @click="sort('experimentation')"><i class="fas fa-atom"></i></a></td>
                   <td class="text-end" title="Weapons"><a href="javascript:;" @click="sort('weapons')"><i class="fas fa-crosshairs"></i></a></td>
                   <td class="text-end" title="Banking"><a href="javascript:;" @click="sort('banking')"><i class="fas fa-coins"></i></a></td>
-                  <td class="text-end" title="Manufacturing"><a href="javascript:;" @click="sort('manufacturing')"><i class="fas fa-gears"></i></a></td>
+                  <td class="text-end" title="Manufacturing"><a href="javascript:;" @click="sort('manufacturing')"><i class="fas fa-wrench"></i></a></td>
                   <td class="text-end" title="Specialists"><a href="javascript:;" @click="sort('specialists')"><i class="fas fa-microchip"></i></a></td>
               </tr>
           </thead>
