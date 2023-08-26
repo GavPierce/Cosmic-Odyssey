@@ -15,18 +15,18 @@
           <tick-selector />
         </div>
         <div class="col text-end pt-1">
-            <span v-if="userPlayer" class="pointer me-2" title="Total credits" @click="setMenuState(MENU_STATES.BULK_INFRASTRUCTURE_UPGRADE)">
+            <span v-if="userPlayer" class="pointer me-2" title="Total Credits" @click="setMenuState(MENU_STATES.BULK_INFRASTRUCTURE_UPGRADE)">
                 <i class="fas fa-dollar-sign text-success"></i> {{userPlayer.credits}}
             </span>
 
-            <span class="pointer me-2" v-if="userPlayer && isSpecialistsCurrencyCreditsSpecialists" title="Total specialist tokens" @click="setMenuState(MENU_STATES.BULK_INFRASTRUCTURE_UPGRADE)">
+            <span class="pointer me-2" v-if="userPlayer && isSpecialistsCurrencyCreditsSpecialists" title="Total Specialist Tokens" @click="setMenuState(MENU_STATES.BULK_INFRASTRUCTURE_UPGRADE)">
                 <i class="fas fa-microchip text-success"></i> {{userPlayer.creditsSpecialists}}
             </span>
 
             <research-progress class="d-none d-lg-inline-block me-2" v-if="userPlayer" @onViewResearchRequested="onViewResearchRequested"/>
         </div>
         <div class="col-auto text-end pointer pt-1" v-if="userPlayer" @click="onViewBulkUpgradeRequested">
-            <span class="d-none d-lg-inline-block me-2">
+            <span class="d-none d-lg-inline-block me-2" title="Total Economy">
                 <i class="fas fa-scale-balanced text-success"></i> {{userPlayer.stats.totalEconomy}}
             </span>
             <span class="d-none d-lg-inline-block me-2">
