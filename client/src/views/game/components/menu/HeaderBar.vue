@@ -56,7 +56,7 @@
 
             <hamburger-menu class="ms-1 d-none d-sm-inline-block" :buttonClass="'btn-sm btn-info'" :dropType="'dropleft'" />
             
-            <button class="btn btn-sm btn-info ms-1 d-none d-sm-inline-block" type="button" @click="goToMyGames()">
+            <button class="btn btn-sm btn-info ms-1 d-none d-sm-inline-block" title="My Games" type="button" @click="goToMyGames()">
                 <i class="fas fa-chevron-left"></i>
             </button>
         </div>
