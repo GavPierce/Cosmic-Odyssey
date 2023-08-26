@@ -127,8 +127,8 @@
         },
         {
             "id": 7,
-            "key": "Spaceship-pirate",
-            "name": "Courier Transport",
+            "key": "forward-field",
+            "name": "Hyperspace Transport",
             "description": "Increased carrier speed by x2. Deducts -1 Weapons from your side in combat and -1 Hyperspace Range from the carrier.",
             "active": {
                 "official": true,
@@ -148,8 +148,8 @@
         },
         {
             "id": 8,
-            "key": "strike-craft",
-            "name": "Armed Freighter",
+            "key": "mars-pathfinder",
+            "name": "Freighter",
             "description": "Increases carrier speed by x1.5. Deducts -1 Weapons from your side in combat and -2 Hyperspace Range to the carrier.",
             "active": {
                 "official": true,
@@ -188,7 +188,7 @@
         },
         {
             "id": 10,
-            "key": "strike-craft-simple",
+            "key": "stealth-bomber",
             "name": "Infiltrator",
             "description": "When participating in combat, deducts -1 Weapons from the opposing side.",
             "active": {
@@ -230,7 +230,7 @@
         },
         {
             "id": 12,
-            "key": "rocket-flight",
+            "key": "scout-ship",
             "name": "Blockade Runner",
             "description": "Increases carrier speed by x2 and the carrier does not participate in carrier-to-carrier combat.",
             "active": {
@@ -252,7 +252,7 @@
         },
         {
             "id": 13,
-            "key": "pirate-destroyer",
+            "key": "spiky-field",
             "name": "Hyperspace Interceptor",
             "description": "Adds +3 Weapons to your side in carrier-to-carrier combat and increases carrier speed by x1.5. Deducts -2 Weapons from your side in carrier-to-star combat.",
             "active": {
@@ -352,7 +352,7 @@
         },
         {
             "id": 17,
-            "key": "mars-pathfinder",
+            "key": "spider-bot",
             "name": "Saboteur",
             "description": "When participating in combat, deducts -3 Weapons from the opposing side. Deducts -2 Hyperspace Range from the carrier and decreases carrier speed to x0.75.",
             "active": {
@@ -394,8 +394,8 @@
         },
         {
             "id": 19,
-            "key": "stardestroyer",
-            "name": "Battlecruiser",
+            "key": "pirate-destroyer",
+            "name": "Mothership",
             "description": "When attacking a star, adds +2 Weapons for each player on your side in combat. Decreases carrier speed to x0.75.",
             "active": {
                 "official": true,
@@ -504,8 +504,8 @@
         },
         {
             "id": 2,
-            "key": "airtight-hatch",
-            "name": "Space Dock",
+            "key": "snowflake-1",
+            "name": "Stellar Space Dock",
             "description": "Adds +2 Manufacturing to the star. Deducts -1 Terraforming from the star.",
             "active": {
                 "official": true,
@@ -525,7 +525,7 @@
         {
             "id": 3,
             "key": "cannister",
-            "name": "Atmosphere Processor",
+            "name": "Atmospheric Processor",
             "description": "Adds +3 Terraforming to the star. Deducts -1 Scanning from the star.",
             "active": {
                 "official": true,
@@ -669,7 +669,7 @@
         },
         {
             "id": 10,
-            "key": "ringed-planet",
+            "key": "habitat-dome",
             "name": "Interstellar Trade Port",
             "description": "The star's economic infrastructure contributes x2 to economy production and adds +1 Scanning to the star. Deducts -3 Weapons from your side in combat and -5 Terraforming from the star.",
             "active": {
@@ -694,7 +694,7 @@
         {
             "id": 11,
             "key": "observatory",
-            "name": "Research Station",
+            "name": "Quantum Research Station",
             "description": "The star's scientific infrastructure contributes x2 to research and adds +1 Scanning to the star. Deducts -3 Weapons from your side in combat and -3 Terraforming from the star.",
             "active": {
                 "official": true,
@@ -775,7 +775,7 @@
         },
         {
             "id": 15,
-            "key": "galactic-senate",
+            "key": "cryo-chamber",
             "name": "Star Fleet Academy",
             "description": "When a carrier is built at this star, a Star Fleet officer is automatically assigned to the carrier.",
             "active": {
@@ -872,7 +872,7 @@
         },
         {
             "id": 20,
-            "key": "energy-tank",
+            "key": "valve",
             "name": "Terraform Transformer",
             "description": "Adds +6 terraforming to the star.",
             "active": {
@@ -911,7 +911,7 @@
         },
         {
             "id": 22,
-            "key": "radar-dish",
+            "key": "space-needle",
             "name": "Neutrino Optics Array",
             "description": "Adds +7 Scanning Range to the star. Deducts -7 Weapons from your side in combat.",
             "active": {
@@ -931,7 +931,7 @@
         },
         {
             "id": 23,
-            "key": "defense-satellite",
+            "key": "beam-satellite",
             "name": "Omega Cannon",
             "description": "Adds +2 Defender Bonus to the star.",
             "active": {
@@ -950,7 +950,7 @@
         },
         {
             "id": 24,
-            "key": "defense-satellite",
+            "key": "laser-blast",
             "name": "Supernova Cannon",
             "description": "Adds +3 Defender Bonus to the star.",
             "active": {
