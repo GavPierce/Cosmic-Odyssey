@@ -317,6 +317,8 @@ export default class GameGalaxyService {
     // If its a dark galaxy start then return no stars.
     if (isDarkMode || isDarkFogged || (isDarkStart && !doc.state.startDate)) {
       doc.galaxy.stars = [];
+      // if King Of The Hill, then return the King Of The Hill star. Always
+      if (kingOfTheHillStar) doc.galaxy.stars.push(kingOfTheHillStar);
     }
 
     doc.galaxy.stars = doc.galaxy.stars.map((s) => {
