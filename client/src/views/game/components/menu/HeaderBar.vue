@@ -27,7 +27,7 @@
         </div>
         <div class="col-auto text-end pointer pt-1" v-if="userPlayer" @click="onViewBulkUpgradeRequested">
             <span class="d-none d-lg-inline-block me-2">
-                <i class="fas fa-money-bill-wave text-success"></i> {{userPlayer.stats.totalEconomy}}
+                <i class="fas fa-scale-balanced text-success"></i> {{userPlayer.stats.totalEconomy}}
             </span>
             <span class="d-none d-lg-inline-block me-2">
                 <i class="fas fa-tools text-warning"></i> {{userPlayer.stats.totalIndustry}}
