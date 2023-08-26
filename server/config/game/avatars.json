@@ -2,138 +2,265 @@
   {
     "id": 0,
     "file": "0.png",
-    "name": "The Gaia Imperium",
-    "description": "The Gaia Imperium, humanity's star-spanning civilization, demonstrates rapid adaptability and experimentation prowess, making them a significant cosmic force.",
+    "name": "Stellar Humanity Accord",
+    "description": "An alliance representing evolved humans, championing peace, and unity amidst a cosmos of diversity.",
     "price": null,
     "isPatronAvatar": false
   },
   {
     "id": 1,
     "file": "1.png",
-    "name": "The Abyssal Conclave",
-    "description": "The Abyssal Conclave, aquatic Eridani from Eos and Tethys, are known for their aptitude for experimentation and advancing post-Cosmos Conflicts.",
+    "name": "Vorxi Swarm",
+    "description": "Hive-minded insectoids with a singular goal - assimilate resources for the Swarm's growth and dominance.",
     "price": null,
     "isPatronAvatar": false
   },
   {
     "id": 2,
     "file": "2.png",
-    "name": "The Verdant Mandate",
-    "description": "Nephiv, an ancient arboreal race excels in terraforming and banking. Survivors of the Wraithen Conflict, they've fortified themselves under King Sylandros' rule. Their goal: the Galactic Throne.",
+    "name": "Nomadic Driftraiders",
+    "description": "Pirates and plunderers who survive by raiding merchant ships, always on the move, always evading capture.",
     "price": null,
     "isPatronAvatar": false
   },
   {
     "id": 3,
     "file": "3.png",
-    "name": "The Synaptic Omni-Mind",
-    "description": "Once known as the Vyrex Empire, the Synaptic Omni-Mind technological telepathy allows them to coordinate with deadly precision. Their cybernetic transformation from extinction stirs both awe and trepidation in the galaxy.",
+    "name": "Zalorian Empire",
+    "description": "Aristocratic and proud, the Zalorians' sole purpose is to spread their influence, seeing all other species as subservient.",
     "price": null,
     "isPatronAvatar": false
   },
   {
     "id": 4,
     "file": "4.png",
-    "name": "The Luminous Collective",
-    "description": "Home to bioluminescent rainforests, the Luminous Collective is an enlightened society of Kraveena. Their intricate light patterns illuminate conversations while empathic powers shape diplomatic outcomes.",
+    "name": "Silent Void Coalition",
+    "description": "Mysterious figures who observe the universe's events, acting covertly to maintain balance.",
     "price": null,
     "isPatronAvatar": false
   },
   {
     "id": 5,
     "file": "5.png",
-    "name": "The Hegemony of Solitude",
-    "description": "Stellascytes, masters of the cosmos. They navigate silent, starless seas, shaping lifeless worlds with keen senses and cold precision. In solitude, they plot dominance.",
+    "name": "Nebula Syndicate",
+    "description": "Ruthless merchants and dealers, working in the galaxy's shadows, always profiting from chaos and war.",
     "price": null,
     "isPatronAvatar": false
   },
   {
     "id": 6,
     "file": "6.png",
-    "name": "The Myriad of the Maelstrom",
-    "description": "Amid the cosmic theatre of the Prism Nebula, The Myriad of the Maelstrom rises, the voracious Kryzlak, teeming from Zephyria's emerald storm. Masters of destruction, their leviathan armada swarms, leaving ruins of civilizations in their wake.",
+    "name": "Aeon Industries",
+    "description": "A corporate behemoth that believes in progress via technology, wielding vast economic and political influence.",
     "price": null,
     "isPatronAvatar": false
   },
   {
     "id": 7,
     "file": "7.png",
-    "name": "The Exan Crucible",
-    "description": "Born from a penal colony on the remote Briseis Primus, the Exani Crucible uses their unique vision and resilience to scan and terraform inhospitable worlds. Led by an elected 'Hand', they seek galactic justice.",
+    "name": "Cerebrum Collective",
+    "description": " A network of interconnected minds seeking to expand their knowledge base and integrate all consciousness.",
     "price": null,
     "isPatronAvatar": false
   },
   {
     "id": 8,
     "file": "8.png",
-    "name": "The Phantoms of Heliofen",
-    "description": "Shadowed within Heliofen's misty marshlands, the Phantoms of Heliofen, spectral Faelidae, balance life between spectral stealth and unyielding resistance. An enigma veiled in cosmic mystery.",
+    "name": "Celestial Gardeners",
+    "description": "Peaceful beings who cultivate life, fostering growth on barren planets, seeking harmony in all things.",
     "price": null,
     "isPatronAvatar": false
   },
   {
     "id": 9,
     "file": "9.png",
-    "name": "The Lazurian Legacy",
-    "description": "Born in icy wastes, the Voltari are a resilient species, unyielding to psionic influence, and masters of frigid colonization. Bearing the Lazurian Legacy, they guard ancient wisdom and ambition, preparing for a galactic resurrection.",
+    "name": "Stellar Nomads",
+    "description": "Cosmic travelers who value freedom and exploration, they roam the galaxies, seeking connections and spreading a message of unity amidst stars.",
     "price": null,
     "isPatronAvatar": false
   },
   {
     "id": 10,
     "file": "10.png",
-    "name": "The Silicate Singularity",
-    "description": "Born from silicate dust, Orraxians of the Silicate Singularity thrive in harsh landscapes. Once a dying empire, now a technological titan, they carry scars of a virus-riddled past, yet face an uncertain future with resurgent threats.",
+    "name": "Crystalline Harmony",
+    "description": "Sentient crystals vibrating in unity, aiming to bring a resonating peace to the chaotic universe.",
     "price": null,
     "isPatronAvatar": false
   },
   {
     "id": 11,
     "file": "11.png",
-    "name": "The Omnisentience",
-    "description": "Cosmic voyagers, the Heligon, thrive in the vacuum of space, harnessing energy from stars. Known as watchers, they guard ancient secrets, their intent unknown.",
+    "name": "Aristavi Aristocrats",
+    "description": "The old guard of the cosmos, holding onto tradition and resisting the tide of change at every corner.",
     "price": null,
     "isPatronAvatar": false
   },
   {
     "id": 12,
     "file": "12.png",
-    "name": "The Rakuni Stellar Scavengers",
-    "description": "Hailing from Rokou, the Rakuni, grew from humble scavengers to interstellar explorers. Fueled by innate curiosity and resilience, they've overcome planetary cataclysms, transforming their communal fears into an odyssey among the stars.",
+    "name": "Wayfarer Navigators",
+    "description": "Cartographers of the universe, they delve into the unknown, driven by curiosity and a thirst for discovery.",
     "price": null,
     "isPatronAvatar": false
   },
   {
     "id": 13,
     "file": "13.png",
-    "name": "The Chroma Celestials",
-    "description": "Chroma Celestials, psionic masters of the cosmos. Expert experimenters and dominators, the Celestari plot a comeback, casting an ominous glow across galaxies.",
+    "name": "Probability Prophets",
+    "description": "Masters of prediction, they use advanced algorithms to forecast and subtly shape the future.",
     "price": null,
     "isPatronAvatar": false
   },
   {
     "id": 14,
     "file": "14.png",
-    "name": "The Ember Ascendancy",
-    "description": "Forged in the molten heart of Seryntia, the Pyriali of the Ember Ascendancy transmute heat into strength. Once enslaved, now they control the galaxy's fiercest flames.",
+    "name": "Intergalactic Traders' Guild",
+    "description": "A powerful mercantile collective, their influence spreads wherever trade routes exist.",
     "price": null,
     "isPatronAvatar": false
   },
   {
     "id": 15,
     "file": "15.png",
-    "name": "The Mirage Merchants of Calador",
-    "description": "From the star-kissed dunes of Calador, the astute Caladorians thrive. Renowned bankers, they exploit their Quantum Mirage Trading, generating immense wealth from nearby empires. Their society, a blend of ancient customs and high-tech prowess, weaves the tapestry of the cosmos' busiest trade hub.",
+    "name": "Cosmic Constructors",
+    "description": "Stellar architects, building and molding cosmic structures, desiring a universe crafted in their image.",
     "price": null,
     "isPatronAvatar": false
   },
   {
     "id": 16,
     "file": "16.png",
-    "name": "TBA",
-    "description": "PLACEHOLDER",
+    "name": "Gasborn Titans",
+    "description": "Gaseous entities with immense power, floating through space, looking to expand their nebulous territories.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 17,
+    "file": "17.png",
+    "name": "Echo Enclave",
+    "description": "Sonic-sensitive entities, they believe in communication and understanding, bridging divides with harmonious dialogue.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 18,
+    "file": "18.png",
+    "name": "Phase Paradox",
+    "description": "Masters of time and space manipulation, they strive to control events while wrestling with the consequences.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 19,
+    "file": "19.png",
+    "name": "Gravity Guardians",
+    "description": "Protectors of cosmic balance, they regulate gravitational anomalies and safeguard celestial equilibriums.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 20,
+    "file": "20.png",
+    "name": "Cosmic Conservators",
+    "description": "Guardians of nature on a galactic scale, they intervene wherever ecosystems are threatened.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 21,
+    "file": "21.png",
+    "name": "Logic Legion",
+    "description": "Cybernetic beings valuing reason above emotion, they seek a cosmos ruled by order and predictability.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 22,
+    "file": "22.png",
+    "name": "Inferno Dominion",
+    "description": "Born from the universe's hottest regions, their fiery might aims to scorch opposition and reign supreme.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 23,
+    "file": "23.png",
+    "name": "Celestial Artisans",
+    "description": "Creators of cosmic art, they transform entire galaxies into masterpieces, showcasing beauty's power.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 24,
+    "file": "24.png",
+    "name": "Magnetic Monarchs",
+    "description": "Rulers of electromagnetic forces, they seek to attract valuable resources and repel those deemed threats.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 25,
+    "file": "25.png",
+    "name": "Silent Envoys",
+    "description": "Shadowy mediators, they work behind the scenes, influencing major galactic events through discreet diplomacy.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 26,
+    "file": "26.png",
+    "name": "Tidewalker Tribes",
+    "description": "Natives of ocean planets, they wish to ensure the universe's waters remain pristine and protected.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 27,
+    "file": "27.png",
+    "name": "Radiant Realm",
+    "description": "Harnessing the energy of countless stars, they dream of a universe illuminated by their radiant power.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 28,
+    "file": "28.png",
+    "name": "Starship Savants",
+    "description": "Engineers with unmatched starship prowess, they wish to dominate space through superior mobility and tactics.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 29,
+    "file": "29.png",
+    "name": "Epoch Custodians",
+    "description": "Time-keepers of the cosmos, they chronicle events while ensuring time's flow remains uninterrupted.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 30,
+    "file": "30.png",
+    "name": "Waveform Union",
+    "description": "Entities of fluctuating frequencies, uniting under shared vibrational goals, resonating change throughout.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 31,
+    "file": "31.png",
+    "name": "Chronos Cabal",
+    "description": "Secretive manipulators of time, they seek to rewrite past mistakes and shape a preferable future.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 32,
+    "file": "32.png",
+    "name": "Marauders of the Rift",
+    "description": "Outlaws exploiting interdimensional rifts, seeking treasures and technology from alternate realities.",
     "price": null,
     "isPatronAvatar": false
   }
-
 ]
