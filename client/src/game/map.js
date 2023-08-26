@@ -95,7 +95,6 @@ class Map extends EventEmitter {
     for (let i = 0; i < game.galaxy.stars.length; i++) {
       this.setupStar(game, userSettings, game.galaxy.stars[i]);
     }
-    console.log(game.galaxy.carriers);
     // Add carriers
     for (let i = 0; i < game.galaxy.carriers.length; i++) {
       this.setupCarrier(game, userSettings, game.galaxy.carriers[i]);
@@ -103,6 +102,7 @@ class Map extends EventEmitter {
 
     // Seems to be a good spot to check for armadas
     this.checkForArmadas(this.carriers);
+    console.log(this.armadas);
     // -----------
     // Setup Waypoints
     if (this.waypoints) {
