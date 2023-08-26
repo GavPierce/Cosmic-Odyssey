@@ -394,7 +394,7 @@
         },
         {
             "id": 19,
-            "key": "star-destroyer",
+            "key": "stardestroyer",
             "name": "Battlecruiser",
             "description": "When attacking a star, adds +2 Weapons for each player on your side in combat. Decreases carrier speed to x0.75.",
             "active": {
@@ -465,8 +465,8 @@
         {
             "id": 22,
             "key": "afterburn",
-            "name": "Warp Stabilizer",
-            "description": "Warp Scramblers do not affect the carrier.",
+            "name": "Warp Space Stabilizer",
+            "description": "Warp Space Manipulators do not affect the carrier.",
             "active": {
                 "official": true,
                 "custom": true
@@ -564,7 +564,7 @@
         {
             "id": 5,
             "key": "infuse",
-            "name": "Warp Scrambler",
+            "name": "Warp Space Manipulator",
             "description": "Locks the Warp Gate at the star to prevent non-allied players from using it. Deducts -1 Weapons from your side in combat.",
             "active": {
                 "official": true,
@@ -608,8 +608,8 @@
         },
         {
             "id": 7,
-            "key": "missile-pod",
-            "name": "War Machine",
+            "key": "missile-mech",
+            "name": "Mecha Gigafactory",
             "description": "Adds +5 Weapons to your side in combat and +5 Manufacturing to the star. Deducts -1 from the star's natural resources every tick, when the star reaches 0 natural resources, the star dies and the specialist retires.",
             "active": {
                 "official": true,
@@ -632,7 +632,7 @@
         {
             "id": 8,
             "key": "power-generator",
-            "name": "Scrambler",
+            "name": "Scanner Scrambler",
             "description": "Prevents other players from seeing how many ships are garrisoned at the star.",
             "active": {
                 "official": true,
@@ -650,8 +650,8 @@
         },
         {
             "id": 9,
-            "key": "space-suit",
-            "name": "Demolition Controller",
+            "key": "damage-kinetic",
+            "name": "Infastructure Incinerator",
             "description": "If the star is captured, all infrastructure is destroyed.",
             "active": {
                 "official": true,
@@ -670,7 +670,7 @@
         {
             "id": 10,
             "key": "ringed-planet",
-            "name": "Trade Port",
+            "name": "Interstellar Trade Port",
             "description": "The star's economic infrastructure contributes x2 to economy production and adds +1 Scanning to the star. Deducts -3 Weapons from your side in combat and -5 Terraforming from the star.",
             "active": {
                 "official": true,
@@ -718,7 +718,7 @@
         {
             "id": 12,
             "key": "double-ringed-orb",
-            "name": "Financial Analyst",
+            "name": "Holo Broadcasting Network",
             "description": "The star produces +2 credits per tick for each point of science on the star.",
             "active": {
                 "official": true,
@@ -737,7 +737,7 @@
         {
             "id": 13,
             "key": "radar-dish",
-            "name": "Stellar Telescope Array",
+            "name": "Orbital Telescope Array",
             "description": "Adds +3 Scanning Range to the star. Deducts -3 Weapons from your side in combat.",
             "active": {
                 "official": true,
@@ -789,7 +789,7 @@
             "modifiers": {
                 "special": {
                     "//comment": "Set to -1 if you want it to be random or a specific key for a specific carrier specialists",
-                    "autoCarrierSpecialistAssign": 15
+                    "autoCarrierSpecialistAssign": -1
                 }
             }
         },
@@ -892,7 +892,7 @@
         {
             "id": 21,
             "key": "radar-dish",
-            "name": "Quantum Magnifying Opitical Array",
+            "name": "Quantum Opitical Array",
             "description": "Adds +5 Scanning Range to the star. Deducts -5 Weapons from your side in combat.",
             "active": {
                 "official": true,
@@ -912,7 +912,7 @@
         {
             "id": 22,
             "key": "radar-dish",
-            "name": "Refracting Neutrino Optics Array",
+            "name": "Neutrino Optics Array",
             "description": "Adds +7 Scanning Range to the star. Deducts -7 Weapons from your side in combat.",
             "active": {
                 "official": true,
@@ -932,7 +932,7 @@
         {
             "id": 23,
             "key": "defense-satellite",
-            "name": "Oribital Dark Energy Cannon",
+            "name": "Omega Cannon",
             "description": "Adds +2 Defender Bonus to the star.",
             "active": {
                 "official": true,
@@ -951,7 +951,7 @@
         {
             "id": 24,
             "key": "defense-satellite",
-            "name": "Orbital Supernova Cannon",
+            "name": "Supernova Cannon",
             "description": "Adds +3 Defender Bonus to the star.",
             "active": {
                 "official": true,
