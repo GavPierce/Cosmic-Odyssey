@@ -49,7 +49,7 @@ The client uses the following tech:
 9. `npm run serve` in `client/` to start the client application.
 10. Browse to the site locally (default [http://localhost:8080](http://localhost:8080)).
 
-_Note: Development work is to be based on the `dev` branch, for a new feature or bug fix, create a branch from `dev`._
+_Note: Development work is to be based on the `main` branch, for a new feature or bug fix, create a branch from `main`._
 
 ### Database Migrations
 
