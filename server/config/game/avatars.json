@@ -2,7 +2,7 @@
   {
     "id": 0,
     "file": "0.png",
-    "name": "Stellar Humanity Accord",
+    "name": "Stellar Humanity Alliance",
     "description": "An alliance representing interstellar humans, championing peace, and unity amidst a cosmos of diversity.",
     "price": null,
     "isPatronAvatar": false
@@ -178,7 +178,7 @@
   {
     "id": 22,
     "file": "22.png",
-    "name": "Inferno Dominion",
+    "name": "Inferno Accord",
     "description": "Born from the universe's hottest regions, their fiery might aims to scorch opposition and reign supreme.",
     "price": null,
     "isPatronAvatar": false
@@ -260,6 +260,14 @@
     "file": "32.png",
     "name": "Marauders of the Rift",
     "description": "Outlaws exploiting interdimensional rifts, seeking treasures and technology from alternate realities.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 33,
+    "file": "33.png",
+    "name": "Vestige Dominion",
+    "description": "Displaced humans mutated into monsterous beings, they strategically and ruthlessly seek galactic control to reclaim their lost humanity.",
     "price": null,
     "isPatronAvatar": false
   }
