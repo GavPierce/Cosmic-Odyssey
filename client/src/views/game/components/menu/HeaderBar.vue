@@ -15,24 +15,24 @@
           <tick-selector />
         </div>
         <div class="col text-end pt-1">
-            <span v-if="userPlayer" class="pointer me-2" title="Total credits" @click="setMenuState(MENU_STATES.BULK_INFRASTRUCTURE_UPGRADE)">
+            <span v-if="userPlayer" class="pointer me-2" title="Total Credits" @click="setMenuState(MENU_STATES.BULK_INFRASTRUCTURE_UPGRADE)">
                 <i class="fas fa-dollar-sign text-success"></i> {{userPlayer.credits}}
             </span>
 
-            <span class="pointer me-2" v-if="userPlayer && isSpecialistsCurrencyCreditsSpecialists" title="Total specialist tokens" @click="setMenuState(MENU_STATES.BULK_INFRASTRUCTURE_UPGRADE)">
-                <i class="fas fa-coins text-success"></i> {{userPlayer.creditsSpecialists}}
+            <span class="pointer me-2" v-if="userPlayer && isSpecialistsCurrencyCreditsSpecialists" title="Total Specialist Tokens" @click="setMenuState(MENU_STATES.BULK_INFRASTRUCTURE_UPGRADE)">
+                <i class="fas fa-microchip text-success"></i> {{userPlayer.creditsSpecialists}}
             </span>
 
             <research-progress class="d-none d-lg-inline-block me-2" v-if="userPlayer" @onViewResearchRequested="onViewResearchRequested"/>
         </div>
         <div class="col-auto text-end pointer pt-1" v-if="userPlayer" @click="onViewBulkUpgradeRequested">
-            <span class="d-none d-lg-inline-block me-2">
-                <i class="fas fa-money-bill-wave text-success"></i> {{userPlayer.stats.totalEconomy}}
+            <span class="d-none d-lg-inline-block me-2" title="Total Economy">
+                <i class="fas fa-scale-balanced text-success"></i> {{userPlayer.stats.totalEconomy}}
             </span>
-            <span class="d-none d-lg-inline-block me-2">
-                <i class="fas fa-tools text-warning"></i> {{userPlayer.stats.totalIndustry}}
+            <span class="d-none d-lg-inline-block me-2" title="Total Industry">
+                <i class="fas fa-gears text-warning"></i> {{userPlayer.stats.totalIndustry}}
             </span>
-            <span class="d-none d-lg-inline-block me-2">
+            <span class="d-none d-lg-inline-block me-2" title="Total Science">
                 <i class="fas fa-flask text-info"></i> {{userPlayer.stats.totalScience}}
             </span>
         </div>
@@ -46,17 +46,17 @@
 
             <ready-status-button :smallButtons="true" v-if="!$isHistoricalMode() && userPlayer && isTurnBasedGame && canEndTurn && !userPlayer.defeated" class="ms-1" />
 
-            <button class="btn btn-sm ms-1 d-lg-none" v-if="userPlayer && !isTutorialGame" :class="{'btn-outline-info': !unreadMessages, 'btn-warning': unreadMessages}" v-on:click="setMenuState(MENU_STATES.INBOX)" title="Inbox (M)">
+            <button class="btn btn-sm ms-1 d-lg-none" v-if="userPlayer && !isTutorialGame" :class="{'btn-outline-info': !unreadMessages, 'btn-warning': unreadMessages}" v-on:click="setMenuState(MENU_STATES.INBOX)" title="Messages (M)">
                 <i class="fas fa-comments"></i> <span class="ms-1" v-if="unreadMessages">{{unreadMessages}}</span>
             </button>
 
             <button class="btn btn-sm ms-1" v-if="userPlayer" :class="{'btn-outline-info': !unreadEvents, 'btn-warning': unreadEvents}" v-on:click="setMenuState(MENU_STATES.EVENT_LOG)" title="Event Log (E)">
-                <i class="fas fa-inbox"></i> <span class="ms-1" v-if="unreadEvents">{{unreadEvents}}</span>
+                <i class="fas fa-land-mine-on"></i> <span class="ms-1" v-if="unreadEvents">{{unreadEvents}}</span>
             </button>
 
             <hamburger-menu class="ms-1 d-none d-sm-inline-block" :buttonClass="'btn-sm btn-info'" :dropType="'dropleft'" />
             
-            <button class="btn btn-sm btn-info ms-1 d-none d-sm-inline-block" type="button" @click="goToMyGames()">
+            <button class="btn btn-sm btn-info ms-1 d-none d-sm-inline-block" title="My Games" type="button" @click="goToMyGames()">
                 <i class="fas fa-chevron-left"></i>
             </button>
         </div>

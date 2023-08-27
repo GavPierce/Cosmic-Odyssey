@@ -8,22 +8,22 @@
     <div v-if="isCompactUIStyle">
     <div class="row pt-2 pb-2 bg-dark">
       <div class="col-3 text-left">
-          <span title="Total number of waypoints plotted">
+          <span title="Total Number of Waypoints Plotted">
            <i class="fas fa-map-marker-alt"></i> {{points.length}}
           </span>
       </div>
       <div class="col-3 text-center">
-          <span title="Total distance (ly)">
+          <span title="Total Distance (ly)">
             <i class="fas fa-ruler"></i> {{distanceLightYears}}
           </span>
       </div>
       <div class="col-3 text-center">
-          <span title="Required scanning evel">
+          <span title="Required Scanning Level">
             <i class="fas fa-satellite"></i> {{scanningLevel}}
           </span>
       </div>
       <div class="col-3 text-end">
-          <span title="Required hyperspace level">
+          <span title="Required Hyperspace Level">
             <i class="fas fa-forward"></i> {{hyperspaceLevel}}
           </span>
       </div>
@@ -34,12 +34,12 @@
           ETA<orbital-mechanics-eta-warning />
       </div>
       <div class="col-5 text-end">
-          <span title="ETA base speed">
+          <span title="ETA Base Speed">
             Base {{totalEta || 'N/A'}}
           </span>
       </div>
       <div class="col-5 text-end">
-          <span title="ETA warp speed">
+          <span title="ETA Warp Speed">
             Warp {{totalEtaWarp || 'N/A'}}
           </span>
       </div>
@@ -64,7 +64,7 @@
               Waypoints
           </div>
           <div class="col-6 text-end">
-              <span title="Total number of waypoints plotted">
+              <span title="Total Number of Waypoints Plotted">
                 <i class="fas fa-map-marker-alt"></i> {{points.length}}
               </span>
           </div>
@@ -75,7 +75,7 @@
              Distance (ly)
           </div>
           <div class="col-6 text-end">
-              <span title="Total distance (ly)">
+              <span title="Total Distance (ly)">
                 <i class="fas fa-ruler"></i> {{distanceLightYears}}
               </span>
           </div>
@@ -86,8 +86,8 @@
               Required Scanning Level
           </div>
           <div class="col-4 text-end">
-              <span title="Required scanning level">
-                <i class="fas fa-satellite"></i> {{scanningLevel}}
+              <span title="Required Scanning Level">
+                <i class="fas fa-satellite-dish"></i> {{scanningLevel}}
               </span>
           </div>
       </div>
@@ -97,7 +97,7 @@
               Required Hyperspace Level
           </div>
           <div class="col-4 text-end">
-              <span title="Required hyperspace level">
+              <span title="Required Hyperspace Level">
                 <i class="fas fa-forward"></i> {{hyperspaceLevel}}
               </span>
           </div>
@@ -108,7 +108,7 @@
               ETA Base Speed
           </div>
           <div class="col-6 text-end">
-              <span title="ETA base speed">
+              <span title="ETA Base Speed">
                 <i class="fas fa-gauge"></i> 
                 {{totalEta || 'N/A'}}
               </span>
@@ -120,7 +120,7 @@
               ETA Warp Speed
           </div>
           <div class="col-6 text-end">
-              <span title="ETA warp speed">
+              <span title="ETA Warp Speed">
                 <i class="fa-brands fa-opera"></i> 
                 {{totalEtaWarp || 'N/A'}}
               </span>
@@ -143,7 +143,7 @@
           <template v-if="getNextPoint(point)">
             <td>
               <span>
-                <i class="fas" :class="{'fa-star':point.type=='star','fa-rocket':point.type=='carrier'}"></i>
+                <i class="fas" :class="{'fa-star':point.type=='star','fa-shuttle-space':point.type=='carrier'}"></i>
                 {{point.object.name}}
               </span>
             </td>
@@ -152,7 +152,7 @@
             </td>
             <td>
               <span v-if="getNextPoint(point)">
-                <i class="fas" :class="{'fa-star':getNextPoint(point).type=='star','fa-rocket':getNextPoint(point).type=='carrier'}"></i>
+                <i class="fas" :class="{'fa-star':getNextPoint(point).type=='star','fa-shuttle-space':getNextPoint(point).type=='carrier'}"></i>
                 {{getNextPoint(point).object.name}}
               </span>
             </td>

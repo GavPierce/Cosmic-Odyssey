@@ -33,7 +33,7 @@ class TechnologyHelper {
     getIcon (technologyKey) {
       switch (technologyKey) {
         case 'scanning':
-          return 'satellite'
+          return 'satellite-dish'
         case 'hyperspace':
           return 'forward'
         case 'terraforming':
@@ -45,7 +45,7 @@ class TechnologyHelper {
         case 'banking':
           return 'coins'
         case 'manufacturing':
-          return 'gears'
+          return 'wrench'
         case 'specialists':
           return 'microchip'
       }

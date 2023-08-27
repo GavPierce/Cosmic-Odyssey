@@ -5,16 +5,16 @@
         <sidebar-menu-item :menuState="MENU_STATES.WELCOME" tooltip="Join Game" iconClass="fas fa-handshake" />
       </div>
       <div v-if="!userPlayer && !gameIsJoinable">
-        <sidebar-menu-item :menuState="MENU_STATES.LEADERBOARD" tooltip="Leaderboard (Q)" iconClass="fas fa-users" />
+        <sidebar-menu-item :menuState="MENU_STATES.LEADERBOARD" tooltip="Leaderboard (Q)" iconClass="fas fa-trophy" />
       </div>
-      <sidebar-menu-item :menuState="MENU_STATES.GALAXY" tooltip="Galaxy (G)" iconClass="fas fa-sun" />
+      <sidebar-menu-item :menuState="MENU_STATES.GALAXY" tooltip="Galaxy (G)" iconClass="fas fa-satellite" />
       <div v-if="userPlayer">
-        <sidebar-menu-item :menuState="MENU_STATES.LEADERBOARD" tooltip="Leaderboard (Q)" iconClass="fas fa-users" />
-        <sidebar-menu-item :menuState="MENU_STATES.RESEARCH" tooltip="Research (R)" iconClass="fas fa-flask" />
-        <sidebar-menu-item :menuState="MENU_STATES.BULK_INFRASTRUCTURE_UPGRADE" tooltip="Bulk Upgrade (B)" iconClass="fas fa-money-bill" />
-        <sidebar-menu-item v-if="isFormalAlliancesEnabled" :menuState="MENU_STATES.DIPLOMACY" tooltip="Diplomacy (D)" iconClass="fas fa-globe-americas" />
+        <sidebar-menu-item :menuState="MENU_STATES.LEADERBOARD" tooltip="Leaderboard (Q)" iconClass="fas fa-trophy" />
+        <sidebar-menu-item :menuState="MENU_STATES.RESEARCH" tooltip="Research (R)" iconClass="fas fa-microscope" />
+        <sidebar-menu-item :menuState="MENU_STATES.BULK_INFRASTRUCTURE_UPGRADE" tooltip="Bulk Upgrade (B)" iconClass="fas fa-search-dollar" />
+        <sidebar-menu-item v-if="isFormalAlliancesEnabled" :menuState="MENU_STATES.DIPLOMACY" tooltip="Diplomacy (D)" iconClass="fas fa-flag" />
         <sidebar-menu-item v-if="isTradeEnabled" :menuState="MENU_STATES.LEDGER" tooltip="Ledger (L)" iconClass="fas fa-file-invoice-dollar" />
-        <sidebar-menu-item :menuState="MENU_STATES.GAME_NOTES" tooltip="Notes (N)" iconClass="fas fa-book-open" />
+        <sidebar-menu-item :menuState="MENU_STATES.GAME_NOTES" tooltip="Notes (N)" iconClass="fas fa-edit" />
       </div>
       <div v-if="isLoggedIn">
         <sidebar-menu-item :menuState="MENU_STATES.COMBAT_CALCULATOR" tooltip="Calculator (C)" iconClass="fas fa-calculator" />

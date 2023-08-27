@@ -102,7 +102,7 @@
         </div>
         <div class="col-auto">
           <span title="Scanning range" v-if="star.ownedByPlayerId">
-            {{star.effectiveTechs.scanning}} <i class="fas fa-satellite ms-1"></i>
+            {{star.effectiveTechs.scanning}} <i class="fas fa-satellite-dish ms-1"></i>
           </span>
         </div>
         <div class="col-auto">
