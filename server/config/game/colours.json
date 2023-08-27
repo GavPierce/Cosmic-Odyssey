@@ -8,6 +8,10 @@
         "value": "0x0000FF"
     },
     {
+        "alias": "Brown",
+        "value": "0x964B00"
+    },
+    {
         "alias": "Fuchsia",
         "value": "0xFF00FF"
     },
