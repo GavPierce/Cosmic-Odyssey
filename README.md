@@ -1,6 +1,6 @@
 # Cosmic Odyssey
 
-CO is a slow-burn browser game heavily inspired by [Neptune's Pride](https://np.ironhelmet.com) and [Subterfuge](http://subterfuge-game.com/).
+CO is a slow-burn browser game heavily inspired by [Solaris](https://solaris.games), [Neptune's Pride](https://np.ironhelmet.com) and [Subterfuge](http://subterfuge-game.com/).
 
 ![](client/src/assets/screenshots/game1.png)
 
