@@ -1,19 +1,63 @@
 [
     {
+        "alias": "Admiral",
+        "value": "0x051094"
+    },
+    {
         "alias": "Aqua",
         "value": "0x00FFFF"
+    },
+    {
+        "alias": "Army Green",
+        "value": "0x4B5320"
+    },
+    {
+        "alias": "Arsenal Red",
+        "value": "0xDB0007"
+    },
+    {
+        "alias": "Artic",
+        "value": "0x82EEFD"
     },
     {
         "alias": "Blue",
         "value": "0x0000FF"
     },
     {
-        "alias": "Fuchsia",
-        "value": "0xFF00FF"
+        "alias": "Bronze",
+        "value": "0xB2560D"
     },
     {
-        "alias": "Gray",
-        "value": "0x808080"
+        "alias": "Brown",
+        "value": "0x964B00"
+    },
+    {
+        "alias": "Citrine",
+        "value": "0xE4D00A"
+    },
+    {
+        "alias": "Copper",
+        "value": "0xB87333"
+    },
+    {
+        "alias": "Crimson",
+        "value": "0x004b49"
+    },
+    {
+        "alias": "Dark Slate Gray",
+        "value": "0x2F4F4F"
+    },
+    {
+        "alias": "Deep Jungle Green",
+        "value": "0x004b49"
+    },
+    {
+        "alias": "Fire",
+        "value": "0xDD571C"
+    },
+    {
+        "alias": "Fuchsia",
+        "value": "0xFF00FF"
     },
     {
         "alias": "Green",
@@ -22,6 +66,14 @@
     {
         "alias": "Lime",
         "value": "0x00FF00"
+    },
+    {
+        "alias": "Imperial Blue",
+        "value": "0x005A92"
+    },
+    {
+        "alias": "Imperial Red",
+        "value": "0xED2939"
     },
     {
         "alias": "Maroon",
@@ -36,6 +88,14 @@
         "value": "0x808000"
     },
     {
+        "alias": "Orange",
+        "value": "0xFFA500"
+    },
+    {
+        "alias": "Pink",
+        "value": "0xffb6c1"
+    },
+    {
         "alias": "Purple",
         "value": "0x800080"
     },
@@ -44,23 +104,43 @@
         "value": "0xFF0000"
     },
     {
-        "alias": "Silver",
-        "value": "0xe0e0e0"
+        "alias": "Rust",
+        "value": "0x8D4004"
+    },
+    {
+        "alias": "Sand",
+        "value": "0xD8B863"
+    },
+    {
+        "alias": "Space Cadet",
+        "value": "0x1D2951"
+    },
+    {
+        "alias": "Steel",
+        "value": "0x4682B4"
+    },
+    {
+        "alias": "Swamp",
+        "value": "0xA8C090"
+    },
+    {
+        "alias": "Tan",
+        "value": "0xD2B48C"
     },
     {
         "alias": "Teal",
         "value": "0x008080"
     },
     {
+        "alias": "Twitter Blue",
+        "value": "0x26a7de"
+    },
+    {
+        "alias": "Ultra Violet",
+        "value": "0x645394"
+    },
+    {
         "alias": "Yellow",
         "value": "0xFFFF00"
-    },
-    {
-        "alias": "Pink",
-        "value": "0xffb6c1"
-    },
-    {
-        "alias": "Orange",
-        "value": "0xff7a2a"
     }
 ]
