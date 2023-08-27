@@ -87,7 +87,7 @@
           </div>
           <div class="col-4 text-end">
               <span title="Required Scanning Level">
-                <i class="fas fa-satellite"></i> {{scanningLevel}}
+                <i class="fas fa-satellite-dish"></i> {{scanningLevel}}
               </span>
           </div>
       </div>
