@@ -30,6 +30,9 @@ class TextureService {
         require("../assets/map-objects/128x128_carrier.svg")
       )
     );
+    this.ARMADA_TEXTURE = new PIXI.Texture(
+      PIXI.BaseTexture.from(require("../assets/map-objects/124x124_armada.png"))
+    );
     this.DEFAULT_FONT_STYLE = new PIXI.TextStyle({
       fontFamily: `Chakra Petch,sans-serif;`,
       fill: 0xffffff,
