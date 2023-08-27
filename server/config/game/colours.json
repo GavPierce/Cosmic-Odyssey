@@ -36,6 +36,10 @@
         "value": "0x808000"
     },
     {
+        "alias": "Orange",
+        "value": "0xFFA500"
+    },
+    {
         "alias": "Purple",
         "value": "0x800080"
     },
