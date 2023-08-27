@@ -1,7 +1,7 @@
 [
     {
-        "alias": "Alien Black",
-        "value": "0x1A2228"
+        "alias": "Admiral",
+        "value": "0x051094"
     },
     {
         "alias": "Aqua",
@@ -12,6 +12,10 @@
         "value": "0x4B5320"
     },
     {
+        "alias": "Arsenal Red",
+        "value": "0xDB0007"
+    },
+    {
         "alias": "Artic",
         "value": "0x82EEFD"
     },
@@ -20,12 +24,12 @@
         "value": "0x0000FF"
     },
     {
-        "alias": "Brown",
-        "value": "0x964B00"
+        "alias": "Bronze",
+        "value": "0xB2560D"
     },
     {
-        "alias": "Canary",
-        "value": "0xffff00"
+        "alias": "Brown",
+        "value": "0x964B00"
     },
     {
         "alias": "Citrine",
@@ -36,8 +40,8 @@
         "value": "0xB87333"
     },
     {
-        "alias": "Cyan",
-        "value": "0xOOFFFF"
+        "alias": "Crimson",
+        "value": "0x004b49"
     },
     {
         "alias": "Dark Slate Gray",
@@ -60,24 +64,16 @@
         "value": "0x008000"
     },
     {
-        "alias": "Gold",
-        "value": "0xFFD700"
-    },
-    {
-        "alias": "Gunmetal",
-        "value": "0x2A3439"
-    },
-    {
-        "alias": "Honey",
-        "value": "0xEC9706"
-    },
-    {
         "alias": "Lime",
         "value": "0x00FF00"
     },
     {
         "alias": "Imperial Blue",
         "value": "0x005A92"
+    },
+    {
+        "alias": "Imperial Red",
+        "value": "0xED2939"
     },
     {
         "alias": "Maroon",
@@ -108,12 +104,24 @@
         "value": "0xFF0000"
     },
     {
+        "alias": "Rust",
+        "value": "0x8D4004"
+    },
+    {
         "alias": "Sand",
         "value": "0xD8B863"
     },
     {
         "alias": "Space Cadet",
         "value": "0x1D2951"
+    },
+    {
+        "alias": "Steel",
+        "value": "0x4682B4"
+    },
+    {
+        "alias": "Swamp",
+        "value": "0xA8C090"
     },
     {
         "alias": "Tan",
@@ -126,6 +134,10 @@
     {
         "alias": "Twitter Blue",
         "value": "0x26a7de"
+    },
+    {
+        "alias": "Ultra Violet",
+        "value": "0x645394"
     },
     {
         "alias": "Yellow",
