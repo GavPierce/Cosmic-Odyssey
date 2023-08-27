@@ -15,7 +15,7 @@
             <research-row
               v-if="isTechnologyEnabled('scanning')"
               research="scanning"
-              iconClass="fa-satellite"
+              iconClass="fa-satellite-dish"
               title="Scanning"
               :player="player"
               :userPlayer="userPlayer"
@@ -39,7 +39,7 @@
             <research-row
               v-if="isTechnologyEnabled('experimentation')"
               research="experimentation"
-              iconClass="fa-flask-vial"
+              iconClass="fa-atom"
               title="Experimentation"
               :player="player"
               :userPlayer="userPlayer"
@@ -63,7 +63,7 @@
             <research-row
               v-if="isTechnologyEnabled('manufacturing')"
               research="manufacturing"
-              iconClass="fa-gears"
+              iconClass="fa-wrench"
               title="Manufacturing"
               :player="player"
               :userPlayer="userPlayer"
