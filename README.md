@@ -4,17 +4,17 @@ CO is a slow-burn browser game heavily inspired by [Solaris](https://solaris.gam
 
 ![](client/src/assets/screenshots/game1.png)
 
-- Build economic, industrial and scientific infrastructure to improve your empire.
-- Build carriers to travel to new stars or to fight your enemies.
-- Research new technologies to gain an edge over your opponents.
-- Hire specialists which grant special abilities to stars and carriers like increased weapons and speed.
-- Set up trade with your allies to get ahead of the curve.
-- Play games with up to 32 players at a time.
-- Participate in group chats with your allies to discuss strategy.
-- Fight other players and capture stars to win the game.
-- Games last around 2-3 weeks, and you don't need to commit a lot of time to play!
-- Play on any device that has a web browser.
-- Its completely free!
+    • Develop economic, scientific, and industrial frameworks to strengthen your dominion.
+    • Construct vessels to explore new celestial bodies or combat adversaries.
+    • Delve into innovative technologies for a competitive advantage.
+    • Engage experts who provide unique abilities to stars and vessels, enhancing weaponry and hyperspace range.
+    • Initiate trade relationships with allies for a strategic edge.
+    • Engage in multiplayer sessions with up to 32 participants.
+    • Collaborate in group discussions with teammates to plan tactics.
+    • Challenge rival players and seize star system points for victory.
+    • Matches typically span 2-3 weeks, requiring minimal time investment!
+    • Accessible on any device equipped with a web browser.
+    A• bsolutely no cost involved!
 
 Visit [Cosmic-Odyssey.io](https://cosmic-odyssey.io/) to play now!
 
