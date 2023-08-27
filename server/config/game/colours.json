@@ -44,10 +44,6 @@
         "value": "0xFF0000"
     },
     {
-        "alias": "Silver",
-        "value": "0xe0e0e0"
-    },
-    {
         "alias": "Teal",
         "value": "0x008080"
     },
@@ -58,6 +54,10 @@
     {
         "alias": "Pink",
         "value": "0xffb6c1"
+    },
+    {
+        "alias": "Purple",
+        "value": "0x800080"
     },
     {
         "alias": "Orange",
