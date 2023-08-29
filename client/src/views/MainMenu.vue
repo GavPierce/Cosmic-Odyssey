@@ -138,9 +138,11 @@
             alt="Shop"
           />
           <div class="card-img-overlay">
-            <h5 class="card-title card-title-success">
-              <i class="fas fa-shopping-basket"></i>
-              <span class="ms-2">Unlockable Factions</span>
+
+            <h5 class="card-title ">
+            <!-- Originally: h5 class="card-title card-title-success but removed "card-title-success for consistent color scheme""-->
+              <i class="fas fa-gem"></i>
+              <span class="ms-2">Factions</span>
             </h5>
           </div>
           <div class="card-arrow">
