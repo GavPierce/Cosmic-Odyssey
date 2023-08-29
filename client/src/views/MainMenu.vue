@@ -140,8 +140,8 @@
           <div class="card-img-overlay">
 
             <h5 class="card-title ">
-            <!-- Originally: h5 class="card-title card-title-success but removed "card-title-success for consistent color scheme""-->
-              <i class="fas fa-gem"></i>
+            <!-- Originally: "h5 class="card-title card-title-success" but removed "card-title-success" for consistent color scheme-->
+              <i class="fas fa-pastafarianism"></i>
               <span class="ms-2">Factions</span>
             </h5>
           </div>
