@@ -36,6 +36,7 @@ The client uses the following tech:
 
 ## Development Environment Setup
 
+
 1. Install the prerequisites.
    - [Node.js](https://nodejs.org/en/) v14
    - [MongoDB](https://www.mongodb.com/) v4.4
