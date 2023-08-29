@@ -157,7 +157,11 @@
 
     <hr />
 
-    <tutorial-game />
+    <!-- 
+      Comment out tutorial game until we can make proper videos so that it doesn't show Solaris youtube videos.
+      <tutorial-game />
+
+      -->
 
     <hr />
   </view-container>
