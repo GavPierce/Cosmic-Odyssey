@@ -44,7 +44,7 @@
           />
           <div class="card-img-overlay">
             <h5 class="card-title">
-              <i class="fas fa-user"></i>
+              <i class="fas fa-star-half-alt"></i>
               <span class="ms-2">My Games</span>
             </h5>
           </div>
@@ -68,7 +68,7 @@
           />
           <div class="card-img-overlay">
             <h5 class="card-title">
-              <i class="fas fa-gamepad"></i>
+              <i class="fas fa-play"></i>
               <span class="ms-2">Join Game</span>
             </h5>
           </div>
@@ -113,7 +113,7 @@
           />
           <div class="card-img-overlay">
             <h5 class="card-title">
-              <i class="fas fa-shield-alt"></i>
+              <i class="fas fa-users"></i>
               <span class="ms-2">{{
                 user && user.guildId ? "My Guild" : "Guilds"
               }}</span>
