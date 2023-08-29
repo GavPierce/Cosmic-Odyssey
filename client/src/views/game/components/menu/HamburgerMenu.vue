@@ -21,17 +21,18 @@
                 <a class="dropdown-item" v-on:click="setMenuState(MENU_STATES.WELCOME)"><i class="fas fa-handshake me-2"></i>Welcome</a>
             </div>
             <div v-if="!userPlayer && !gameIsJoinable">
-                <a class="dropdown-item" v-on:click="setMenuState(MENU_STATES.LEADERBOARD)" title="Leaderboard (Q)"><i class="fas fa-users me-2"></i>Leaderboard</a>
+                <a class="dropdown-item" v-on:click="setMenuState(MENU_STATES.LEADERBOARD)" title="Leaderboard (Q)"><i class="fas fa-trophy me-2"></i>Leaderboard</a>
             </div>
-            <a class="dropdown-item" v-on:click="setMenuState(MENU_STATES.GALAXY)" title="Galaxy (G)"><i class="fas fa-sun me-2"></i>Galaxy</a>
+            <a class="dropdown-item" v-on:click="setMenuState(MENU_STATES.GALAXY)" title="Galaxy (G)"><i class="fas fa-satellite me-2"></i>Galaxy</a>
             <div v-if="userPlayer">
-                <a class="dropdown-item" v-on:click="setMenuState(MENU_STATES.LEADERBOARD)" title="Leaderboard (Q)"><i class="fas fa-users me-2"></i>Leaderboard</a>
-                <a class="dropdown-item" v-on:click="setMenuState(MENU_STATES.RESEARCH)" title="Research (R)"><i class="fas fa-flask me-2"></i>Research</a>
+                <a class="dropdown-item" v-on:click="setMenuState(MENU_STATES.LEADERBOARD)" title="Leaderboard (Q)"><i class="fas fa-trophy me-2"></i>Leaderboard</a>
+                <a class="dropdown-item" v-on:click="setMenuState(MENU_STATES.RESEARCH)" title="Research (R)"><i class="fas fa-microscope me-2"></i>Research</a>
+                <a class="dropdown-item" v-on:click="setMenuState(MENU_STATES.BULK_INFRASTRUCTURE_UPGRADE)" title="Bulk Upgrade (B)"><i class="fas fa-search-dollar me-2"></i>Research</a>
                 <a class="dropdown-item d-lg-none" v-on:click="setMenuState(MENU_STATES.INBOX)" title="Inbox (M)" v-if="!isTutorialGame"><i class="fas fa-comments me-2"></i>Inbox</a>
                 <a class="dropdown-item d-none d-lg-inline-block" v-on:click="onMenuChatSidebarRequested()" title="Inbox (M)" v-if="!isTutorialGame"><i class="fas fa-comments me-2"></i>Inbox</a>
-                <a class="dropdown-item" v-on:click="setMenuState(MENU_STATES.DIPLOMACY)" title="Diplomacy (D)" v-if="isFormalAlliancesEnabled"><i class="fas fa-globe-americas me-2"></i>Diplomacy</a>
+                <a class="dropdown-item" v-on:click="setMenuState(MENU_STATES.DIPLOMACY)" title="Diplomacy (D)" v-if="isFormalAlliancesEnabled"><i class="fas fa-peace me-2"></i>Diplomacy</a>
                 <a class="dropdown-item" v-on:click="setMenuState(MENU_STATES.LEDGER)" title="Ledger (L)" v-if="isTradeEnabled"><i class="fas fa-file-invoice-dollar me-2"></i>Ledger</a>
-                <a class="dropdown-item" v-on:click="setMenuState(MENU_STATES.GAME_NOTES)" title="Notes (N)"><i class="fas fa-book-open me-2"></i>Notes</a>
+                <a class="dropdown-item" v-on:click="setMenuState(MENU_STATES.GAME_NOTES)" title="Notes (N)"><i class="fas fa-edit me-2"></i>Notes</a>
                 <a class="dropdown-item" v-on:click="setMenuState(MENU_STATES.SPECTATORS)" title="Spectators" v-if="isSpectatingEnabled"><i class="fas fa-people-arrows me-2"></i>Spectators</a>
             </div>
             <a v-if="isLoggedIn && !isDarkModeExtra && !isDataCleaned && (gameIsInProgress || gameIsFinished)" class="dropdown-item" v-on:click="setMenuState(MENU_STATES.INTEL)" title="Intel (I)"><i class="fas fa-chart-line me-2"></i>Intel</a>
