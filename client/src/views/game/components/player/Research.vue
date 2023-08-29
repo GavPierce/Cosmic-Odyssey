@@ -8,7 +8,7 @@
               <th></th>
               <th></th>
               <th></th>
-              <th class="text-end">You</th>
+              <th class="text-end" title="Your number will be red if you are the lowest and green if you are the highest.">You</th>
             </tr>
           </thead>
           <tbody>
