@@ -228,12 +228,16 @@ export default {
       typing: true,
       showCursor: true,
       lightSpeed: false,
-      launchAudio: null
+      launchAudio: null,
+      backgroundMusic: null,
+      isMusicPlaying: false
     };
   },
   async mounted() {
     this.isAutoLoggingIn = true;
     this.launchAudio = new Audio(wooshAudio);
+    this.backgroundMusic = new Audio(require("../assets/audio/backgroundMusic.mp3"));
+    this.backgroundMusic.loop = true;
 
     try {
       let response = await ApiAuthService.verify();
@@ -261,6 +265,14 @@ export default {
     }
   },
   methods: {
+    toggleBackgroundMusic() {
+    if (this.isMusicPlaying) {
+        this.backgroundMusic.pause();
+    } else {
+        this.backgroundMusic.play();
+    }
+    this.isMusicPlaying = !this.isMusicPlaying;
+    },
     login() {
       this.lightSpeed = true;
       this.launchAudio.play();
