@@ -26,6 +26,14 @@
       </div>
       <div class="bottom-nav">
         <div class="bottom-left">
+        <!-- Show the volume-up icon when music is playing -->
+        <a v-if="isMusicPlaying" @click="toggleBackgroundMusic" title="Music" class="me-2">
+          <i class="fas fa-volume-up"></i>
+        </a>
+        <!-- Show the volume-mute icon when music is muted-->
+        <a v-else @click="toggleBackgroundMusic" title="Music" class="me-2">
+          <i class="fas fa-volume-mute"></i>
+        </a>
           <router-link
             :to="{ name: 'privacy-policy' }"
             class="me-2"
@@ -39,14 +47,18 @@
             title="Discord"
             class="me-2"
           >
-            <i class="fab fa-discord"></i>
+            <i class="fa-brands fa-discord"></i>
           </a>
-          <a
+
+         <!--COMMENT OUT DONATION UNTIL WE WANT TO REACTIVATE IT 
+            <a
             href="https://www.buymeacoffee.com/gavinpierce"
             target="_blank"
             class="text-warning"
             ><i class="fas fa-coffee me-1"></i>Donate</a
-          >
+            >
+          -->
+          
         </div>
         <a
           href="https://docs.cosmic-odyssey.io"
@@ -79,7 +91,7 @@ export default {
       isAutoLoggingIn: false,
       words: [
         "EMBARK ON A COSMIC ODYSSEY",
-        "ADAPT TO THE UNEXPECTED",
+        "PLAN FOR THE UNEXPECTED",
         "ADMINISTER AN EMPIRE",
         "ANTICIPATE INCOMING THREATS",
         "ASCEND TO THE THRONE",
@@ -102,6 +114,7 @@ export default {
         "BOMBARD PLANETARY INFASTRUCTURE",
         "BLOCKADE TRADE ROUTES",
         "BOUNTY HUNT",
+        "BYPASS THE COMPRESSOR",
         "CONQUER YOUR ENEMIES",
         "COMMUNICATE WITH ALIEN LIFEFORMS",
         "COLONIZE PLANETS",
@@ -120,18 +133,21 @@ export default {
         "DESTROY STARBASES",
         "DEFEND FROM PIRATES",
         "DETECT INCOMING THREATS",
+        "DISENGAGE THE EXTERNAL INERTIAL DAMPENER",
         "DOMINATE THE GALAXY",
         "DEMOLISH YOUR ENEMY'S ECONOMY",
         "EXPLORE ANCIENT RUINS",
         "ELIMINATE THREATS",
         "ENJOY YOUR ACCOMPLISHMENTS",
         "EXTRACT MINERALS",
+        "EXPECT THE UNEXPECTED",
         "EXPERIMENT WITH TECHNOLOGIES",
         "EXPLOIT RESOURCES",
         "ENFORCE YOUR RULE",
         "EXPERIENCE GRAND STRATEGY",
         "FIGHT FOR JUSTICE",
         "FEDERATE WITH YOUR ALLIES",
+        "FIND THE TRUTH THAT IS OUT THERE",
         "FIRE ALL TORPEDOES",
         "FORGE FRIENDSHIPS",
         "GRANT SAFE PASSAGE",
@@ -139,6 +155,7 @@ export default {
         "GAIN RICHES",
         "GATHER RESOURCES",
         "GENERATE NUCLEAR ENERGY",
+        "HAVE A BAD FEELING ABOUT THIS",
         "HUNT GIANT CREATURES",
         "HACK MAINFRAMES",
         "HI-JACK TRADE SHIPS",
@@ -146,15 +163,18 @@ export default {
         "INVADE PLANETS",
         "INFILTRATE ENEMY LEADERSHIP",
         "JAM ENEMY COMMS",
-        "JOURNEY ACROSS THE UNIVERSE",
+        "JOURNEY THROUGH THE UNKNOWN",
         "JUMP THROUGH WORMHOLES",
         "JOIN FORCES",
         "KINDLE A REBELLION",
         "LEAD YOUR EMPIRE",
         "LAUNCH ALL SQUADRONS",
+        "LIVE LONG AND PROSPER",
+        "MAKE IT SO",
         "MARAUDE RICH TRADE WORDS",
         "MANUFACTURE YOUR FLEET",
         "MINE ASTEROIDS",
+        "MUTATE APPENDAGES",
         "NAVIGATE UNCHARTED STAR",
         "NEGOTIATE DIPLOMACY",
         "OPERATE SUPERWEAPONS",
@@ -164,6 +184,7 @@ export default {
         "OUTLAW CORRUPTION",
         "OPPOSE TYRANNY",
         "PILOT YOUR SHIP",
+        "PILLAGE CORPORATE COFFERS",
         "PROTECT YOUR CAPITAL",
         "PROBE ENEMY DEFENSES",
         "PLOT IN SECRECY",
@@ -171,11 +192,14 @@ export default {
         "QUASH REBELLIONS",
         "RECRUIT MERCENARIES",
         "RAID COLONIES",
+        "REALIGN THE MULTIMODAL FLUX RELAY",
         "RESEARCH NEW TECHNOLOGIES",
         "REPAIR DAMAGED INFASTRUCTURE",
+        "REVERSE THE POLARITY",
         "RULE WITH AN IRONFIST",
         "REBEL AGAINST OPPRESSION",
         "SABOTAGE ENEMY REACTORS",
+        "SET PHASERS TO STUN",
         "SYNCHRONIZE ATTACKS",
         "SYNERGIZE TECHNOLOGIES",
         "SWARM SECTORS",
@@ -272,6 +296,10 @@ export default {
         this.backgroundMusic.play();
     }
     this.isMusicPlaying = !this.isMusicPlaying;
+    },
+    beforeDestroy() {
+      this.backgroundMusic.pause();
+      this.backgroundMusic = null;
     },
     login() {
       this.lightSpeed = true;
@@ -419,6 +447,9 @@ export default {
   .top-logo {
     height: 5em;
     margin-top: 2em;
+  }
+  .discord-icon {
+    color: #5865F2;
   }
 }
 </style>
