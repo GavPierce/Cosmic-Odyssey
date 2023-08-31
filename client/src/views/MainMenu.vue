@@ -39,7 +39,7 @@
         >
           <img
             class="card-img"
-            :src="require('../assets/screenshots/home-1.png')"
+            :src="require('../assets/screenshots/home-1-small.png')"
             alt="View my games"
           />
           <div class="card-img-overlay">
@@ -63,7 +63,7 @@
         <div class="card bg-dark text-white p-1">
           <img
             class="card-img"
-            :src="require('../assets/screenshots/home-2.png')"
+            :src="require('../assets/screenshots/home-2-small.png')"
             alt="Join a game"
           />
           <div class="card-img-overlay">
@@ -87,7 +87,7 @@
         >
           <img
             class="card-img"
-            :src="require('../assets/screenshots/home-3.png')"
+            :src="require('../assets/screenshots/home-3-small.png')"
             alt="Leaderboard"
           />
           <div class="card-img-overlay">
@@ -108,7 +108,7 @@
         <div class="card bg-dark text-white p-1" @click="routeToPath('/guild')">
           <img
             class="card-img"
-            :src="require('../assets/screenshots/home-4.png')"
+            :src="require('../assets/screenshots/home-4-small.png')"
             alt="Guilds"
           />
           <div class="card-img-overlay">
@@ -134,7 +134,7 @@
         >
           <img
             class="card-img"
-            :src="require('../assets/screenshots/home-5.png')"
+            :src="require('../assets/screenshots/home-5-small.png')"
             alt="Shop"
           />
           <div class="card-img-overlay">
