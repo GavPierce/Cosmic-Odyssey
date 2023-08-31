@@ -142,6 +142,7 @@ export default {
     onObjectsClicked(e) {
       this.$emit("onObjectsClicked", e);
     },
+/* COMMENT OUT DONATE MODAL TO PREVENT TESTERS GETTING POP UP
     async tryShowDonateModal() {
       let chance = Math.floor(Math.random() * (20 - 0 + 1) + 0); // 1 in 20
 
@@ -167,7 +168,7 @@ Gavin`,
       }
     }
   },
-
+*/
   computed: mapState(["game"]),
 
   watch: {
