@@ -30,10 +30,13 @@
         <a v-if="isMusicPlaying" @click="toggleBackgroundMusic" title="Music" class="me-2">
           <i class="fas fa-volume-up"></i>
         </a>
-        <!-- Show the volume-mute icon when music is muted-->
+
         <a v-else @click="toggleBackgroundMusic" title="Music" class="me-2">
           <i class="fas fa-volume-mute"></i>
         </a>
+
+<!-- Volume slider -->
+<input type="range" min="0" max="1" step="0.1" v-model="volume" @input="adjustVolume">
           <router-link
             :to="{ name: 'privacy-policy' }"
             class="me-2"
@@ -289,6 +292,20 @@ export default {
     }
   },
   methods: {
+    adjustVolume() {
+    this.backgroundMusic.volume = this.volume;
+
+    // Check if volume is more than 0 and music isn't playing, then play the music.
+    if (this.volume > 0 && !this.isMusicPlaying) {
+        this.backgroundMusic.play();
+        this.isMusicPlaying = true;
+    } 
+    // If volume is set to 0, then pause the music.
+    else if (this.volume === 0 && this.isMusicPlaying) {
+        this.backgroundMusic.pause();
+        this.isMusicPlaying = false;
+    }
+    },
     toggleBackgroundMusic() {
     if (this.isMusicPlaying) {
         this.backgroundMusic.pause();
@@ -450,6 +467,10 @@ export default {
   }
   .discord-icon {
     color: #5865F2;
+  }
+  input[type="range"] {
+    width: 50%; /* Adjust this value to your desired size */
+    margin: 0 auto; /* Centering the slider */
   }
 }
 </style>
