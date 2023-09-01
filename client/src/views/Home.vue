@@ -31,7 +31,8 @@
             <a v-else @click="toggleBackgroundMusic" title="Music" class="me-2">
               <i class="fas fa-volume-mute"></i>
             </a>
-            <input type="range" min="0" max="1" step="0.1" v-model="volume" @input="adjustVolume">
+            <input type="range" ref="volumeSlider" min="0" max="1" step="0.1" v-model="volume" @input="adjustVolume" @mouseover="showTooltip" @mouseleave="hideTooltip">
+            <span class="volume-tooltip" v-if="isTooltipVisible && !isNaN(volume)">{{ volumePercentage }}%</span>
         </div>
       </div>
       
@@ -92,6 +93,8 @@ export default {
   data() {
     return {
       isAutoLoggingIn: false,
+      isTooltipVisible: false,
+      volume: 0.5, // default volume level
       words: [
         "EMBARK ON A COSMIC ODYSSEY",
         "PLAN FOR THE UNEXPECTED",
@@ -104,7 +107,6 @@ export default {
         "ACTIVATE DEFENSES",
         "ACQUIRE HIDDEN KNOWLEDGE",
         "ADVANCE YOUR CIVILIZATION",
-        "AMAZE YOURSELF",
         "ASSIST THE HELPLESS",
         "AMBUSH INVADERS",
         "ANALYZE WARP SIGNATURES",
@@ -292,22 +294,41 @@ export default {
     },
     documentationUrl() {
         return process.env.VUE_APP_DOCUMENTATION_URL;
+    },
+    volumePercentage() {
+      return Math.round(this.volume * 100);
     }
   },
   methods: {
     adjustVolume() {
-    this.backgroundMusic.volume = this.volume;
+      this.backgroundMusic.volume = this.volume;
+      this.updateTooltipPosition();
+          if (this.volume > 0 && !this.isMusicPlaying) {
+              // Try to play the music
+              const playPromise = this.backgroundMusic.play();
 
-    // Check if volume is more than 0 and music isn't playing, then play the music.
-    if (this.volume > 0 && !this.isMusicPlaying) {
-        this.backgroundMusic.play();
-        this.isMusicPlaying = true;
-    } 
-    // If volume is set to 0, then pause the music.
-    else if (this.volume === 0 && this.isMusicPlaying) {
-        this.backgroundMusic.pause();
-        this.isMusicPlaying = false;
-    }
+              if (playPromise !== undefined) {
+                  playPromise.catch(error => {
+                      // Audio play failed due to browser restrictions.
+                      // Add a one-time click event to the document.
+                      document.addEventListener('click', () => {
+                          this.backgroundMusic.play();
+                          this.isMusicPlaying = true;
+                      }, { once: true });
+                  }).then(() => {
+                      // Audio played successfully.
+                      this.isMusicPlaying = true;
+                  });
+              } else {
+                  // Browser does not return a play promise.
+                  // Play state will be uncertain.
+                  this.isMusicPlaying = true;
+              }
+          } else if (this.volume === 0 && this.isMusicPlaying) {
+              this.backgroundMusic.pause();
+              this.isMusicPlaying = false;
+          }
+      }
     },
     toggleBackgroundMusic() {
       // If music is playing, pause it. Otherwise, play it.
@@ -324,6 +345,29 @@ export default {
       if (this.volume === 0) {
           this.isMusicPlaying = false;
       }
+    },
+    updateTooltipPosition() {
+      const slider = this.$refs.volumeSlider;
+      const tooltip = slider.nextSibling;
+      const rect = slider.getBoundingClientRect();
+      const percent = (slider.value - slider.min) / (slider.max - slider.min);
+      tooltip.style.left = rect.left + percent * rect.width + 'px';
+      tooltip.style.top = rect.top - 30 + 'px'; // Adjust this value based on your design
+    },
+    showTooltip() {
+        this.isTooltipVisible = true;
+        this.updateTooltipPosition();
+
+        // Position the tooltip above the current slider handle
+        const slider = this.$refs.volumeSlider;
+        const tooltip = slider.nextSibling;
+        const rect = slider.getBoundingClientRect();
+        const percent = (slider.value - slider.min) / (slider.max - slider.min);
+        tooltip.style.left = rect.left + percent * rect.width + 'px';
+        tooltip.style.top = rect.top - 30 + 'px'; // 30 is an arbitrary offset for the tooltip
+    },
+    hideTooltip() {
+        this.isTooltipVisible = false;
     },
     beforeDestroy() {
       this.backgroundMusic.pause();
@@ -346,28 +390,33 @@ export default {
           setTimeout(() => {
             this.typeEffect();
           }, 2000); // Wait for 2 seconds before starting to delete
-          return;
+        return;
         }
       } else {
-        if (this.letterIndex > 0) {
+      if (this.letterIndex > 0) {
           this.currentText = this.words[this.wordIndex].substring(
             0,
             this.letterIndex - 1
           );
           this.letterIndex--;
-        } else {
+      } else {
           this.typing = true;
           this.wordIndex = Math.floor(Math.random() * this.words.length); // Randomly select a word from the list
-          setTimeout(() => {
+        setTimeout(() => {
             this.typeEffect();
           }, 500); // Wait for 0.5 seconds before starting to type the next word
           return;
-        }
       }
-      setTimeout(this.typeEffect, this.typing ? 100 : 50);
     }
-  }
-};
+    setTimeout(this.typeEffect, this.typing ? 100 : 50);
+  },
+  watch: {
+    volume: function() {
+      this.updateTooltipPosition();
+    }
+}
+}
+
 </script>
 
 <style scoped>
@@ -469,6 +518,18 @@ export default {
 i.fas {
     margin-right: 10px; /* Provides spacing between the icon and the range input */
 }
+.volume-tooltip {
+    position: absolute;
+    transform: translateX(-50%);
+    transition: left 0.3s ease;  
+    background-color: #333;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    transform: translateX(-50%);
+    pointer-events: none;
+}
 
 @media (min-width: 622px) {
   .splash-text {
@@ -489,6 +550,7 @@ i.fas {
   .discord-icon {
     color: #5865F2;
   }
+  
   input[type="range"] {
     width: 100%; /* Adjust this value to your desired size */
     margin: 0 auto; /* Centering the slider */
