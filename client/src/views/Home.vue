@@ -16,27 +16,27 @@
       </div>
       <div class="login-box">
         <h4>Login</h4>
-
         <loading-spinner :loading="isAutoLoggingIn" />
-
         <account-login
           v-if="!isAutoLoggingIn"
           @loginSuccess="login"
         ></account-login>
+        
+        
+        <!-- Background music control centered below the login -->
+        <div class="volume-control centered">
+            <a v-if="!isMuted" @click="toggleBackgroundMusic" title="Music" class="me-2">
+              <i class="fas fa-volume-up"></i>
+            </a>
+            <a v-else @click="toggleBackgroundMusic" title="Music" class="me-2">
+              <i class="fas fa-volume-mute"></i>
+            </a>
+            <input type="range" min="0" max="1" step="0.1" v-model="volume" @input="adjustVolume">
+        </div>
       </div>
+      
       <div class="bottom-nav">
         <div class="bottom-left">
-        <!-- Show the volume-up icon when music is playing -->
-        <a v-if="isMusicPlaying" @click="toggleBackgroundMusic" title="Music" class="me-2">
-          <i class="fas fa-volume-up"></i>
-        </a>
-
-        <a v-else @click="toggleBackgroundMusic" title="Music" class="me-2">
-          <i class="fas fa-volume-mute"></i>
-        </a>
-
-<!-- Volume slider -->
-<input type="range" min="0" max="1" step="0.1" v-model="volume" @input="adjustVolume">
           <router-link
             :to="{ name: 'privacy-policy' }"
             class="me-2"
@@ -287,8 +287,11 @@ export default {
     this.typeEffect();
   },
   computed: {
+    isMuted() {
+        return this.volume === 0 || !this.isMusicPlaying;
+    },
     documentationUrl() {
-      return process.env.VUE_APP_DOCUMENTATION_URL;
+        return process.env.VUE_APP_DOCUMENTATION_URL;
     }
   },
   methods: {
@@ -307,12 +310,20 @@ export default {
     }
     },
     toggleBackgroundMusic() {
-    if (this.isMusicPlaying) {
-        this.backgroundMusic.pause();
-    } else {
-        this.backgroundMusic.play();
-    }
-    this.isMusicPlaying = !this.isMusicPlaying;
+      // If music is playing, pause it. Otherwise, play it.
+      if (this.isMusicPlaying) {
+          this.backgroundMusic.pause();
+      } else {
+          this.backgroundMusic.play();
+      }
+      
+      // Reflect the change in the isMusicPlaying state.
+      this.isMusicPlaying = !this.isMusicPlaying;
+
+      // Check if volume is zero after toggling and adjust accordingly.
+      if (this.volume === 0) {
+          this.isMusicPlaying = false;
+      }
     },
     beforeDestroy() {
       this.backgroundMusic.pause();
@@ -449,6 +460,16 @@ export default {
   justify-content: space-around;
   align-content: center;
 }
+.volume-control {
+    display: flex;
+    align-items: center; /* Aligns children vertically in the center */
+    justify-content: center; /* Aligns children horizontally in the center */
+}
+
+i.fas {
+    margin-right: 10px; /* Provides spacing between the icon and the range input */
+}
+
 @media (min-width: 622px) {
   .splash-text {
     text-align: center;
@@ -469,7 +490,7 @@ export default {
     color: #5865F2;
   }
   input[type="range"] {
-    width: 50%; /* Adjust this value to your desired size */
+    width: 100%; /* Adjust this value to your desired size */
     margin: 0 auto; /* Centering the slider */
   }
 }
