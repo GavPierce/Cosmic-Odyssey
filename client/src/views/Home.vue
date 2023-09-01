@@ -21,12 +21,12 @@
         
         <!-- Background music control centered below the login -->
         <div class="volume-control centered">
-          <a v-if="!isMuted" @click="toggleBackgroundMusic" title="Music" class="me-2">
-            <i class="fas fa-volume-up"></i>
-          </a>
-          <a v-else @click="toggleBackgroundMusic" title="Music" class="me-2">
-            <i class="fas fa-volume-mute"></i>
-          </a>
+            <a v-if="!isMuted" @click="toggleBackgroundMusic" title="Music" class="me-2">
+                <i class="fas fa-volume-up"></i>
+            </a>
+            <a v-else @click="toggleBackgroundMusic" title="Music" class="me-2">
+                <i class="fas fa-volume-mute"></i>
+            </a>
           <input type="range" ref="volumeSlider" min="0" max="1" step="0.1" v-model="volume" 
                  @input="adjustVolume" @mouseover="showTooltip" @mouseleave="hideTooltip">
           <span class="volume-tooltip" v-if="isTooltipVisible && !isNaN(volume)">{{ volumePercentage }}%</span>
@@ -75,28 +75,24 @@ export default {
     return {
       isAutoLoggingIn: false,
       isTooltipVisible: false,
-      volume: 0.5, // default volume level
       words: [
         "EMBARK ON A COSMIC ODYSSEY",
-        "PLAN FOR THE UNEXPECTED",
-        "ADMINISTER AN EMPIRE",
         "ANTICIPATE INCOMING THREATS",
         "ASCEND TO THE THRONE",
         "ATTACK CRITICAL INFASTRUCTURE",
-        "ACHIEVE GREATNESS",
+        "ACHIEVE GALACTIC GREATNESS",
         "ACCOMPLISH THE IMPOSSIBLE",
         "ACTIVATE DEFENSES",
         "ACQUIRE HIDDEN KNOWLEDGE",
         "ADVANCE YOUR CIVILIZATION",
-        "ASSIST THE HELPLESS",
         "AMBUSH INVADERS",
         "ANALYZE WARP SIGNATURES",
         "ALLY WITH FORMER ENEMIES",
         "ASSEMBLE MEGASTRUCTURES",
         "BLAST-OFF",
-        "BUILD A GALACTIC EMPIRE",
+        "BUILD MEGASTRUCTURES",
         "BATTLE SPACE PIRATES",
-        "BRIBE OFFICIALS",
+        "BRIBE THE GALACTIC SENATE OFFICIALS",
         "BOMBARD PLANETARY INFASTRUCTURE",
         "BLOCKADE TRADE ROUTES",
         "BOUNTY HUNT",
@@ -106,6 +102,7 @@ export default {
         "COLONIZE PLANETS",
         "COMMAND YOUR ARMADA",
         "CAPTURE TREASURE",
+        "CHARGE THE SUPERWEAPON",
         "CHART NEW STAR SYSTEMS",
         "CALCULATE JUMP COORDINATES",
         "CAPTAIN YOUR DREADNOUGHT",
@@ -114,6 +111,7 @@ export default {
         "DEVELOP STRATEGIES",
         "DECIMATE ENEMY FLEETS",
         "DEFEAT EVIL",
+        "DEFEND THE HELPLESS",
         "DETHRONE EMPERORS",
         "DRIFT THROUGH ASTROID FIELDS",
         "DESTROY STARBASES",
@@ -152,24 +150,22 @@ export default {
         "JOURNEY THROUGH THE UNKNOWN",
         "JUMP THROUGH WORMHOLES",
         "JOIN FORCES",
-        "KINDLE A REBELLION",
         "LEAD YOUR EMPIRE",
         "LAUNCH ALL SQUADRONS",
         "LIVE LONG AND PROSPER",
         "MAKE IT SO",
         "MARAUDE RICH TRADE WORDS",
-        "MANUFACTURE YOUR FLEET",
+        "MANUFACTURE YOUR ROBOT LEGION",
         "MINE ASTEROIDS",
         "MUTATE APPENDAGES",
         "NAVIGATE UNCHARTED STAR",
-        "NEGOTIATE DIPLOMACY",
-        "OPERATE SUPERWEAPONS",
-        "OBTAIN PRESTIGE",
+        "NEGOTIATE PEAVE",
+        "OBTAIN ANCIENT ALIEN ARTIFACTS",
         "OVERWHELM ENEMY DEFENSES",
         "OVERCOME NEW CHALLENGES",
         "OUTLAW CORRUPTION",
         "OPPOSE TYRANNY",
-        "PILOT YOUR SHIP",
+        "PILOT YOUR INTERCEPTOR",
         "PILLAGE CORPORATE COFFERS",
         "PROTECT YOUR CAPITAL",
         "PROBE ENEMY DEFENSES",
@@ -190,6 +186,7 @@ export default {
         "SYNERGIZE TECHNOLOGIES",
         "SWARM SECTORS",
         "SIEGE PLANETARY DEFENSES",
+        "SPARK A REBELLION",
         "SPY ON TOP SECRET PROJECTS",
         "SALVAGE WRECKAGE",
         "SMUGGLE CONTRABAND",
@@ -198,16 +195,15 @@ export default {
         "SEIZE YOUR DESTINY",
         "SPREAD PROPAGANDA",
         "TRANSMIT STAR CHARTS",
-        "TRANSPORT CARGO",
-        "TEAM-UP WITH NEW FRIENDS",
+        "TRANSPORT ILLEGAL CARGO",
+        "TEAM-UP WITH YOUR FRIENDS",
         "TRADE GOODS",
         "TERRAFORM BARREN SYSTEMS",
         "TERMINATE THE CHOSEN ONE",
         "TARGET ENEMY ENGINES",
         "TRAVEL THROUGH ION STORMS",
         "TRANSFORM REALITY",
-        "TRAVERSE NEBULA",
-        "THRIVE AS A CIVILIZATION",
+        "TRAVERSE TRHOUGH A NEBULA",
         "TELEPORT IN ONE PIECE",
         "UNITE THE OPPRESSED",
         "UNLOAD CARGO CONTAINERS",
@@ -215,7 +211,7 @@ export default {
         "UNDERTAKE STELLAR PROJECTS",
         "VOYAGE INTO THE UNKNOWN",
         "VENTURE THROUGH NEW WORLDS",
-        "VISIT SHADOW PORTS",
+        "VISIT UNEXPLORED WORLDS",
         "VINDICATE YOUR SOVEREIGNTY",
         "VIOLATE THE RULES OF PHYSICS",
         "VETO BILLS IN THE SENATE",
@@ -229,9 +225,9 @@ export default {
         "WITHDRAW FROM YOUR ENEMIES SECTOR",
         "WITNESS A SAGA",
         "WRITE PEACE TREATIES",
-        "YIELD RESOURCES",
         "ZOOM THROUGH HYPERSPACE"
       ],
+      volume: 0, // mute by default
       wordIndex: 0,
       letterIndex: 0,
       currentText: "",
@@ -239,6 +235,7 @@ export default {
       showCursor: true,
       lightSpeed: false,
       launchAudio: null,
+      lastVolume: null,
       backgroundMusic: null,
       isMusicPlaying: false
     };
@@ -271,7 +268,7 @@ export default {
   },
   computed: {
     isMuted() {
-        return this.volume === 0 || !this.isMusicPlaying;
+      return this.volume === 0;
     },
     documentationUrl() {
         return process.env.VUE_APP_DOCUMENTATION_URL;
@@ -284,49 +281,44 @@ export default {
     adjustVolume() {
       this.backgroundMusic.volume = this.volume;
       this.updateTooltipPosition();
-          if (this.volume > 0 && !this.isMusicPlaying) {
-              // Try to play the music
-              const playPromise = this.backgroundMusic.play();
-
-              if (playPromise !== undefined) {
-                  playPromise.catch(error => {
-                      // Audio play failed due to browser restrictions.
-                      // Add a one-time click event to the document.
-                      document.addEventListener('click', () => {
-                          this.backgroundMusic.play();
-                          this.isMusicPlaying = true;
-                      }, { once: true });
-                  }).then(() => {
-                      // Audio played successfully.
-                      this.isMusicPlaying = true;
-                  });
-              } else {
-                  // Browser does not return a play promise.
-                  // Play state will be uncertain.
-                  this.isMusicPlaying = true;
-              }
-          } else if (this.volume === 0 && this.isMusicPlaying) {
-              this.backgroundMusic.pause();
-              this.isMusicPlaying = false;
-          }
+      if (this.volume > 0 && !this.isMusicPlaying) {
+        // Try to play the music
+        const playPromise = this.backgroundMusic.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            // Audio play failed due to browser restrictions.
+            document.addEventListener('click', () => {
+              this.backgroundMusic.play();
+              this.isMusicPlaying = true;
+            }, { once: true });
+          }).then(() => {
+            // Audio played successfully.
+            this.isMusicPlaying = true;
+          });
+        } else {
+          // Browser does not return a play promise. Play state will be uncertain.
+          this.isMusicPlaying = true;
+        }
+      } else if (this.volume === 0 && this.isMusicPlaying) {
+        this.backgroundMusic.pause();
+        this.isMusicPlaying = false;
       }
+    }
     },
+
     toggleBackgroundMusic() {
-      // If music is playing, pause it. Otherwise, play it.
-      if (this.isMusicPlaying) {
-          this.backgroundMusic.pause();
-      } else {
-          this.backgroundMusic.play();
-      }
-      
-      // Reflect the change in the isMusicPlaying state.
-      this.isMusicPlaying = !this.isMusicPlaying;
+        if (this.isMuted) {
+          // If it's muted, we'll play it
+          this.volume = this.lastVolume || 0.5; // Restore the last volume or default to 0.5
+        } else {
+          // If it's playing, we'll mute it
+          this.lastVolume = this.volume; // Store the current volume before muting
+          this.volume = 0; // Set the volume to 0 to mute it
+        }
+        this.adjustVolume();  // Adjust the volume after making changes
+      },
 
-      // Check if volume is zero after toggling and adjust accordingly.
-      if (this.volume === 0) {
-          this.isMusicPlaying = false;
-      }
-    },
+
     updateTooltipPosition() {
       const slider = this.$refs.volumeSlider;
       const tooltip = slider.nextSibling;
@@ -335,6 +327,7 @@ export default {
       tooltip.style.left = rect.left + percent * rect.width + 'px';
       tooltip.style.top = rect.top - 30 + 'px'; // Adjust this value based on your design
     },
+
     showTooltip() {
         this.isTooltipVisible = true;
         this.updateTooltipPosition();
@@ -347,13 +340,16 @@ export default {
         tooltip.style.left = rect.left + percent * rect.width + 'px';
         tooltip.style.top = rect.top - 30 + 'px'; // 30 is an arbitrary offset for the tooltip
     },
+
     hideTooltip() {
         this.isTooltipVisible = false;
     },
+
     beforeDestroy() {
       this.backgroundMusic.pause();
       this.backgroundMusic = null;
     },
+
     login() {
       this.lightSpeed = true;
       this.launchAudio.play();
@@ -361,6 +357,7 @@ export default {
         router.push({ name: "main-menu" });
       }, 1000);
     },
+
     typeEffect() {
       if (this.typing) {
         if (this.letterIndex < this.words[this.wordIndex].length) {
@@ -389,8 +386,10 @@ export default {
           return;
       }
     }
+
     setTimeout(this.typeEffect, this.typing ? 100 : 50);
   },
+
   watch: {
     volume: function() {
       this.updateTooltipPosition();
