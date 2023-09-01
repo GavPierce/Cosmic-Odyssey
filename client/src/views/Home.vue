@@ -9,66 +9,47 @@
         WELCOME EXPLORER
         <div class="subtext">
           prepare to
-          <span
-            >{{ currentText }}<span class="cursor" v-if="showCursor"></span
-          ></span>
+          <span>
+            {{ currentText }}<span class="cursor" v-if="showCursor"></span>
+          </span>
         </div>
       </div>
       <div class="login-box">
         <h4>Login</h4>
         <loading-spinner :loading="isAutoLoggingIn" />
-        <account-login
-          v-if="!isAutoLoggingIn"
-          @loginSuccess="login"
-        ></account-login>
-        
+        <account-login v-if="!isAutoLoggingIn" @loginSuccess="login"></account-login>
         
         <!-- Background music control centered below the login -->
         <div class="volume-control centered">
-            <a v-if="!isMuted" @click="toggleBackgroundMusic" title="Music" class="me-2">
-              <i class="fas fa-volume-up"></i>
-            </a>
-            <a v-else @click="toggleBackgroundMusic" title="Music" class="me-2">
-              <i class="fas fa-volume-mute"></i>
-            </a>
-            <input type="range" ref="volumeSlider" min="0" max="1" step="0.1" v-model="volume" @input="adjustVolume" @mouseover="showTooltip" @mouseleave="hideTooltip">
-            <span class="volume-tooltip" v-if="isTooltipVisible && !isNaN(volume)">{{ volumePercentage }}%</span>
+          <a v-if="!isMuted" @click="toggleBackgroundMusic" title="Music" class="me-2">
+            <i class="fas fa-volume-up"></i>
+          </a>
+          <a v-else @click="toggleBackgroundMusic" title="Music" class="me-2">
+            <i class="fas fa-volume-mute"></i>
+          </a>
+          <input type="range" ref="volumeSlider" min="0" max="1" step="0.1" v-model="volume" 
+                 @input="adjustVolume" @mouseover="showTooltip" @mouseleave="hideTooltip">
+          <span class="volume-tooltip" v-if="isTooltipVisible && !isNaN(volume)">{{ volumePercentage }}%</span>
         </div>
       </div>
       
       <div class="bottom-nav">
         <div class="bottom-left">
-          <router-link
-            :to="{ name: 'privacy-policy' }"
-            class="me-2"
-            title="Privacy Policy"
-          >
+          <router-link :to="{ name: 'privacy-policy' }" class="me-2" title="Privacy Policy">
             <i class="fas fa-file-alt"></i>
           </router-link>
-          <a
-            href="https://discord.gg/XfqPrSP8Q4"
-            target="_blank"
-            title="Discord"
-            class="me-2"
-          >
+          <a href="https://discord.gg/XfqPrSP8Q4" target="_blank" title="Discord" class="me-2">
             <i class="fa-brands fa-discord"></i>
           </a>
 
-         <!--COMMENT OUT DONATION UNTIL WE WANT TO REACTIVATE IT 
-            <a
-            href="https://www.buymeacoffee.com/gavinpierce"
-            target="_blank"
-            class="text-warning"
-            ><i class="fas fa-coffee me-1"></i>Donate</a
-            >
+          <!-- COMMENT OUT DONATION UNTIL WE WANT TO REACTIVATE IT
+          <a href="https://www.buymeacoffee.com/gavinpierce" target="_blank" class="text-warning">
+            <i class="fas fa-coffee me-1"></i>Donate
+          </a>
           -->
-          
+
         </div>
-        <a
-          href="https://docs.cosmic-odyssey.io"
-          target="_blank"
-          class="bottom-right text-primary me-2"
-        >
+        <a href="https://docs.cosmic-odyssey.io" target="_blank" class="bottom-right text-primary me-2">
           <i class="fas fa-graduation-cap me-1"></i>Learn to Play
         </a>
       </div>
@@ -420,38 +401,36 @@ export default {
 </script>
 
 <style scoped>
-@import url("https://fonts.cdnfonts.com/css/anurati");
+  @import url("https://fonts.cdnfonts.com/css/anurati");
 
-.top-logo {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  height: 3em;
-  background-color: transparent;
-  margin-top: 2em;
-}
+  .top-logo {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 3em;
+    background-color: transparent;
+    margin-top: 2em;
+  }
 
-.top-logo img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  height: 50px;
-  background-color: transparent;
-  color: #ffffff;
-  text-align: center;
-  font-family: "Chakra Petch", sans-serif;
-  font-size: 20px;
-  font-weight: 500;
-  padding-top: 10px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-}
+  .top-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    background-color: transparent;
+    color: #ffffff;
+    text-align: center;
+    font-family: "Chakra Petch", sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    padding-top: 10px;
+  }
 
 .splash-text {
   text-align: center;
