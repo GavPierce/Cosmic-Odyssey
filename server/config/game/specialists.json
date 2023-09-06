@@ -449,7 +449,7 @@
             "id": 21,
             "key": "interceptor-ship",
             "name": "Assault Lander",
-            "description": "Grants x1.5 star capture rewards for destroying infrastructure in combat.",
+            "description": "Grants twice the star capture rewards for destroying infrastructure in combat.",
             "active": {
                 "official": true,
                 "custom": true
@@ -460,7 +460,7 @@
             "expireTicks": null,
             "modifiers": {
                 "special": {
-                    "starCaptureRewardMultiplier": 1.5
+                    "starCaptureRewardMultiplier": 2
                 }
             }
         },
