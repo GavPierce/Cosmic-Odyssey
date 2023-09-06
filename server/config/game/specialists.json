@@ -697,13 +697,13 @@
             "id": 11,
             "key": "observatory",
             "name": "Quantum Research Station",
-            "description": "The star's scientific infrastructure contributes x2 to research and adds +1 Scanning to the star. Deducts -3 Weapons from your side in combat and -3 Terraforming from the star.",
+            "description": "The star's scientific infrastructure is tripled to research and adds +1 Scanning to the star. Deducts -3 Weapons from your side in combat and -3 Terraforming from the star.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 500,
-            "baseCostCreditsSpecialists": 5,
+            "baseCostCredits": 400,
+            "baseCostCreditsSpecialists": 4,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -713,7 +713,7 @@
                     "scanning": 1
                 },
                 "special": {
-                    "scienceInfrastructureMultiplier": 2
+                    "scienceInfrastructureMultiplier": 3
                 }
             }
         },
