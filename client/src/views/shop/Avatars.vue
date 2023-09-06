@@ -3,13 +3,13 @@
     <view-title title="Faction Collection" />
 
     <p>
-      In the vast expanse of the cosmos, unveil hidden factions and enigmatic species using the coveted <strong class="text-warning">Galactic Credits</strong>. Amass these stellar tokens by triumphing in interstellar galactic domination.
+      In the vast expanse of the cosmos, unveil hidden factions and enigmatic species using the coveted <strong>Galactic Credits</strong>. Amass these stellar tokens by triumphing in interstellar galactic domination.
     </p>
     <h5 v-if="userCredits">
       You have
       <span class="text-warning"
-        ><strong>{{ userCredits.credits }}</strong> Galactic Credits</span
-      >.
+        ><strong>{{ userCredits.credits }}</strong> </span
+      > Galactic Credits.
     </h5>
 
     <hr />
@@ -173,7 +173,6 @@ export default {
 </script>
 
 <style scoped>
-
 .linebreaks {
   white-space: break-spaces;
 }
@@ -276,14 +275,14 @@ button:hover:before {
 }
 
 .text-warning {
-  animation: glow 3s infinite alternate;
+  animation: glow 6s infinite alternate;
   color: #000000;
-  text-shadow: 0 0 5px #FFD700, 0 0 5px #FFD700;
+  text-shadow: 0 0 3px #FFD700, 0 0 3px #FFD700;  /* Reduced intensity */
 }
 
 @keyframes glow {
   0% {
-    text-shadow: 0 0 5px #000000, 0 0 5px #000000;
+    text-shadow: 0 0 1px #FFD700, 0 0 1px #FFD700;
   }
   100% {
     text-shadow: 0 0 15px #FFD700, 0 0 10px #FFD700, 0 0 25px #FFA500;
