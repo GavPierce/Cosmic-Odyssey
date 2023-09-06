@@ -51,7 +51,7 @@
             </button>
 
             <button class="btn btn-sm ms-1" v-if="userPlayer" :class="{'btn-outline-info': !unreadEvents, 'btn-warning': unreadEvents}" v-on:click="setMenuState(MENU_STATES.EVENT_LOG)" title="Event Log (E)">
-                <i class="fas fa-land-mine-on"></i> <span class="ms-1" v-if="unreadEvents">{{unreadEvents}}</span>
+                <i class="fas fa-broadcast-tower"></i> <span class="ms-1" v-if="unreadEvents">{{unreadEvents}}</span>
             </button>
 
             <hamburger-menu class="ms-1 d-none d-sm-inline-block" :buttonClass="'btn-sm btn-info'" :dropType="'dropleft'" />
