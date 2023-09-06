@@ -149,8 +149,8 @@
         {
             "id": 8,
             "key": "mars-pathfinder",
-            "name": "Freighter",
-            "description": "Increases carrier speed by x1.5. Deducts -1 Weapons from your side in combat and -2 Hyperspace Range to the carrier.",
+            "name": "Cargo Freighter",
+            "description": "Increases carrier speed by 50% and increases hyperspace range by 2. Deducts -1 Weapons from your side in combat.",
             "active": {
                 "official": true,
                 "custom": true
@@ -161,9 +161,9 @@
             "expireTicks": null,
             "modifiers": {
                 "local": {
-                    "speed": 1.5,
-                    "weapons": -1,
-                    "hyperspace": -2
+                    "speed": 1.50,
+                    "weapons": -2,
+                    "hyperspace": 2
                 }
             }
         },
@@ -283,8 +283,8 @@
         {
             "id": 14,
             "key": "spoutnik",
-            "name": "Pathfinder",
-            "description": "Adds +1 hyperspace range, 10% more speed and -1 weapons to the carrier.",
+            "name": "Pathfinder Probe",
+            "description": "Adds +1 hyperspace range, 50% more speed and -10 weapons to the carrier.",
             "active": {
                 "official": true,
                 "custom": true
@@ -296,8 +296,8 @@
             "modifiers": {
                 "local": {
                     "hyperspace": 1,
-                    "speed": 1.1,
-                    "weapons": -1
+                    "speed": 1.5,
+                    "weapons": -10
                 }
             }
         },
@@ -611,8 +611,8 @@
         {
             "id": 7,
             "key": "missile-mech",
-            "name": "Mecha Gigafactory",
-            "description": "Adds +3 Weapons to your side in combat and +10 Manufacturing to the star. Deducts -1 from the star's natural resources every tick, when the star reaches 0 natural resources, the star dies and the specialist retires.",
+            "name": "Omega Forge",
+            "description": "Harnesses the stellar energies to provide +3 weapons to your armada and augments starship production by +10 manufacturing. However, depletes -1 resources from the star's core reservoir every cosmic pulse. Upon the star's reservoir depleting to void, the star implodes into oblivion, wiping out all of the planetary infastructure.",
             "active": {
                 "official": true,
                 "custom": true
@@ -634,8 +634,8 @@
         {
             "id": 8,
             "key": "power-generator",
-            "name": "Scanner Scrambler",
-            "description": "Prevents other players from seeing how many ships are garrisoned at the star.",
+            "name": "Scanning Jammer",
+            "description": "A cutting-edge enigma device that shrouds the star system in a veil of cosmic mystery, rendering the count of star-cruisers harbored within imperceptible to adversarial cosmic entities.",
             "active": {
                 "official": true,
                 "custom": true
@@ -653,7 +653,7 @@
         {
             "id": 9,
             "key": "damage-kinetic",
-            "name": "Infrastructure Incinerator",
+            "name": "Infrastructur Obliterator",
             "description": "Should the star system fall into enemy grasp, entire stellar infrastructure shall face annihilation.",
             "active": {
                 "official": true,
@@ -934,7 +934,7 @@
         {
             "id": 23,
             "key": "beam-satellite",
-            "name": "Omega Cannon",
+            "name": "Dark Energy Cannon",
             "description": "Adds +2 Defender Bonus to the star.",
             "active": {
                 "official": true,
