@@ -422,26 +422,26 @@
             "id": 20,
             "key": "metroid",
             "name": "Experimental Lifeform",
-            "description": "When attacking a star, adds +6 Weapons to your side in combat. Does not participate in carrier-to-carrier combat. Dies after 20 ticks. Gains no rewards from invading.",
+            "description": "When attacking a star, adds +10 Weapons to your side in combat. When attacking in hyperspace, -2 Weapons to your side in combat. Dies after 30 ticks. Gains no rewards from invading.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 600,
-            "baseCostCreditsSpecialists": 6,
+            "baseCostCredits": 500,
+            "baseCostCreditsSpecialists": 5,
             "oneShot": false,
-            "expireTicks": 20,
+            "expireTicks": 30,
             "modifiers": {
                 "local": {
                     "carrierToStarCombat": {
                         "attacker": {
-                            "weapons": 6,
+                            "weapons": 10,
                             "starCaptureRewardMultiplier": 0
                         }
+                    },
+                    "carrierToCarrierCombat": {
+                        "weapons": -2
                     }
-                },
-                "special": {
-                    "avoidCombatCarrierToCarrier": true
                 }
             }
         },
