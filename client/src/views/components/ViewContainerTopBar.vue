@@ -19,18 +19,17 @@
       </div>
       <div class="menu-item dropdown dropdown-mobile-full">
         <router-link
-        :to="{ name: 'administration' }"
-        v-if="userHasAdminRole"
-        class="menu-link"
-        title="Access administrator features."
-      >
-        <div class="menu-icon"><i class="fas fa-users-cog"></i></div>
-        <div class="menu-text d-sm-block d-none ms-1">Admin</div>
-      </router-link>
-
+          :to="{ name: 'administration' }"
+          v-if="userHasAdminRole"
+          class="menu-link"
+          title="Access administrator features."
+        >
+          <div class="menu-icon"><i class="fas fa-users-cog"></i></div>
+          <div class="menu-text d-sm-block d-none ms-1">Admin</div>
+        </router-link>
       </div>
       <div class="menu-item dropdown dropdown-mobile-full">
-        <router-link :to="{ name: 'avatars' }" class="menu-link">
+        <router-link :to="{ name: 'avatars' }" class="menu-link" title="View unlockable factions, symbols and colors to customize your play-style.">
           <div class="menu-icon"><i class="fas fa-pastafarianism"></i></div>
           <div class="menu-text d-sm-block d-none ms-1">Unlockables</div>
         </router-link>
@@ -41,6 +40,7 @@
           data-bs-toggle="dropdown"
           data-bs-display="static"
           class="menu-link"
+          title="View your account settings, game-play statistics and achievements."
         >
           <!-- <div class="menu-img online">
           <img src="assets/img/user/profile.jpg" alt="Profile" height="60">
