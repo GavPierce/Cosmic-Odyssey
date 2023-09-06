@@ -16,13 +16,25 @@
       </div>
       <div class="login-box">
         <h4>Login</h4>
-
         <loading-spinner :loading="isAutoLoggingIn" />
-
         <account-login
           v-if="!isAutoLoggingIn"
           @loginSuccess="login"
         ></account-login>
+        <!-- Add the "Forgot Password/Username?" placeholder here. -->
+        <div class="forgot-credentials">
+        </div>
+        <div class="volume-controls" v-if="!isFirefox">
+            <a v-if="isMusicPlaying" @click="toggleBackgroundMusic" title="Music">
+              <i class="fas fa-volume-up"></i>
+            </a>
+            <a v-else @click="toggleBackgroundMusic" title="Music">
+              <i class="fas fa-volume-mute"></i>
+            </a>
+            <input type="range" class="volume-slider" min="0" max="1" step="0.1" v-model="volume" @input="adjustVolume" :style="{'background': sliderThumbPosition}">
+
+
+        </div>
       </div>
       <div class="bottom-nav">
         <div class="bottom-left">
@@ -39,14 +51,8 @@
             title="Discord"
             class="me-2"
           >
-            <i class="fab fa-discord"></i>
+            <i class="fa-brands fa-discord"></i>
           </a>
-          <a
-            href="https://www.buymeacoffee.com/gavinpierce"
-            target="_blank"
-            class="text-warning"
-            ><i class="fas fa-coffee me-1"></i>Donate</a
-          >
         </div>
         <a
           href="https://docs.cosmic-odyssey.io"
@@ -59,6 +65,8 @@
     </div>
   </div>
 </template>
+
+
 
 <script>
 import Starfield from "./components/Starfield";
@@ -79,11 +87,10 @@ export default {
       isAutoLoggingIn: false,
       words: [
         "EMBARK ON A COSMIC ODYSSEY",
-        "ADAPT TO THE UNEXPECTED",
+        "PLAN FOR THE UNEXPECTED",
         "ADMINISTER AN EMPIRE",
         "ANTICIPATE INCOMING THREATS",
         "ASCEND TO THE THRONE",
-        "ATTACK CRITICAL INFASTRUCTURE",
         "ACHIEVE GREATNESS",
         "ACCOMPLISH THE IMPOSSIBLE",
         "ACTIVATE DEFENSES",
@@ -99,9 +106,10 @@ export default {
         "BUILD A GALACTIC EMPIRE",
         "BATTLE SPACE PIRATES",
         "BRIBE OFFICIALS",
-        "BOMBARD PLANETARY INFASTRUCTURE",
+        "BOMBARD PLANETARY INFRASTRUCTURE",
         "BLOCKADE TRADE ROUTES",
         "BOUNTY HUNT",
+        "BYPASS THE COMPRESSOR",
         "CONQUER YOUR ENEMIES",
         "COMMUNICATE WITH ALIEN LIFEFORMS",
         "COLONIZE PLANETS",
@@ -120,18 +128,21 @@ export default {
         "DESTROY STARBASES",
         "DEFEND FROM PIRATES",
         "DETECT INCOMING THREATS",
+        "DISENGAGE THE EXTERNAL INERTIAL DAMPENER",
         "DOMINATE THE GALAXY",
         "DEMOLISH YOUR ENEMY'S ECONOMY",
         "EXPLORE ANCIENT RUINS",
         "ELIMINATE THREATS",
         "ENJOY YOUR ACCOMPLISHMENTS",
         "EXTRACT MINERALS",
+        "EXPECT THE UNEXPECTED",
         "EXPERIMENT WITH TECHNOLOGIES",
         "EXPLOIT RESOURCES",
         "ENFORCE YOUR RULE",
         "EXPERIENCE GRAND STRATEGY",
         "FIGHT FOR JUSTICE",
         "FEDERATE WITH YOUR ALLIES",
+        "FIND THE TRUTH THAT IS OUT THERE",
         "FIRE ALL TORPEDOES",
         "FORGE FRIENDSHIPS",
         "GRANT SAFE PASSAGE",
@@ -139,6 +150,7 @@ export default {
         "GAIN RICHES",
         "GATHER RESOURCES",
         "GENERATE NUCLEAR ENERGY",
+        "HAVE A BAD FEELING ABOUT THIS",
         "HUNT GIANT CREATURES",
         "HACK MAINFRAMES",
         "HI-JACK TRADE SHIPS",
@@ -146,15 +158,18 @@ export default {
         "INVADE PLANETS",
         "INFILTRATE ENEMY LEADERSHIP",
         "JAM ENEMY COMMS",
-        "JOURNEY ACROSS THE UNIVERSE",
+        "JOURNEY THROUGH THE UNKNOWN",
         "JUMP THROUGH WORMHOLES",
         "JOIN FORCES",
         "KINDLE A REBELLION",
         "LEAD YOUR EMPIRE",
         "LAUNCH ALL SQUADRONS",
+        "LIVE LONG AND PROSPER",
+        "MAKE IT SO",
         "MARAUDE RICH TRADE WORDS",
         "MANUFACTURE YOUR FLEET",
         "MINE ASTEROIDS",
+        "MUTATE APPENDAGES",
         "NAVIGATE UNCHARTED STAR",
         "NEGOTIATE DIPLOMACY",
         "OPERATE SUPERWEAPONS",
@@ -164,6 +179,7 @@ export default {
         "OUTLAW CORRUPTION",
         "OPPOSE TYRANNY",
         "PILOT YOUR SHIP",
+        "PILLAGE CORPORATE COFFERS",
         "PROTECT YOUR CAPITAL",
         "PROBE ENEMY DEFENSES",
         "PLOT IN SECRECY",
@@ -171,11 +187,14 @@ export default {
         "QUASH REBELLIONS",
         "RECRUIT MERCENARIES",
         "RAID COLONIES",
+        "REALIGN THE MULTIMODAL FLUX RELAY",
         "RESEARCH NEW TECHNOLOGIES",
-        "REPAIR DAMAGED INFASTRUCTURE",
+        "REPAIR DAMAGED INFRASTRUCTURE",
+        "REVERSE THE POLARITY",
         "RULE WITH AN IRONFIST",
         "REBEL AGAINST OPPRESSION",
         "SABOTAGE ENEMY REACTORS",
+        "SET PHASERS TO STUN",
         "SYNCHRONIZE ATTACKS",
         "SYNERGIZE TECHNOLOGIES",
         "SWARM SECTORS",
@@ -211,12 +230,12 @@ export default {
         "VETO BILLS IN THE SENATE",
         "WATCH THE FALL OF EMPIRES",
         "WAIT FOR THE RIGHT MOMENT",
-        "WARP THOUGH STARGATES",
+        "WARP THROUGH STARGATES",
         "WAKE THE ANCIENTS",
         "WEIGH RISKS",
         "WATCH STARS COLLAPSE",
         "WHISPER IN THE SHADOWS",
-        "WITHDRAW FROM YOUR ENEMIES SECTOR",
+        "WITHDRAW FROM THE ENEMY SECTOR",
         "WITNESS A SAGA",
         "WRITE PEACE TREATIES",
         "YIELD RESOURCES",
@@ -228,12 +247,21 @@ export default {
       typing: true,
       showCursor: true,
       lightSpeed: false,
-      launchAudio: null
+      launchAudio: null,
+      backgroundMusic: null,
+      isMusicPlaying: false,
+      volume: 0,
+      userInteracted: false,
+      isFirefox: false
     };
   },
   async mounted() {
     this.isAutoLoggingIn = true;
     this.launchAudio = new Audio(wooshAudio);
+    this.backgroundMusic = new Audio(require("../assets/audio/backgroundMusic.mp3"));
+    this.backgroundMusic.loop = true;
+    this.isFirefox = navigator.userAgent.indexOf('Firefox') !== -1;
+    
 
     try {
       let response = await ApiAuthService.verify();
@@ -258,9 +286,55 @@ export default {
   computed: {
     documentationUrl() {
       return process.env.VUE_APP_DOCUMENTATION_URL;
-    }
+    },
+    sliderThumbPosition() {
+    const gradient = `linear-gradient(to right, blue ${this.volume * 100}%, gray ${this.volume * 100}%)`;
+    return gradient;
+}
+
   },
   methods: {
+    adjustVolume() {
+      this.backgroundMusic.volume = this.volume;
+      
+        if (this.volume > 0 && !this.userInteracted) {
+            this.backgroundMusic.play().catch(error => {
+                console.error("Playback failed:", error);
+            });
+            this.isMusicPlaying = true;
+            this.userInteracted = true; // Set userInteracted flag to true
+        } 
+        else if (this.volume === 0 && this.userInteracted) {
+            this.backgroundMusic.pause();
+            this.isMusicPlaying = false;
+        }
+    },
+
+    toggleBackgroundMusic() {
+      if (this.isMusicPlaying) {
+        this.backgroundMusic.pause();
+        this.isMusicPlaying = false;
+      } else {
+        if (!this.userInteracted) {
+          this.volume = 0.5;  // Set volume to 50% when played for the first time
+          this.backgroundMusic.volume = this.volume;
+          this.backgroundMusic.play().catch(error => {
+            console.error("Playback failed:", error);
+          });
+          this.userInteracted = true;
+          this.isMusicPlaying = true;
+        } else {
+          this.backgroundMusic.play().catch(error => {
+            console.error("Playback failed:", error);
+          });
+          this.isMusicPlaying = true;
+        }
+      }
+    },
+    beforeDestroy() {
+      this.backgroundMusic.pause();
+      this.backgroundMusic = null;
+    },
     login() {
       this.lightSpeed = true;
       this.launchAudio.play();
@@ -319,6 +393,7 @@ export default {
   height: 100%;
   object-fit: contain;
 }
+
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -334,16 +409,16 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  align-items: center;
 }
 
 .splash-text {
   text-align: center;
   font-family: "Anurati", sans-serif;
   max-width: 12em;
-  font-size: 25px; /* or whatever size you need */
-  font-weight: bold; /* or whatever weight you need */
+  font-size: 25px;
+  font-weight: bold;
   height: min-content;
-  /* Gradient properties */
   background-image: linear-gradient(
     to bottom right,
     rgb(175, 175, 174),
@@ -351,22 +426,23 @@ export default {
     #ffffff,
     #ffffff
   );
-
-  /* Make the text transparent and clip the background to it */
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
+
 .subtext {
   font-weight: 500;
   font-family: "Chakra Petch", sans-serif;
-  font-size: 12px; /* or whatever size you need */
+  font-size: 12px;
 }
+
 .subtext span {
   color: rgb(249, 219, 52);
 }
+
 .cursor {
-  border-right: 2px solid white; /* Cursor effect */
+  border-right: 2px solid white;
   padding-right: 5px;
   animation: blink 0.7s infinite;
 }
@@ -380,10 +456,12 @@ export default {
     opacity: 0;
   }
 }
+
 .login-box {
   height: min-content;
   padding-top: 2em;
 }
+
 .full-container {
   background-color: transparent;
   height: 100vh;
@@ -392,6 +470,8 @@ export default {
   justify-content: space-around;
   align-content: center;
 }
+
+/* Styles for the input range on large screens (622px and above) */
 @media (min-width: 622px) {
   .splash-text {
     text-align: center;
@@ -402,11 +482,78 @@ export default {
   .subtext {
     font-weight: 500;
     font-family: "Chakra Petch", sans-serif;
-    font-size: 20px; /* or whatever size you need */
+    font-size: 20px;
   }
   .top-logo {
     height: 5em;
     margin-top: 2em;
   }
+  .discord-icon {
+    color: #5865F2;
+  }
+  input[type="range"] {
+    width: 100%;
+    margin: 0 auto;
+  }
+  .volume-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  /* Adjusted styles for the range input */
+  /* Base styles for the range input */
+/* Base styles for the range input */
+input[type="range"] {
+    width: 100%;
+    margin: 0 auto;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 3px;
+    outline: none; 
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Webkit specific styles for the slider thumb */
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px; 
+    height: 15px; 
+    background: rgb(254, 254, 255); 
+    cursor: pointer; 
+    border-radius: 50%;
+    transition: background 0.3s;
+}
+
+/* Firefox specific styles for the slider thumb */
+input[type="range"]::-moz-range-thumb {
+    width: 15px; 
+    height: 15px; 
+    background: rgb(254, 254, 255);
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+/* Firefox styles for the filled portion of the range to the left of the thumb */
+input[type="range"]::-moz-range-progress {
+    background: blue;
+    border-radius: 5px;
+}
+
+/* Firefox styles for the track of the range */
+input[type="range"]::-moz-range-track {
+    background: gray;
+    border-radius: 5px;
+}
+
+/* Webkit styles for the track of the range */
+input[type="range"]::-webkit-slider-runnable-track {
+    border-radius: 5px;
+    background: inherit; /* Inherit the gradient background from the main input element */
+}
+
 }
 </style>
+
