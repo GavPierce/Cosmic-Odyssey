@@ -141,12 +141,12 @@
         </div>
         <div class="col-auto">
           <span v-if="star.ownedByPlayerId && !isDeadStar" title="Manufacturing">
-            {{star.effectiveTechs.manufacturing}} <i class="fas fa-gears ms-1"></i>
+            {{star.effectiveTechs.manufacturing}} <i class="fas fa-wrench ms-1"></i>
           </span>
         </div>
         <div class="col-auto">
           <span v-if="star.ownedByPlayerId && !isDeadStar" title="Ship production per tick">
-            {{star.manufacturing || '???'}} <i class="fas fa-wrench ms-1"></i>
+            {{star.manufacturing || '???'}} <i class="fas fa-rocket ms-1"></i>
           </span>
         </div>
       </div>
@@ -235,7 +235,7 @@
           </div>
           <div class="col text-end" title="Manufacturing">
             <span>{{star.effectiveTechs.manufacturing}}</span>
-            <i class="fas fa-gears ms-2"></i>
+            <i class="fas fa-wrench ms-2"></i>
           </div>
       </div>
 
@@ -245,7 +245,7 @@
           </div>
           <div class="col text-end" title="Ship production per tick">
             <span>{{star.manufacturing || '???'}}</span>
-            <i class="fas fa-wrench ms-2"></i>
+            <i class="fas fa-rocket ms-2"></i>
           </div>
       </div>
     </div>

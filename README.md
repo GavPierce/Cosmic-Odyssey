@@ -32,6 +32,19 @@ Our server harnesses the power of:
 
 ## 🖥 Frontend Tech Stack
 
+1. Install the prerequisites.
+   - [Node.js](https://nodejs.org/en/) v14
+   - [MongoDB](https://www.mongodb.com/) v4.4
+2. Clone the repository.
+3. Checkout `master`.
+4. `npm install` in both `client/` and `server/` directories.
+5. Create a `.env` file in `server/` (See `.env.example`).
+6. Create a `.env` file in `client/` (See `.env.example`).
+7. `npm run start-jobs:dev` in `server/` to start the automated jobs and setup new games.
+8. `npm run start-api:dev` in `server/` to start the API.
+9. `npm run serve` in `client/` to start the client application.
+10. Browse to the site locally (default [http://localhost:8080](http://localhost:8080)).
+
 On the client-side, we use:
 - **Vue.js** - [https://vuejs.org/](https://vuejs.org/)
 - **PixiJS** - [https://www.pixijs.com/](https://www.pixijs.com/)

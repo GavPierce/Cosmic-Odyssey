@@ -3,7 +3,7 @@
     <menu-title :title="carrier.name" @onCloseRequested="onCloseRequested">
       <button v-if="hasWaypoints" @click="onViewCombatCalculatorRequested" class="btn btn-sm btn-outline-warning"><i class="fas fa-calculator"></i></button>
       <modalButton modalName="scuttleCarrierModal" v-if="!$isHistoricalMode() && canScuttleCarrier" classText="btn btn-sm btn-outline-danger ms-1">
-        <i class="fas fa-rocket"></i> <i class="fas fa-trash ms-1"></i>
+        <i class="fas fa-space-shuttle"></i> <i class="fas fa-trash ms-1"></i>
       </modalButton>
       <button v-if="!$isHistoricalMode() && isOwnedByUserPlayer && isGameInProgress" @click="onCarrierRenameRequested" class="btn btn-sm btn-outline-success ms-1"><i class="fas fa-pencil-alt"></i></button>
       <button @click="viewOnMap" class="btn btn-sm btn-outline-info ms-1"><i class="fas fa-eye"></i></button>
@@ -34,7 +34,7 @@
         </div>
         <div class="col-auto">
           <span title="The weapons level of this carrier">
-            {{carrier.effectiveTechs.weapons}} <i class="fas fa-gun ms-1"></i>
+            {{carrier.effectiveTechs.weapons}} <i class="fas fa-crosshairs ms-1"></i>
           </span>
         </div>
         <div class="col-auto">
@@ -47,7 +47,7 @@
       <div class="row pb-2">
         <div class="col">
           <span v-if="canShowSpecialist && isOwnedByUserPlayer && canHireSpecialist">
-            <specialist-icon :type="'carrier'" :defaultIcon="'user-astronaut'" :specialist="carrier.specialist"></specialist-icon>
+            <specialist-icon :type="'carrier'" :defaultIcon="'microchip'" :specialist="carrier.specialist"></specialist-icon>
             <a href="javascript:;" @click="onViewHireCarrierSpecialistRequested">
               <span class="ms-1" v-if="carrier.specialistId" :title="carrier.specialist.description">{{carrier.specialist.name}}</span>
               <span v-if="!carrier.specialistId">No Specialist</span>
@@ -55,7 +55,7 @@
             <span v-if="carrier.specialistId && carrier.specialistExpireTick" class="badge bg-warning ms-1"><i class="fas fa-stopwatch"></i> Expires Tick {{carrier.specialistExpireTick}}</span>
           </span>
           <span v-if="canShowSpecialist && (!isOwnedByUserPlayer || !canHireSpecialist)">
-            <specialist-icon :type="'carrier'" :defaultIcon="'user-astronaut'" :specialist="carrier.specialist"></specialist-icon>
+            <specialist-icon :type="'carrier'" :defaultIcon="'microchip'" :specialist="carrier.specialist"></specialist-icon>
             <span v-if="carrier.specialist" class="ms-1">{{carrier.specialist.name}}</span>
             <span v-if="carrier.specialistId && carrier.specialistExpireTick" class="badge bg-warning ms-1"><i class="fas fa-stopwatch"></i> Expires Tick {{carrier.specialistExpireTick}}</span>
             <span v-if="!carrier.specialist">No Specialist</span>
@@ -63,7 +63,7 @@
         </div>
         <div class="col-auto">
           <span title="The hyperspace range of this carrier">
-            {{carrier.effectiveTechs.hyperspace}} <i class="fas fa-gas-pump ms-1"></i>
+            {{carrier.effectiveTechs.hyperspace}} <i class="fas fa-fa-forward ms-1"></i>
           </span>
         </div>
         <div class="col-auto">
