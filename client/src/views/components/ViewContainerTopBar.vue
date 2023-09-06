@@ -18,12 +18,16 @@
         </router-link>
       </div>
       <div class="menu-item dropdown dropdown-mobile-full">
-        <router-link :to="{ name: 'galactic-credits-shop' }" class="menu-link">
-          <div class="menu-icon"><i class="fas fa-coins"></i></div>
-          <div class="menu-text d-sm-block d-none ms-1">
-            {{ userCredits }} Credit{{ userCredits === 1 ? "" : "s" }}
-          </div>
-        </router-link>
+        <router-link
+        :to="{ name: 'administration' }"
+        v-if="userHasAdminRole"
+        class="menu-link"
+        title="Access administrator features."
+      >
+        <div class="menu-icon"><i class="fas fa-users-cog"></i></div>
+        <div class="menu-text d-sm-block d-none ms-1">Admin</div>
+      </router-link>
+
       </div>
       <div class="menu-item dropdown dropdown-mobile-full">
         <router-link :to="{ name: 'avatars' }" class="menu-link">
