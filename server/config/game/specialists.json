@@ -398,21 +398,21 @@
             "id": 19,
             "key": "pirate-destroyer",
             "name": "Mothership",
-            "description": "When attacking a star, adds +2 Weapons for each player on your side in combat. Decreases carrier speed to x0.75.",
+            "description": "When defending a star, adds +4 Weapons for each ally on your side in combat. Decreases carrier speed to 50%.",
             "active": {
                 "official": true,
                 "custom": true
             },
             "baseCostCredits": 400,
-            "baseCostCreditsSpecialists": 4,
+            "baseCostCreditsSpecialists": 6,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
                 "local": {
-                    "speed": 0.75,
+                    "speed": 0.5,
                     "carrierToStarCombat": {
-                        "attacker": {
-                            "weaponsPerAlly": 2
+                        "defender": {
+                            "weaponsPerAlly": 4
                         }
                     }
                 }
