@@ -838,13 +838,13 @@
             "id": 18,
             "key": "star-gate",
             "name": "Stargate",
-            "description": "This star will form a wormhole with the next star where a Stargate is hired and the specialist will retire.",
+            "description": "This star will form a wormhole with the next star where a Stargate is constructed and the specialist will retire.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 2500,
-            "baseCostCreditsSpecialists": 25,
+            "baseCostCredits": 1000,
+            "baseCostCreditsSpecialists": 10,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
