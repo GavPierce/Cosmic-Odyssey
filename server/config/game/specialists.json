@@ -129,7 +129,7 @@
             "id": 7,
             "key": "forward-field",
             "name": "Hyperspace Transport",
-            "description": "Harnesses the energies of void-fold continuums to amplify vessel propulsion by a factor of 2. In this high-velocity mode, weapon array efficiency diminishes by -3. However, the astral jump radius of the carrier expands by +2 hyperspace range.",
+            "description": "Powerful vessel propulsion increases speed of carrier to 200%. It's added fuel reserves expand hyperspace range by +2. Weapons efficiency diminishes by -3.",
             "active": {
                 "official": true,
                 "custom": true
@@ -254,7 +254,7 @@
             "id": 13,
             "key": "spiky-field",
             "name": "Hyperspace Interceptor",
-            "description": "Adds +3 Weapons to your side in carrier-to-carrier combat and increases carrier speed by x1.5. Deducts -2 Weapons from your side in carrier-to-star combat.",
+            "description": "Adds +3 Weapons to your side in carrier-to-carrier combat and increases carrier speed by 50%. Deducts -2 Weapons from your side in carrier-to-star combat.",
             "active": {
                 "official": true,
                 "custom": true
@@ -427,15 +427,15 @@
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 500,
-            "baseCostCreditsSpecialists": 5,
+            "baseCostCredits": 800,
+            "baseCostCreditsSpecialists": 8,
             "oneShot": false,
             "expireTicks": 30,
             "modifiers": {
                 "local": {
                     "carrierToStarCombat": {
                         "attacker": {
-                            "weapons": 10,
+                            "weapons": 8,
                             "starCaptureRewardMultiplier": 0
                         }
                     },
@@ -468,7 +468,7 @@
             "id": 22,
             "key": "afterburn",
             "name": "Warp Space Stabilizer",
-            "description": "Warp Space Manipulators do not affect the carrier.",
+            "description": "Shielding the carrier from Warp Space Manipulator effects, maintaining stable warp speeds between two warp gate connection points.",
             "active": {
                 "official": true,
                 "custom": true
@@ -488,8 +488,8 @@
         {
             "id": 1,
             "key": "satellite",
-            "name": "Orbital Array",
-            "description": "Adds +1 Scanning Range to the star.",
+            "name": "Cosmic Sensor Array",
+            "description": "Orbital network that expands the star's scanning range by +1.",
             "active": {
                 "official": true,
                 "custom": true
@@ -507,8 +507,8 @@
         {
             "id": 2,
             "key": "snowflake-1",
-            "name": "Stellar Space Dock",
-            "description": "Adds +2 Manufacturing to the star. Deducts -1 Terraforming from the star.",
+            "name": "Fleet Space Dock",
+            "description": "Boosts star manufacturing by +2 but reduces terraforming by -1 due to energy harnessing.",
             "active": {
                 "official": true,
                 "custom": true
@@ -546,9 +546,9 @@
         },
         {
             "id": 4,
-            "key": "defense-satellite",
-            "name": "Orbital Defense Cannon",
-            "description": "Adds +1 Defender Bonus to the star.",
+            "key": "anti-aircraft-gun",
+            "name": "Laser Defense Grid",
+            "description": "With amplifiying emitters, this grid casts a potent laser defenses, giving the star a +1 Defender Bonus against interstellar threats.",
             "active": {
                 "official": true,
                 "custom": true
@@ -589,7 +589,7 @@
             "id": 6,
             "key": "triple-yin",
             "name": "Atomic Reassemblers",
-            "description": "Nanobots restructure waste and latent materials at the atomic level, enriching the star system with +1 natural resources every tick. However, the process diminishes combat capabilities, resulting in -5 Weapons and reduces the star's scanning potential by -3.",
+            "description": "Nanobots automatically convert waste to +1 total natural resources per tick but reduce weapons by -5 and scanning by -3.",
             "active": {
                 "official": true,
                 "custom": true
@@ -610,9 +610,9 @@
         },
         {
             "id": 7,
-            "key": "missile-mech",
+            "key": "omega",
             "name": "Omega Forge",
-            "description": "Harnesses the stellar energies to provide +3 weapons to your armada and augments starship production by +10 manufacturing. However, depletes -1 resources from the star's core reservoir every cosmic pulse. Upon the star's reservoir depleting to void, the star implodes into oblivion, wiping out all of the planetary infastructure.",
+            "description": "Uses star energy for +3 weapons and +10 manufacturing. Drains -1 resource per tick. Star implodes if resources hit zero, destroying all planetary infrastructure.",
             "active": {
                 "official": true,
                 "custom": true
@@ -635,7 +635,7 @@
             "id": 8,
             "key": "power-generator",
             "name": "Scanning Jammer",
-            "description": "A cutting-edge enigma device that shrouds the star system in a veil of cosmic mystery, rendering the count of star-cruisers harbored within imperceptible to adversarial cosmic entities.",
+            "description": "A megastructure that transmits a scanner disruption frequency concealing the number of ships in a star systemfrom people other than you, preventing them from scoping out your fleet.",
             "active": {
                 "official": true,
                 "custom": true
@@ -654,7 +654,7 @@
             "id": 9,
             "key": "damage-kinetic",
             "name": "Infrastructur Obliterator",
-            "description": "Should the star system fall into enemy grasp, entire stellar infrastructure shall face annihilation.",
+            "description": "Should the star system fall into enemy grasp, entire stellar infrastructure will be annihilated.",
             "active": {
                 "official": true,
                 "custom": true
@@ -673,7 +673,7 @@
             "id": 10,
             "key": "habitat-dome",
             "name": "Interstellar Trade Port",
-            "description": "Within the cosmic expanse, the star amplifies its economy fourfold and enhances scanning by one unit. However, its weaponry and terraformation capabilities decline by five units each.",
+            "description": "This megastructure amplifies its star's economy fourfold and enhances scanning by one unit. However, its weaponry and terraformation capabilities decline by five units each.",
             "active": {
                 "official": true,
                 "custom": true
@@ -695,9 +695,9 @@
         },
         {
             "id": 11,
-            "key": "observatory",
-            "name": "Quantum Research Station",
-            "description": "The star's scientific infrastructure is tripled to research and adds +1 Scanning to the star. Deducts -3 Weapons from your side in combat and -3 Terraforming from the star.",
+            "key": "processor",
+            "name": "Qantum Computing Gigacomplex",
+            "description": "Tripling the star's research output. However, it diminishes weapon strength by -3 in battles and reduces the star's terraforming by -3.",
             "active": {
                 "official": true,
                 "custom": true
@@ -709,8 +709,7 @@
             "modifiers": {
                 "local": {
                     "terraforming": -3,
-                    "weapons": -3,
-                    "scanning": 1
+                    "weapons": -3
                 },
                 "special": {
                     "scienceInfrastructureMultiplier": 3
@@ -719,9 +718,9 @@
         },
         {
             "id": 12,
-            "key": "double-ringed-orb",
-            "name": "Holo Broadcasting Network",
-            "description": "The star produces +6 credits per tick for each point of science on the star.",
+            "key": "vibrating-ball",
+            "name": "Research Network Transmitter",
+            "description": "Amplified by the star's scientific knowledge, it adds +6 credits per tick for each science point it holds.",
             "active": {
                 "official": true,
                 "custom": true
@@ -739,8 +738,8 @@
         {
             "id": 13,
             "key": "radar-dish",
-            "name": "Orbital Telescope Array",
-            "description": "Adds +3 Scanning Range to the star. Deducts -1 Weapons from your side in combat.",
+            "name": "Telescopic Vision Array",
+            "description": "Boosts star's scanning range by +3. Yet, its intricate design results in a -1 Weapons reduction during battles.",
             "active": {
                 "official": true,
                 "custom": true
@@ -759,8 +758,8 @@
         {
             "id": 14,
             "key": "energy-tank",
-            "name": "Terraforming Processor",
-            "description": "Adds +2 Terraforming to the star.",
+            "name": "Genesis Terraformer",
+            "description": "Harnesses star energy to boost the terraforming capability by +2, speeding up the process of improving planetary biomes.",
             "active": {
                 "official": true,
                 "custom": true
@@ -777,9 +776,9 @@
         },
         {
             "id": 15,
-            "key": "cryo-chamber",
-            "name": "Star Fleet Academy",
-            "description": "When a carrier is built at this star, a Star Fleet officer is automatically assigned to the carrier.",
+            "key": "star-altar",
+            "name": "Galactic Command Academy",
+            "description": "Every carrier crafted at this star is automatically captained by a trained Galactic Command officer from the academy.",
             "active": {
                 "official": true,
                 "custom": true
@@ -799,19 +798,19 @@
             "id": 16,
             "key": "rocket-thruster",
             "name": "Stellar Engine",
-            "description": "When the Stellar Engine is activated, the star slowly moves towards the nearest Stellar Beacon at 10% of carrier speed.",
+            "description": "When the Stellar Engine is activated, the star slowly moves towards the nearest Stellar Beacon at 20% of carrier speed.",
             "active": {
                 "official": false,
                 "custom": true
             },
-            "baseCostCredits": 1000,
-            "baseCostCreditsSpecialists": 10,
+            "baseCostCredits": 700,
+            "baseCostCreditsSpecialists": 7,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
                 "special": {
                     "moveStar": true,
-                    "starMovementPerTick": 0.10
+                    "starMovementPerTick": 0.20
                 }
             }
         },
@@ -836,9 +835,9 @@
         },
         {
             "id": 18,
-            "key": "star-gate",
+            "key": "james-bond-aperture",
             "name": "Stargate",
-            "description": "This star will form a wormhole with the next star where a Stargate is constructed and the specialist will retire.",
+            "description": "Forms a wormhole to any star with a similar gate. Upon connection, the megastructures are permenantly linked until one stargate is destroyed.",
             "active": {
                 "official": true,
                 "custom": true
@@ -855,9 +854,9 @@
         },
         {
             "id": 19,
-            "key": "energy-tank",
-            "name": "Terraform Manipulator",
-            "description": "Adds +4 terraforming to the star.",
+            "key": "valve",
+            "name": "Geosculpting Manipulator",
+            "description": "Taps into planetary cores to boost the star's terraforming capability by +4, reshaping worlds.",
             "active": {
                 "official": true,
                 "custom": true
@@ -874,9 +873,9 @@
         },
         {
             "id": 20,
-            "key": "valve",
-            "name": "Terraform Transformer",
-            "description": "Adds +6 terraforming to the star.",
+            "key": "moon-orbit",
+            "name": "Planetary Orbital Forge",
+            "description": "An orbiting megastructure amplify the star's terraforming ability by +6.",
             "active": {
                 "official": true,
                 "custom": true
@@ -893,9 +892,9 @@
         },
         {
             "id": 21,
-            "key": "radar-dish",
-            "name": "Quantum Opitical Array",
-            "description": "Adds +5 Scanning Range to the star. Deducts -2 Weapons from your side in combat.",
+            "key": "observatory",
+            "name": "Deep-space Vision Interface",
+            "description": "Enhances star's scanning by +5 with advanced sensors but reduces weapon strength by -2 in battles.",
             "active": {
                 "official": true,
                 "custom": true
@@ -913,9 +912,9 @@
         },
         {
             "id": 22,
-            "key": "space-needle",
-            "name": "Neutrino Optics Array",
-            "description": "Adds +7 Scanning Range to the star. Deducts -3 Weapons from your side in combat.",
+            "key": "radar-dish",
+            "name": "Neutrino Optics Matrix",
+            "description": "Expands star's scanning reach by +7 through advanced optics but sacrifices -3 Weapons strength in battles.",
             "active": {
                 "official": true,
                 "custom": true
@@ -934,8 +933,8 @@
         {
             "id": 23,
             "key": "beam-satellite",
-            "name": "Dark Energy Cannon",
-            "description": "Adds +2 Defender Bonus to the star.",
+            "name": "Void Force Channeler",
+            "description": "Channels dark energy to bestow the star with a powerful +2 Defender Bonus against adversaries.",
             "active": {
                 "official": true,
                 "custom": true
@@ -952,9 +951,9 @@
         },
         {
             "id": 24,
-            "key": "laser-blast",
-            "name": "Supernova Cannon",
-            "description": "Adds +3 Defender Bonus to the star.",
+            "key": "ringed-beam",
+            "name": "Supernova Megalaser",
+            "description": "Uses a controlled micro supernova reaction within the star to grant a formidable +3 Defender Bonus against foes",
             "active": {
                 "official": true,
                 "custom": true
