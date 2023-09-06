@@ -653,8 +653,8 @@
         {
             "id": 9,
             "key": "damage-kinetic",
-            "name": "Infastructure Incinerator",
-            "description": "If the star is captured, all infrastructure is destroyed.",
+            "name": "Infrastructure Incinerator",
+            "description": "Should the star system fall into enemy grasp, entire stellar infrastructure shall face annihilation.",
             "active": {
                 "official": true,
                 "custom": true
@@ -673,7 +673,7 @@
             "id": 10,
             "key": "habitat-dome",
             "name": "Interstellar Trade Port",
-            "description": "The star's economic infrastructure contributes triple economy production and adds +1 Scanning to the star. Deducts -4 Weapons from your side in combat and -5 Terraforming from the star.",
+            "description": "Within the cosmic expanse, the star amplifies its economy fourfold and enhances scanning by one unit. However, its weaponry and terraformation capabilities decline by five units each.",
             "active": {
                 "official": true,
                 "custom": true
@@ -685,11 +685,11 @@
             "modifiers": {
                 "local": {
                     "terraforming": -5,
-                    "weapons": -4,
+                    "weapons": -5,
                     "scanning": 1
                 },
                 "special": {
-                    "economyInfrastructureMultiplier": 3
+                    "economyInfrastructureMultiplier": 4
                 }
             }
         },
