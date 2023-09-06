@@ -232,7 +232,7 @@
             "id": 12,
             "key": "scout-ship",
             "name": "Blockade Runner",
-            "description": "Increases carrier speed by x2 and the carrier does not participate in carrier-to-carrier combat.",
+            "description": "Increases carrier speed by 200% and the carrier does not participate in carrier-to-carrier combat.",
             "active": {
                 "official": true,
                 "custom": true
@@ -284,7 +284,7 @@
             "id": 14,
             "key": "spoutnik",
             "name": "Pathfinder",
-            "description": "Adds +1 Hyperspace Range to the carrier.",
+            "description": "Adds +1 hyperspace range, 10% more speed and -1 weapons to the carrier.",
             "active": {
                 "official": true,
                 "custom": true
@@ -295,7 +295,9 @@
             "expireTicks": null,
             "modifiers": {
                 "local": {
-                    "hyperspace": 1
+                    "hyperspace": 1,
+                    "speed": 1.1,
+                    "weapons": -1
                 }
             }
         },
