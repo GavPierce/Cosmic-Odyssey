@@ -23,7 +23,7 @@
                 <i class="fas fa-microchip text-success"></i> {{userPlayer.creditsSpecialists}}
             </span>
 
-            <research-progress class="d-none d-lg-inline-block me-2" v-if="userPlayer" @onViewResearchRequested="onViewResearchRequested"/>
+            <research-progress class="d-none d-lg-inline-block me-2" title="Current Research Progress" v-if="userPlayer" @onViewResearchRequested="onViewResearchRequested"/>
         </div>
         <div class="col-auto text-end pointer pt-1" v-if="userPlayer" @click="onViewBulkUpgradeRequested">
             <span class="d-none d-lg-inline-block me-2" title="Total Economy">
@@ -54,7 +54,7 @@
                 <i class="fas fa-broadcast-tower"></i> <span class="ms-1" v-if="unreadEvents">{{unreadEvents}}</span>
             </button>
 
-            <hamburger-menu class="ms-1 d-none d-sm-inline-block" :buttonClass="'btn-sm btn-info'" :dropType="'dropleft'" />
+            <hamburger-menu title="Menu" class="ms-1 d-none d-sm-inline-block" :buttonClass="'btn-sm btn-info'" :dropType="'dropleft'" />
             
             <button class="btn btn-sm btn-info ms-1 d-none d-sm-inline-block" title="My Games" type="button" @click="goToMyGames()">
                 <i class="fas fa-chevron-left"></i>
