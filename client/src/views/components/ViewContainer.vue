@@ -43,4 +43,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.container {
+  padding-top: 50px;  /* Determine the appropriate value based on player feedback */
+}
+</style>
