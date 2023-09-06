@@ -214,8 +214,8 @@
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 500,
-            "baseCostCreditsSpecialists": 5,
+            "baseCostCredits": 200,
+            "baseCostCreditsSpecialists": 2,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
