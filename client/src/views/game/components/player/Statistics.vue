@@ -138,7 +138,7 @@ export default {
         return description;
     },
     userPlayerNewShipsDescription() {
-        return `You have will produce ${this.userPlayer.stats.newShips} new ships this galactic cycle.`;
+        return `You will produce ${this.userPlayer.stats.newShips} new ships this galactic cycle.`;
     },
     playerNewShipsDescription() {
         return `Player will produce ${this.player.stats.newShips} new ships this galactic cycle.`;
