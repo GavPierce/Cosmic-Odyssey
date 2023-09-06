@@ -721,18 +721,18 @@
             "id": 12,
             "key": "double-ringed-orb",
             "name": "Holo Broadcasting Network",
-            "description": "The star produces +2 credits per tick for each point of science on the star.",
+            "description": "The star produces +3 credits per tick for each point of science on the star.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 1000,
-            "baseCostCreditsSpecialists": 10,
+            "baseCostCredits": 500,
+            "baseCostCreditsSpecialists": 5,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
                 "special": {
-                    "creditsPerTickByScience": 2
+                    "creditsPerTickByScience": 3
                 }
             }
         },
