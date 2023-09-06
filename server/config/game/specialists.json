@@ -171,16 +171,19 @@
             "id": 9,
             "key": "nested-hexagons",
             "name": "Cloak Field Generator",
-            "description": "Prevents other players from seeing how many ships the carrier has.",
+            "description": "Prevents other players from seeing how many ships the carrier has but decreases it's speed by 10%",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 300,
-            "baseCostCreditsSpecialists": 7,
+            "baseCostCredits": 600,
+            "baseCostCreditsSpecialists": 6,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
+                "local": {
+                    "speed": 0.9
+                },
                 "special": {
                     "hideShips": true
                 }
