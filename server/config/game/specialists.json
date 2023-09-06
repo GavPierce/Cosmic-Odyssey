@@ -612,7 +612,7 @@
             "id": 7,
             "key": "missile-mech",
             "name": "Mecha Gigafactory",
-            "description": "Adds +5 Weapons to your side in combat and +5 Manufacturing to the star. Deducts -1 from the star's natural resources every tick, when the star reaches 0 natural resources, the star dies and the specialist retires.",
+            "description": "Adds +3 Weapons to your side in combat and +10 Manufacturing to the star. Deducts -1 from the star's natural resources every tick, when the star reaches 0 natural resources, the star dies and the specialist retires.",
             "active": {
                 "official": true,
                 "custom": true
@@ -626,8 +626,8 @@
                     "addNaturalResourcesOnTick": -1
                 },
                 "local": {
-                    "manufacturing": 5,
-                    "weapons": 5
+                    "manufacturing": 10,
+                    "weapons": 4
                 }
             }
         },
