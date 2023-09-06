@@ -967,6 +967,26 @@
                     "defenderBonus": 3
                 }
             }
+        },
+        {
+            "id": 2,
+            "key": "caged-ball",
+            "name": "Dyson Sphere",
+            "description": "A star-encircling megastructure boosts star production by +5 but diminishes terraforming by -5 due to energy extraction.",
+            "active": {
+                "official": true,
+                "custom": true
+            },
+            "baseCostCredits": 100,
+            "baseCostCreditsSpecialists": 1,
+            "oneShot": false,
+            "expireTicks": null,
+            "modifiers": {
+                "local": {
+                    "manufacturing": 5,
+                    "terraforming": -5
+                }
+            }
         }
     ]
 }
