@@ -1,8 +1,8 @@
 <template>
   <div id="header" class="app-header">
     <div class="brand">
-      <a href="javascript:;" class="brand-logo" @click="goHome">
-        <span class="brand-img"></span>
+      <a href="javascript:;" class="brand-logo" @click="goHome" title="Main Menu">
+          <span class="brand-img"></span>
       </a>
     </div>
 
@@ -27,8 +27,8 @@
       </div>
       <div class="menu-item dropdown dropdown-mobile-full">
         <router-link :to="{ name: 'avatars' }" class="menu-link">
-          <div class="menu-icon"><i class="fas fa-shopping-basket"></i></div>
-          <div class="menu-text d-sm-block d-none ms-1">Shop</div>
+          <div class="menu-icon"><i class="fas fa-pastafarianism"></i></div>
+          <div class="menu-text d-sm-block d-none ms-1">Unlockables</div>
         </router-link>
       </div>
       <div class="menu-item dropdown dropdown-mobile-full">
