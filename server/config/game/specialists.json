@@ -129,7 +129,7 @@
             "id": 7,
             "key": "forward-field",
             "name": "Hyperspace Transport",
-            "description": "Increased carrier speed by x2. Deducts -1 Weapons from your side in combat and -1 Hyperspace Range from the carrier.",
+            "description": "Harnesses the energies of void-fold continuums to amplify vessel propulsion by a factor of 2. In this high-velocity mode, weapon array efficiency diminishes by -3. However, the astral jump radius of the carrier expands by +2 hyperspace range.",
             "active": {
                 "official": true,
                 "custom": true
@@ -141,8 +141,8 @@
             "modifiers": {
                 "local": {
                     "speed": 2,
-                    "hyperspace": -1,
-                    "weapons": -1
+                    "hyperspace": 2,
+                    "weapons": -3
                 }
             }
         },
