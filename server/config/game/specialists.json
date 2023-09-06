@@ -572,8 +572,8 @@
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 300,
-            "baseCostCreditsSpecialists": 3,
+            "baseCostCredits": 100,
+            "baseCostCreditsSpecialists": 1,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -799,19 +799,19 @@
             "id": 16,
             "key": "rocket-thruster",
             "name": "Stellar Engine",
-            "description": "When the Stellar Engine is activated, the star slowly moves towards the nearest Stellar Beacon at x0.25 carrier speed.",
+            "description": "When the Stellar Engine is activated, the star slowly moves towards the nearest Stellar Beacon at 10% of carrier speed.",
             "active": {
                 "official": false,
                 "custom": true
             },
-            "baseCostCredits": 500,
-            "baseCostCreditsSpecialists": 5,
+            "baseCostCredits": 1000,
+            "baseCostCreditsSpecialists": 10,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
                 "special": {
                     "moveStar": true,
-                    "starMovementPerTick": 0.25
+                    "starMovementPerTick": 0.10
                 }
             }
         },
