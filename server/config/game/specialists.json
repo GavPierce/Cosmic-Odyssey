@@ -432,8 +432,9 @@
             },
             "baseCostCredits": 800,
             "baseCostCreditsSpecialists": 8,
-            "oneShot": false,
-            "expireTicks": 30,
+            "oneShot": true,
+            "//comment": "Set to -1 if you want it to be random or a specific key for life duration, code needs to be implemented first",
+            "expireTicks": 25,
             "modifiers": {
                 "local": {
                     "carrierToStarCombat": {
