@@ -232,18 +232,18 @@
             "id": 12,
             "key": "scout-ship",
             "name": "Blockade Runner",
-            "description": "Increases carrier speed by 200% and the carrier does not participate in carrier-to-carrier combat.",
+            "description": "Increases carrier speed by 50% and the carrier does not participate in carrier-to-carrier combat.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 1000,
-            "baseCostCreditsSpecialists": 10,
+            "baseCostCredits": 6000,
+            "baseCostCreditsSpecialists": 6,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
                 "local": {
-                    "speed": 2
+                    "speed": 1.5
                 },
                 "special": {
                     "avoidCombatCarrierToCarrier": true
