@@ -740,19 +740,19 @@
             "id": 13,
             "key": "radar-dish",
             "name": "Orbital Telescope Array",
-            "description": "Adds +3 Scanning Range to the star. Deducts -3 Weapons from your side in combat.",
+            "description": "Adds +3 Scanning Range to the star. Deducts -1 Weapons from your side in combat.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 600,
-            "baseCostCreditsSpecialists": 6,
+            "baseCostCredits": 300,
+            "baseCostCreditsSpecialists": 3,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
                 "local": {
                     "scanning": 3,
-                    "weapons": -3
+                    "weapons": -1
                 }
             }
         },
@@ -784,8 +784,8 @@
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 3000,
-            "baseCostCreditsSpecialists": 30,
+            "baseCostCredits": 1500,
+            "baseCostCreditsSpecialists": 15,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -895,19 +895,19 @@
             "id": 21,
             "key": "radar-dish",
             "name": "Quantum Opitical Array",
-            "description": "Adds +5 Scanning Range to the star. Deducts -5 Weapons from your side in combat.",
+            "description": "Adds +5 Scanning Range to the star. Deducts -2 Weapons from your side in combat.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 1200,
-            "baseCostCreditsSpecialists": 12,
+            "baseCostCredits": 500,
+            "baseCostCreditsSpecialists": 5,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
                 "local": {
                     "scanning": 5,
-                    "weapons": -5
+                    "weapons": -2
                 }
             }
         },
@@ -915,19 +915,19 @@
             "id": 22,
             "key": "space-needle",
             "name": "Neutrino Optics Array",
-            "description": "Adds +7 Scanning Range to the star. Deducts -7 Weapons from your side in combat.",
+            "description": "Adds +7 Scanning Range to the star. Deducts -3 Weapons from your side in combat.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 2400,
-            "baseCostCreditsSpecialists": 24,
+            "baseCostCredits": 700,
+            "baseCostCreditsSpecialists": 7,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
                 "local": {
                     "scanning": 7,
-                    "weapons": -7
+                    "weapons": -3
                 }
             }
         },
@@ -940,8 +940,8 @@
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 500,
-            "baseCostCreditsSpecialists": 5,
+            "baseCostCredits": 300,
+            "baseCostCreditsSpecialists": 3,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -959,8 +959,8 @@
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 1000,
-            "baseCostCreditsSpecialists": 10,
+            "baseCostCredits": 500,
+            "baseCostCreditsSpecialists": 5,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
