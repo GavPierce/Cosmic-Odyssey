@@ -673,23 +673,23 @@
             "id": 10,
             "key": "habitat-dome",
             "name": "Interstellar Trade Port",
-            "description": "The star's economic infrastructure contributes x2 to economy production and adds +1 Scanning to the star. Deducts -3 Weapons from your side in combat and -5 Terraforming from the star.",
+            "description": "The star's economic infrastructure contributes triple economy production and adds +1 Scanning to the star. Deducts -4 Weapons from your side in combat and -5 Terraforming from the star.",
             "active": {
                 "official": true,
                 "custom": true
             },
             "baseCostCredits": 1000,
-            "baseCostCreditsSpecialists": 10,
+            "baseCostCreditsSpecialists": 5,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
                 "local": {
                     "terraforming": -5,
-                    "weapons": -3,
+                    "weapons": -4,
                     "scanning": 1
                 },
                 "special": {
-                    "economyInfrastructureMultiplier": 2
+                    "economyInfrastructureMultiplier": 3
                 }
             }
         },
