@@ -1,18 +1,18 @@
 <template>
 <div class="container-fluid header-bar" :class="{'header-bar-bg':!$isHistoricalMode(),'bg-dark':$isHistoricalMode()}">
     <div class="row pt-2 pb-2 g-0">
-        <div class="col-auto d-none d-md-inline-block me-5 pointer pt-1" v-on:click="setMenuState(MENU_STATES.LEADERBOARD)">
+        <div class="col-auto d-none d-md-inline-block me-5 pointer pt-1 " v-on:click="setMenuState(MENU_STATES.LEADERBOARD)" title="Game Name">
             <server-connection-status/>
 
             {{game.settings.general.name}}
         </div>
+        <div class="col-auto pt-1 me-4" title="Time Machine" v-if="isLoggedIn && isTimeMachineEnabled && !isDataCleaned && !gameIsWaitingForPlayers">
+          <tick-selector />
+        </div>
         <div class="col-auto pt-1 me-3">
             <span class="pointer" v-if="gameIsPaused" v-on:click="setMenuState(MENU_STATES.LEADERBOARD)">{{getGameStatusText}}</span>
-            <span class="pointer" v-if="gameIsInProgress" v-on:click="setMenuState(MENU_STATES.LEADERBOARD)" title="Next production tick"><i class="fas fa-clock"></i> {{timeRemaining}}</span>
+            <span class="pointer" v-if="gameIsInProgress" v-on:click="setMenuState(MENU_STATES.LEADERBOARD)" title="Next Galactic Cycle"><i class="fas fa-sync"></i> {{timeRemaining}}</span>
             <span class="pointer" v-if="gameIsPendingStart" v-on:click="setMenuState(MENU_STATES.LEADERBOARD)" title="Game starts in"><i class="fas fa-stopwatch"></i> {{timeRemaining}}</span>
-        </div>
-        <div class="col-auto pt-1" v-if="isLoggedIn && isTimeMachineEnabled && !isDataCleaned && !gameIsWaitingForPlayers">
-          <tick-selector />
         </div>
         <div class="col text-end pt-1">
             <span v-if="userPlayer" class="pointer me-2" title="Total Credits" @click="setMenuState(MENU_STATES.BULK_INFRASTRUCTURE_UPGRADE)">
