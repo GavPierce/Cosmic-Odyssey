@@ -587,15 +587,15 @@
         },
         {
             "id": 6,
-            "key": "techno-heart",
-            "name": "World Builder",
-            "description": "Adds +1 to the star's natural resources every tick. Deducts -5 Weapons from your side in combat and -3 Scanning from the star.",
+            "key": "triple-yin",
+            "name": "Atomic Reassemblers",
+            "description": "Nanobots restructure waste and latent materials at the atomic level, enriching the star system with +1 natural resources every tick. However, the process diminishes combat capabilities, resulting in -5 Weapons and reduces the star's scanning potential by -3.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 1000,
-            "baseCostCreditsSpecialists": 10,
+            "baseCostCredits": 1200,
+            "baseCostCreditsSpecialists": 12,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
