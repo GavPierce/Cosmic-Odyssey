@@ -9,8 +9,8 @@
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 200,
-            "baseCostCreditsSpecialists": 2,
+            "baseCostCredits": 100,
+            "baseCostCreditsSpecialists": 1,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -24,7 +24,49 @@
             "id": 2,
             "key": "commander",
             "name": "Commander",
-            "description": "Adds +2 Weapons to your side in combat. Deducts -2 Hyperspace Range from the carrier and decreases carrier speed to x0.8.",
+            "description": "Adds +2 Weapons to your side in combat. Deducts -1 Hyperspace Range from the carrier and decreases carrier speed to 90%.",
+            "active": {
+                "official": true,
+                "custom": true
+            },
+            "baseCostCredits": 200,
+            "baseCostCreditsSpecialists": 2,
+            "oneShot": false,
+            "expireTicks": null,
+            "modifiers": {
+                "local": {
+                    "weapons": 2,
+                    "hyperspace": -1,
+                    "speed": 0.9
+                }
+            }
+        },
+        {
+            "id": 3,
+            "key": "captain",
+            "name": "Captain",
+            "description": "Adds +3 Weapons to your side in combat. Deducts -2 Hyperspace Range from the carrier and decreases carrier speed to 80%.",
+            "active": {
+                "official": true,
+                "custom": true
+            },
+            "baseCostCredits": 300,
+            "baseCostCreditsSpecialists":3,
+            "oneShot": false,
+            "expireTicks": null,
+            "modifiers": {
+                "local": {
+                    "weapons": 3,
+                    "hyperspace": -2,
+                    "speed": 0.8
+                }
+            }
+        },
+        {
+            "id": 4,
+            "key": "admiral",
+            "name": "Admiral",
+            "description": "Adds +4 Weapons to your side in combat. Deducts -3 Hyperspace Range from the carrier and decreases carrier speed to 70%.",
             "active": {
                 "official": true,
                 "custom": true
@@ -35,51 +77,9 @@
             "expireTicks": null,
             "modifiers": {
                 "local": {
-                    "weapons": 2,
-                    "hyperspace": -2,
-                    "speed": 0.8
-                }
-            }
-        },
-        {
-            "id": 3,
-            "key": "captain",
-            "name": "Captain",
-            "description": "Adds +3 Weapons to your side in combat. Deducts -3 Hyperspace Range from the carrier and decreases carrier speed to x0.6.",
-            "active": {
-                "official": true,
-                "custom": true
-            },
-            "baseCostCredits": 600,
-            "baseCostCreditsSpecialists": 6,
-            "oneShot": false,
-            "expireTicks": null,
-            "modifiers": {
-                "local": {
-                    "weapons": 3,
-                    "hyperspace": -3,
-                    "speed": 0.6
-                }
-            }
-        },
-        {
-            "id": 4,
-            "key": "admiral",
-            "name": "Admiral",
-            "description": "Adds +4 Weapons to your side in combat. Deducts -4 Hyperspace Range from the carrier and decreases carrier speed to x0.4.",
-            "active": {
-                "official": true,
-                "custom": true
-            },
-            "baseCostCredits": 800,
-            "baseCostCreditsSpecialists": 8,
-            "oneShot": false,
-            "expireTicks": null,
-            "modifiers": {
-                "local": {
                     "weapons": 4,
-                    "hyperspace": -4,
-                    "speed": 0.4
+                    "hyperspace": -3,
+                    "speed": 0.7
                 }
             }
         },
@@ -87,20 +87,20 @@
             "id": 5,
             "key": "fleet-admiral",
             "name": "Fleet Admiral",
-            "description": "Adds +5 Weapons to your side in combat. Deducts -5 Hyperspace Range from the carrier and decreases carrier speed to x0.2.",
+            "description": "Adds +5 Weapons to your side in combat. Deducts -4 Hyperspace Range from the carrier and decreases carrier speed to 60%.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 1000,
-            "baseCostCreditsSpecialists": 10,
+            "baseCostCredits": 500,
+            "baseCostCreditsSpecialists": 5,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
                 "local": {
                     "hyperspace": -5,
                     "weapons": 5,
-                    "speed": 0.2
+                    "speed": 0.6
                 }
             }
         },
@@ -177,7 +177,7 @@
                 "custom": true
             },
             "baseCostCredits": 300,
-            "baseCostCreditsSpecialists": 3,
+            "baseCostCreditsSpecialists": 7,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -196,7 +196,7 @@
                 "custom": true
             },
             "baseCostCredits": 300,
-            "baseCostCreditsSpecialists": 3,
+            "baseCostCreditsSpecialists": 2,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
