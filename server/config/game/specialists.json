@@ -305,7 +305,7 @@
             "id": 15,
             "key": "starfighter",
             "name": "Corsair",
-            "description": "Increases carrier speed by x1.5 and the carrier does not participate in carrier-to-carrier combat. Deducts -1 Weapons to your side in combat and -2 Hyperspace Range from the carrier.",
+            "description": "Increases carrier speed by 50% and the carrier does not participate in carrier-to-carrier combat. Deducts -1 Weapons to your side in combat and -2 Hyperspace Range from the carrier.",
             "active": {
                 "official": true,
                 "custom": true
@@ -329,7 +329,7 @@
             "id": 16,
             "key": "polar-star",
             "name": "Protostar Generator",
-            "description": "Reignites a dead star with 25 Natural Resources (x2 for Binary Stars), the Protostar Generator will be destroyed but the carrier will survive. Decreases carrier speed to x0.5.",
+            "description": "Reignites a dead star with 25 Natural Resources (x2 for Binary Stars), the Protostar Generator will be destroyed but the carrier will survive. Decreases carrier speed to 50%.",
             "active": {
                 "official": true,
                 "custom": true
@@ -361,8 +361,8 @@
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 1000,
-            "baseCostCreditsSpecialists": 10,
+            "baseCostCredits": 800,
+            "baseCostCreditsSpecialists": 8,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
