@@ -1,6 +1,6 @@
 [
     {
-        "alias": "Admiral",
+        "alias": "Admiral Blue",
         "value": "0x051094"
     },
     {
@@ -40,7 +40,7 @@
         "value": "0xB87333"
     },
     {
-        "alias": "Crimson",
+        "alias": "Crimson Red",
         "value": "0x004b49"
     },
     {
@@ -76,7 +76,7 @@
         "value": "0x800000"
     },
     {
-        "alias": "Navy",
+        "alias": "Navy Blue",
         "value": "0x000080"
     },
     {
@@ -108,7 +108,7 @@
         "value": "0xD8B863"
     },
     {
-        "alias": "Space Cadet",
+        "alias": "Space Cade Blue",
         "value": "0x1D2951"
     },
     {
