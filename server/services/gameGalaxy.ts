@@ -284,7 +284,7 @@ export default class GameGalaxyService {
 
     let kingOfTheHillPlayer: Player | null = null;
 
-    if (isKingOfTheHillMode) {
+    if (isKingOfTheHillMode && !isDarkModeExtra) {
       kingOfTheHillPlayer = this.playerService.getKingOfTheHillPlayer(doc);
     }
 
