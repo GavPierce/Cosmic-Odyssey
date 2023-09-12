@@ -280,6 +280,7 @@ export default class GameGalaxyService {
 
   _setPlayerStats(doc: Game) {
     const isKingOfTheHillMode = this.gameTypeService.isKingOfTheHillMode(doc);
+    const isDarkModeExtra = this.gameTypeService.isDarkModeExtra(doc);
 
     let kingOfTheHillPlayer: Player | null = null;
 
@@ -291,7 +292,7 @@ export default class GameGalaxyService {
     doc.galaxy.players.forEach((p) => {
       p.stats = this.playerStatisticsService.getStats(doc, p);
 
-      if (isKingOfTheHillMode) {
+      if (isKingOfTheHillMode && !isDarkModeExtra) {
         p.isKingOfTheHill =
           kingOfTheHillPlayer != null &&
           kingOfTheHillPlayer._id.toString() === p._id.toString();
