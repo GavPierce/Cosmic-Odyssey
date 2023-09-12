@@ -4,6 +4,10 @@
         "value": "0x051094"
     },
     {
+        "alias": "Apricot",
+        "value": "0xFFD8B1"
+    },
+    {
         "alias": "Aqua",
         "value": "0x00FFFF"
     },
@@ -20,8 +24,24 @@
         "value": "0x82EEFD"
     },
     {
+        "alias": "Azure",
+        "value": "0x007FFF"
+    },
+    {
+        "alias": "Beige",
+        "value": "0xFFFAC8"
+    },
+    {
         "alias": "Blue",
         "value": "0x0000FF"
+    },
+    {
+        "alias": "Blue-Green",
+        "value": "0x31A39D"
+    },
+    {
+        "alias": "Blue-Violet",
+        "value": "0x8A2BE2"
     },
     {
         "alias": "Bronze",
@@ -36,12 +56,20 @@
         "value": "0xE4D00A"
     },
     {
+        "alias": "Citron",
+        "value": "0x9FA91F"
+    },
+    {
         "alias": "Copper",
         "value": "0xB87333"
     },
     {
-        "alias": "Crimson Red",
-        "value": "0x004b49"
+        "alias": "Crimson",
+        "value": "0xDC143C"
+    },
+    {
+        "alias": "Cyan",
+        "value": "0x42D4F4"
     },
     {
         "alias": "Dark Slate Gray",
@@ -60,6 +88,10 @@
         "value": "0x008000"
     },
     {
+        "alias": "Lavender",
+        "value": "0xDCBEFF"
+    },
+    {
         "alias": "Lime",
         "value": "0x00FF00"
     },
@@ -72,8 +104,16 @@
         "value": "0xED2939"
     },
     {
+        "alias": "Magenta",
+        "value": "0xF032E6"
+    },
+    {
         "alias": "Maroon",
         "value": "0x800000"
+    },
+    {
+        "alias": "Mint",
+        "value": "0xAAFFC3"
     },
     {
         "alias": "Navy Blue",
@@ -100,8 +140,24 @@
         "value": "0xFF0000"
     },
     {
+        "alias": "Red-Orange",
+        "value": "0xFF681F"
+    },
+    {
+        "alias": "Red-Violet",
+        "value": "0x922B3E"
+    },
+    {
+        "alias": "Russet",
+        "value": "0x80461B"
+    },
+    {
         "alias": "Rust",
         "value": "0x8D4004"
+    },
+    {
+        "alias": "Sage",
+        "value": "0xB2AC88"
     },
     {
         "alias": "Sand",
@@ -138,5 +194,17 @@
     {
         "alias": "Yellow",
         "value": "0xFFFF00"
+    },
+    {
+        "alias": "Yellow-Green",
+        "value": "0xC5E17A"
+    },
+    {
+        "alias": "Yellow-Orange",
+        "value": "0xFFAE42"
+    },
+    {
+        "alias": "Violet",
+        "value": "0x922B3e"
     }
 ]
