@@ -441,7 +441,6 @@ export default class GameGalaxyService {
           s.isKingOfTheHillStar =
             kingOfTheHillStar != null &&
             kingOfTheHillStar._id.toString() === s._id.toString();
-          console.log("isKingOfTheHillStar", s.isKingOfTheHillStar);
         }
 
         // Ignore stars the player owns, they will always be visible.
