@@ -4,6 +4,18 @@
         "value": "0x051094"
     },
     {
+        "alias": "Amber",
+        "value": "0xFFBF00"
+    },
+    {
+        "alias": "Amethyst",
+        "value": "0x9966CC"
+    },
+    {
+        "alias": "Apple Green",
+        "value": "0x8DB600"
+    },
+    {
         "alias": "Apricot",
         "value": "0xFFD8B1"
     },
@@ -22,6 +34,10 @@
     {
         "alias": "Arctic Blue",
         "value": "0x82EEFD"
+    },
+    {
+        "alias": "Aubergine",
+        "value": "0x3D0734"
     },
     {
         "alias": "Azure",
@@ -44,12 +60,24 @@
         "value": "0x8A2BE2"
     },
     {
+        "alias": "Brass",
+        "value": "0xB5A642"
+    },
+    {
         "alias": "Bronze",
         "value": "0xB2560D"
     },
     {
         "alias": "Brown",
         "value": "0x964B00"
+    },
+    {
+        "alias": "Cerulean",
+        "value": "0x2A52BE"
+    },
+    {
+        "alias": "Chartreuse",
+        "value": "0x7FFF00"
     },
     {
         "alias": "Citrine Yellow",
@@ -84,12 +112,24 @@
         "value": "0xFF00FF"
     },
     {
+        "alias": "Golden Yellow",
+        "value": "0xFFDF00"
+    },
+    {
         "alias": "Green",
         "value": "0x008000"
     },
     {
+        "alias": "Khaki",
+        "value": "0xC3B091"
+    },
+    {
         "alias": "Lavender",
         "value": "0xDCBEFF"
+    },
+    {
+        "alias": "Lemon-Lime",
+        "value": "0xE3FF00"
     },
     {
         "alias": "Lime",
@@ -104,6 +144,10 @@
         "value": "0xED2939"
     },
     {
+        "alias": "Indigo",
+        "value": "0x4B0082"
+    },
+    {
         "alias": "Magenta",
         "value": "0xF032E6"
     },
@@ -114,6 +158,10 @@
     {
         "alias": "Mint",
         "value": "0xAAFFC3"
+    },
+    {
+        "alias": "Mocha",
+        "value": "0x967117"
     },
     {
         "alias": "Navy Blue",
@@ -128,8 +176,20 @@
         "value": "0xFFA500"
     },
     {
+        "alias": "Orange Peel",
+        "value": "0xFF9F00"
+    },
+    {
+        "alias": "Persimmon",
+        "value": "0xEC5800"
+    },
+    {
         "alias": "Pink",
         "value": "0xffb6c1"
+    },
+    {
+        "alias": "Plum",
+        "value": "0x673147"
     },
     {
         "alias": "Purple",
@@ -162,6 +222,10 @@
     {
         "alias": "Sand",
         "value": "0xD8B863"
+    },
+    {
+        "alias": "Scarlet",
+        "value": "0xFF2400"
     },
     {
         "alias": "Space Cade Blue",
@@ -204,7 +268,15 @@
         "value": "0xFFAE42"
     },
     {
+        "alias": "Vermilion",
+        "value": "0xE34234"
+    },
+    {
         "alias": "Violet",
         "value": "0x922B3e"
+    },
+    {
+        "alias": "Viridian",
+        "value": "0x40826D"
     }
 ]
