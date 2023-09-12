@@ -7,26 +7,26 @@
           </button>
         </div>
         <div class="col" v-if="userPlayer">
-          <button class="btn" @click="panToHomeStar()">
-            <i class="fas fa-home"></i>
-          </button>
-        </div>
-        <div class="col" v-if="userPlayer">
-          <button class="btn" v-on:click="setMenuState(MENU_STATES.RESEARCH)">
-            <i class="fas fa-flask"></i>
-          </button>
-        </div>
-        <div class="col">
-          <button class="btn" v-on:click="setMenuState(MENU_STATES.GALAXY)">
+          <button class="btn" @click="panToHomeStar()" title="Home Star">
             <i class="fas fa-sun"></i>
           </button>
         </div>
-        <div class="col" v-if="isLoggedIn && !isDarkModeExtra && !isDataCleaned && (gameIsInProgress || gameIsFinished)">
-          <button class="btn" v-on:click="setMenuState(MENU_STATES.INTEL)">
-            <i class="fas fa-chart-line"></i>
+        <div class="col" v-if="userPlayer">
+          <button class="btn" v-on:click="setMenuState(MENU_STATES.RESEARCH)" title="Research (R)">
+            <i class="fas fa-microscope"></i>
           </button>
         </div>
         <div class="col">
+          <button class="btn" v-on:click="setMenuState(MENU_STATES.GALAXY)" title="Galaxy (G)">
+            <i class="fas fa-satellite"></i>
+          </button>
+        </div>
+        <div class="col" v-if="isLoggedIn && !isDarkModeExtra && !isDataCleaned && (gameIsInProgress || gameIsFinished)">
+          <button class="btn" v-on:click="setMenuState(MENU_STATES.INTEL)" title="Intel (I)">
+            <i class="fas fa-chart-line"></i>
+          </button>
+        </div>
+        <div class="col" title="Menu">
           <hamburger-menu :dropType="'dropup'" />
         </div>
     </div>

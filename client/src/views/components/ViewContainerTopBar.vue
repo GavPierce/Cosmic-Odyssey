@@ -1,8 +1,8 @@
 <template>
   <div id="header" class="app-header">
     <div class="brand">
-      <a href="javascript:;" class="brand-logo" @click="goHome">
-        <span class="brand-img"></span>
+      <a href="javascript:;" class="brand-logo" @click="goHome" title="Main Menu">
+          <span class="brand-img"></span>
       </a>
     </div>
 
@@ -18,17 +18,20 @@
         </router-link>
       </div>
       <div class="menu-item dropdown dropdown-mobile-full">
-        <router-link :to="{ name: 'galactic-credits-shop' }" class="menu-link">
-          <div class="menu-icon"><i class="fas fa-coins"></i></div>
-          <div class="menu-text d-sm-block d-none ms-1">
-            {{ userCredits }} Credit{{ userCredits === 1 ? "" : "s" }}
-          </div>
+        <router-link
+          :to="{ name: 'administration' }"
+          v-if="userHasAdminRole"
+          class="menu-link"
+          title="Access administrator features."
+        >
+          <div class="menu-icon"><i class="fas fa-users-cog"></i></div>
+          <div class="menu-text d-sm-block d-none ms-1">Admin</div>
         </router-link>
       </div>
       <div class="menu-item dropdown dropdown-mobile-full">
-        <router-link :to="{ name: 'avatars' }" class="menu-link">
-          <div class="menu-icon"><i class="fas fa-shopping-basket"></i></div>
-          <div class="menu-text d-sm-block d-none ms-1">Shop</div>
+        <router-link :to="{ name: 'avatars' }" class="menu-link" title="View unlockable factions, symbols and colors to customize your play-style.">
+          <div class="menu-icon"><i class="fas fa-pastafarianism"></i></div>
+          <div class="menu-text d-sm-block d-none ms-1">Unlockables</div>
         </router-link>
       </div>
       <div class="menu-item dropdown dropdown-mobile-full">
@@ -37,6 +40,7 @@
           data-bs-toggle="dropdown"
           data-bs-display="static"
           class="menu-link"
+          title="View your account settings, game-play statistics and achievements."
         >
           <!-- <div class="menu-img online">
           <img src="assets/img/user/profile.jpg" alt="Profile" height="60">

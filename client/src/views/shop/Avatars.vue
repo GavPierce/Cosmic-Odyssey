@@ -3,15 +3,13 @@
     <view-title title="Faction Collection" />
 
     <p>
-      Unlock new factions and species to play with
-      <strong class="text-warning">Galactic Credits</strong>.Earn credits by
-      winning official games.
+      In the vast expanse of the cosmos, unveil hidden factions and enigmatic species using the coveted <strong>Galactic Credits</strong>. Amass these stellar tokens by triumphing in interstellar galactic domination.
     </p>
     <h5 v-if="userCredits">
       You have
       <span class="text-warning"
-        ><strong>{{ userCredits.credits }}</strong> Galactic Credits</span
-      >.
+        ><strong>{{ userCredits.credits }}</strong> </span
+      > Galactic Credits.
     </h5>
 
     <hr />
@@ -19,14 +17,16 @@
     <loading-spinner v-if="isLoading" />
 
     <div v-if="avatars">
-      <div class="row mb-4" v-for="avatar in sortedAvatars" :key="avatar.id">
+      <div class="row mb-4" v-for="avatar in sortedAvatars" :key="avatar.id" :class="{ 'hovering-avatar': hovering === avatar.id }">
         <div class="col-auto">
-          <img :src="getAvatarImage(avatar)" width="128" height="128" />
+          <img :src="getAvatarImage(avatar)" width="128" height="128" class="avatar-border"
+              @mouseover="hovering = avatar.id"
+              @mouseleave="hovering = null" />
         </div>
         <div class="col">
           <div class="row">
             <div class="col">
-              <h5>
+              <h5 class="faction-name">
                 {{ avatar.name
                 }}<span
                   class="badge bg-success ms-2"
@@ -88,7 +88,8 @@ export default {
     return {
       isLoading: false,
       userCredits: null,
-      avatars: []
+      avatars: [],
+      hovering: null
     };
   },
   async mounted() {
@@ -174,5 +175,117 @@ export default {
 <style scoped>
 .linebreaks {
   white-space: break-spaces;
+}
+
+.avatar-border {
+    border-radius: 50% !important;
+    border: 3px solid #000000 !important;
+    box-shadow: 0 4px 8px rgba(230, 230, 234, 0.1) !important;
+    overflow: hidden !important;
+}
+
+.faction-name {
+    font-family: 'Orbitron', sans-serif;
+    background-color: #000;
+    padding: 10px;
+    border-radius: 8px;
+    color: #fff;
+}
+
+.row.mb-4 {
+    border-bottom: 1px solid #000000;
+    padding-bottom: 10px;
+    margin-bottom: 20px;                
+}
+
+button:hover, .btn:hover {
+    transform: scale(1.02);
+    transition: transform 0.2s ease-in-out;
+}
+
+button:disabled {
+    opacity: 0.6;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.avatar-border:hover {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes neonFlicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+    text-shadow:
+      0 0 4px #FF0000,
+      0 0 11px #FF0000,
+      0 0 19px #FF7F00,
+      0 0 40px #FF7F00,
+      0 0 80px #FF7F00,
+      0 0 90px #FF7F00,
+      0 0 100px #FF7F00,
+      0 0 150px #FF7F00;
+  }
+  
+  20%, 24%, 55% {
+    text-shadow: none;
+  }
+}
+
+.faction-name {
+    font-family: 'Orbitron', sans-serif;
+    background-color: #000;              
+    padding: 10px;
+    border-radius: 8px;
+    color: #FF7F00;
+    transition: 0.5s;
+}
+
+.avatar-border:hover ~ .col .row .faction-name,
+.row.mb-4:hover .faction-name {
+    animation: neonFlicker 3.5s infinite alternate;
+}
+
+button:before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50px;
+  height: 2px;
+  background-color: #FFD700;
+  opacity: 0;
+  transform: translate(-50%, -50%) rotate(45deg);
+  transition: opacity 0.3s, width 0.3s;
+  z-index: -1;
+}
+
+button:hover:before {
+  opacity: 1;
+  width: 100%;
+}
+
+.text-warning {
+  animation: glow 6s infinite alternate;
+  color: #000000;
+  text-shadow: 0 0 3px #FFD700, 0 0 3px #FFD700;  /* Reduced intensity */
+}
+
+@keyframes glow {
+  0% {
+    text-shadow: 0 0 1px #FFD700, 0 0 1px #FFD700;
+  }
+  100% {
+    text-shadow: 0 0 15px #FFD700, 0 0 10px #FFD700, 0 0 25px #FFA500;
+  }
 }
 </style>

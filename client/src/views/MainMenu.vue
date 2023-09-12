@@ -39,12 +39,12 @@
         >
           <img
             class="card-img"
-            :src="require('../assets/screenshots/home-1.png')"
+            :src="require('../assets/screenshots/home-1-small.png')"
             alt="View my games"
           />
           <div class="card-img-overlay">
             <h5 class="card-title">
-              <i class="fas fa-user"></i>
+              <i class="fas fa-star-half-alt"></i>
               <span class="ms-2">My Games</span>
             </h5>
           </div>
@@ -63,12 +63,12 @@
         <div class="card bg-dark text-white p-1">
           <img
             class="card-img"
-            :src="require('../assets/screenshots/home-2.png')"
+            :src="require('../assets/screenshots/home-2-small.png')"
             alt="Join a game"
           />
           <div class="card-img-overlay">
             <h5 class="card-title">
-              <i class="fas fa-gamepad"></i>
+              <i class="fas fa-play"></i>
               <span class="ms-2">Join Game</span>
             </h5>
           </div>
@@ -87,7 +87,7 @@
         >
           <img
             class="card-img"
-            :src="require('../assets/screenshots/home-3.png')"
+            :src="require('../assets/screenshots/home-3-small.png')"
             alt="Leaderboard"
           />
           <div class="card-img-overlay">
@@ -108,12 +108,12 @@
         <div class="card bg-dark text-white p-1" @click="routeToPath('/guild')">
           <img
             class="card-img"
-            :src="require('../assets/screenshots/home-4.png')"
+            :src="require('../assets/screenshots/home-4-small.png')"
             alt="Guilds"
           />
           <div class="card-img-overlay">
             <h5 class="card-title">
-              <i class="fas fa-shield-alt"></i>
+              <i class="fas fa-users"></i>
               <span class="ms-2">{{
                 user && user.guildId ? "My Guild" : "Guilds"
               }}</span>
@@ -134,13 +134,15 @@
         >
           <img
             class="card-img"
-            :src="require('../assets/screenshots/home-5.png')"
+            :src="require('../assets/screenshots/home-5-small.png')"
             alt="Shop"
           />
           <div class="card-img-overlay">
-            <h5 class="card-title card-title-success">
-              <i class="fas fa-shopping-basket"></i>
-              <span class="ms-2">Unlockable Factions</span>
+
+            <h5 class="card-title ">
+            <!-- Originally: "h5 class="card-title card-title-success" but removed "card-title-success" for consistent color scheme-->
+              <i class="fas fa-pastafarianism"></i>
+              <span class="ms-2">Factions</span>
             </h5>
           </div>
           <div class="card-arrow">
@@ -155,7 +157,11 @@
 
     <hr />
 
-    <tutorial-game />
+    <!-- 
+      Comment out tutorial game until we can make proper videos so that it doesn't show Solaris youtube videos.
+      <tutorial-game />
+
+      -->
 
     <hr />
   </view-container>
