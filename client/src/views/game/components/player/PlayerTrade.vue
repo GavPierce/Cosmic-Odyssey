@@ -10,6 +10,20 @@
 
       <p v-if="!isTradePossibleByScanning" class="text-danger pt-2 pb-0 mb-0">You cannot trade with this player, they are not within scanning range.</p>
       <p v-if="!isTradePossibleByDiplomacy" class="text-danger pt-2 pb-0 mb-0">You cannot trade with this player, they are not an ally.</p>
+      <br>
+    
+
+    <div class="col">
+      <button class="btn btn-info me-1" @click="onOpenDiplomacyRequested" title="Open Diplomacy" v-if="isFormalAlliancesEnabled">
+        <i class="fas fa-flag"></i> Diplomacy
+      </button>
+      <button class="btn btn-info me-1" @click="onOpenLedgerRequested" title="Open Ledger" v-if="isTradeEnabled">
+        <i class="fas fa-file-invoice-dollar"></i> Ledger
+      </button>
+      <button class="btn btn-info " @click="onViewCompareIntelRequested" title="Compare Intel" v-if="!isDarkModeExtra">
+        <i class="fas fa-chart-line"></i> Intel
+      </button>
+    </div>
     </div>
 </template>
 
@@ -21,13 +35,20 @@ import Reputation from './Reputation'
 import GameHelper from '../../../../services/gameHelper'
 import DiplomacyHelper from '../../../../services/diplomacyHelper'
 import DiplomacyApiService from '../../../../services/api/diplomacy'
+import eventBus from '../../../../eventBus'
+import MENU_STATES from '../../../../services/data/menuStates'
+import Statistics from './Statistics'
+import PlayerTitleVue from './PlayerTitle'
+import ConversationApiService from '../../../../services/api/conversation'
 
 export default {
   components: {
     'sendTechnology': SendTechnology,
     'sendCredits': SendCredits,
     'sendCreditsSpecialists': SendCreditsSpecialists,
-    'reputation': Reputation
+    'reputation': Reputation,
+    'statistics': Statistics,
+    'player-title': PlayerTitleVue
   },
   props: {
     playerId: String
@@ -61,7 +82,18 @@ export default {
         console.error(err)
         this.diplomaticStatus = null
       }
-    }
+    },
+    onViewCompareIntelRequested (e) {
+      this.$emit('onViewCompareIntelRequested', this.player._id)
+    },
+    onOpenTradeRequested (e) {
+      this.$emit('onOpenTradeRequested', this.playerId)
+    },
+    onOpenDiplomacyRequested (e) {
+      this.$store.commit('setMenuState', {
+        state: MENU_STATES.DIPLOMACY
+      })
+    },
   },
   computed: {
     game () {
@@ -96,7 +128,8 @@ export default {
     },
     tradeTechnologyIsEnabled () {
       return this.game.settings.player.tradeCost > 0
-    }
+    },
+    
   }
 }
 </script>
