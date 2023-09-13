@@ -14,14 +14,14 @@
 
   <div class="row pt-2 pb-2 bg-dark" v-if="!(!userPlayer || !gameHasStarted || player.userId)">
     <div class="col">
-      <button class="btn btn-outline-secondary me-1" @click="onOpenDiplomacyRequested" title="Open Diplomacy" v-if="isFormalAlliancesEnabled">
-        <i class="fas fa-globe-americas"></i>
+      <button class="btn btn-info me-1" @click="onOpenDiplomacyRequested" title="Open Diplomacy" v-if="isFormalAlliancesEnabled">
+        <i class="fas fa-flag"></i> Diplomacy
       </button>
-      <button class="btn btn-outline-secondary me-1" @click="onOpenLedgerRequested" title="Open Ledger" v-if="isTradeEnabled">
-        <i class="fas fa-file-invoice-dollar"></i>
+      <button class="btn btn-info me-1" @click="onOpenLedgerRequested" title="Open Ledger" v-if="isTradeEnabled">
+        <i class="fas fa-file-invoice-dollar"></i> Ledger
       </button>
-      <button class="btn btn-outline-secondary" @click="onViewCompareIntelRequested" title="Compare Intel" v-if="!isDarkModeExtra">
-        <i class="fas fa-chart-line"></i>
+      <button class="btn btn-info" @click="onViewCompareIntelRequested" title="Compare Intel" v-if="!isDarkModeExtra">
+        <i class="fas fa-chart-line"></i> Intel
       </button>
     </div>
     <div class="col-auto">
