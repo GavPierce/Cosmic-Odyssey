@@ -14,15 +14,16 @@
     
 
     <div class="col">
-      <button class="btn btn-info me-1" @click="onOpenDiplomacyRequested" title="Open Diplomacy" v-if="isFormalAlliancesEnabled">
+      <button class="btn btn-info me-1" @click="onOpenDiplomacyRequested" title="Open Diplomacy">
         <i class="fas fa-flag"></i> Diplomacy
       </button>
-      <button class="btn btn-info me-1" @click="onOpenLedgerRequested" title="Open Ledger" v-if="isTradeEnabled">
+      <button class="btn btn-info me-1" @click="onOpenLedgerRequested" title="Open Ledger">
         <i class="fas fa-file-invoice-dollar"></i> Ledger
       </button>
-      <button class="btn btn-info " @click="onViewCompareIntelRequested" title="Compare Intel" v-if="!isDarkModeExtra">
+      <!-- Remove comment if you want to add the compare intel button
+         <button class="btn btn-info " @click="onViewCompareIntelRequested" title="Compare Intel">
         <i class="fas fa-chart-line"></i> Intel
-      </button>
+      </button> -->
     </div>
     </div>
 </template>
@@ -61,12 +62,52 @@ export default {
     }
   },
   async mounted () {
-    this.player = GameHelper.getPlayerById(this.$store.state.game, this.playerId)
     this.userPlayer = GameHelper.getUserPlayer(this.$store.state.game)
+    this.player = GameHelper.getPlayerById(this.$store.state.game, this.playerId)
+
 
     await this.loadDiplomaticStatus()
   },
   methods: {
+    onViewConversationRequested (e) {
+      if (this.conversation) {
+        eventBus.$emit('onViewConversationRequested', {
+          conversationId: this.conversation._id
+        })
+      } else {
+        eventBus.$emit('onViewConversationRequested', {
+          participantIds: [
+            this.userPlayer._id,
+            this.player._id
+          ]
+        })
+      }
+    },
+    onViewCompareIntelRequested (e) {
+      this.$emit('onViewCompareIntelRequested', this.player._id)
+    },
+    onOpenTradeRequested (e) {
+      this.$emit('onOpenTradeRequested', this.playerId)
+    },
+    onOpenDiplomacyRequested (e) {
+      this.$store.commit('setMenuState', {
+        state: MENU_STATES.DIPLOMACY
+      })
+    },
+    onOpenLedgerRequested (e) {
+      this.$store.commit('setMenuState', {
+        state: MENU_STATES.LEDGER
+      })
+    },
+    getAvatarImage () {
+      try {
+        return require(`../../../../assets/avatars/${this.player.avatar}`)
+      } catch (err) {
+        console.error(err)
+        
+        return null
+      }
+    },
     async loadDiplomaticStatus () {
       if (!DiplomacyHelper.isFormalAlliancesEnabled(this.$store.state.game) || !DiplomacyHelper.isTradeRestricted(this.$store.state.game)) {
         return

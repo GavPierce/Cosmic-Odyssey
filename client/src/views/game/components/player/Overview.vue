@@ -18,10 +18,10 @@
         <i class="fas fa-flag"></i> Diplomacy
       </button>
       <button class="btn btn-info me-1" @click="onOpenLedgerRequested" title="Open Ledger" v-if="isTradeEnabled">
-        <i class="fas fa-file-invoice-dollar"></i> Ledger
+        <i class="fas fa-file-invoice-dollar"></i> 
       </button>
       <button class="btn btn-info" @click="onViewCompareIntelRequested" title="Compare Intel" v-if="!isDarkModeExtra">
-        <i class="fas fa-chart-line"></i> Intel
+        <i class="fas fa-chart-line"></i>
       </button>
     </div>
     <div class="col-auto">
@@ -29,7 +29,7 @@
         :class="{'btn-warning': conversation && conversation.unreadCount}"
         v-if="canCreateConversation" title="Message Player">
         <i class="fas fa-envelope"></i>
-        <span v-if="conversation && conversation.unreadCount" class="ms-1">{{conversation.unreadCount}}</span>
+        <span v-if="conversation && conversation.unreadCount" class="ms-1">{{conversation.unreadCount}}</span> Message
       </button>
       <button class="btn btn-info" v-if="!gameHasFinished && isTradeEnabled" @click="onOpenTradeRequested" title="Trade Resources with Other Players">
         <i class="fas fa-handshake"></i>
