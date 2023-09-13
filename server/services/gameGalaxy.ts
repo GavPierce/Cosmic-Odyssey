@@ -651,6 +651,7 @@ export default class GameGalaxyService {
         null;
 
       // Append the guild tag to the player alias.
+      //TODO: This is needs to be tested.
       let playerGuild: Guild | null = null;
 
       if (p.userId) {
@@ -662,7 +663,7 @@ export default class GameGalaxyService {
           playerGuild = guildUser.guild;
 
           if (playerGuild) {
-            p.alias += `[${playerGuild.tag}]`;
+            p.alias = `[${playerGuild.tag}]` + p.alias; // Prepend the guild tag before the player alias
           }
         }
       }
