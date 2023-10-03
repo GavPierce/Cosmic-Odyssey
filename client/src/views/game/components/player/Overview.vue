@@ -14,24 +14,24 @@
 
   <div class="row pt-2 pb-2 bg-dark" v-if="!(!userPlayer || !gameHasStarted || player.userId)">
     <div class="col">
-      <button class="btn btn-outline-secondary me-1" @click="onOpenDiplomacyRequested" title="Open Diplomacy" v-if="isFormalAlliancesEnabled">
-        <i class="fas fa-globe-americas"></i>
+      <button class="btn btn-info me-1" @click="onOpenDiplomacyRequested" title="Open Diplomacy" v-if="isFormalAlliancesEnabled">
+        <i class="fas fa-flag"></i> Diplomacy
       </button>
-      <button class="btn btn-outline-secondary me-1" @click="onOpenLedgerRequested" title="Open Ledger" v-if="isTradeEnabled">
-        <i class="fas fa-file-invoice-dollar"></i>
+      <button class="btn btn-info me-1" @click="onOpenLedgerRequested" title="Open Ledger" v-if="isTradeEnabled">
+        <i class="fas fa-file-invoice-dollar"></i> 
       </button>
-      <button class="btn btn-outline-secondary" @click="onViewCompareIntelRequested" title="Compare Intel" v-if="!isDarkModeExtra">
+      <button class="btn btn-info" @click="onViewCompareIntelRequested" title="Compare Intel" v-if="!isDarkModeExtra">
         <i class="fas fa-chart-line"></i>
       </button>
     </div>
     <div class="col-auto">
       <button class="btn btn-success me-1" @click="onViewConversationRequested"
         :class="{'btn-warning': conversation && conversation.unreadCount}"
-        v-if="canCreateConversation">
+        v-if="canCreateConversation" title="Message Player">
         <i class="fas fa-envelope"></i>
-        <span v-if="conversation && conversation.unreadCount" class="ms-1">{{conversation.unreadCount}}</span>
+        <span v-if="conversation && conversation.unreadCount" class="ms-1">{{conversation.unreadCount}}</span> Message
       </button>
-      <button class="btn btn-info" v-if="!gameHasFinished && isTradeEnabled" @click="onOpenTradeRequested">
+      <button class="btn btn-info" v-if="!gameHasFinished && isTradeEnabled" @click="onOpenTradeRequested" title="Trade Resources with Other Players">
         <i class="fas fa-handshake"></i>
         Trade
       </button>
@@ -127,7 +127,34 @@ export default {
           console.error(err)
         }
       }
-    }
+    },
+    async loadDiplomaticStatus () {
+      if (!DiplomacyHelper.isFormalAlliancesEnabled(this.$store.state.game) || !DiplomacyHelper.isTradeRestricted(this.$store.state.game)) {
+        return
+      }
+
+      try {
+        const response = await DiplomacyApiService.getDiplomaticStatusToPlayer(this.$store.state.game._id, this.player._id)
+
+        if (response.status === 200) {
+          this.diplomaticStatus = response.data
+        }
+      } catch (err) {
+        console.error(err)
+        this.diplomaticStatus = null
+      }
+    },
+    onViewCompareIntelRequested (e) {
+      this.$emit('onViewCompareIntelRequested', this.player._id)
+    },
+    onOpenTradeRequested (e) {
+      this.$emit('onOpenTradeRequested', this.playerId)
+    },
+    onOpenDiplomacyRequested (e) {
+      this.$store.commit('setMenuState', {
+        state: MENU_STATES.DIPLOMACY
+      })
+    },
   },
   computed: {
     isDarkModeExtra () {
@@ -142,7 +169,54 @@ export default {
     },
     isFormalAlliancesEnabled () {
       return DiplomacyHelper.isFormalAlliancesEnabled(this.$store.state.game)
-    }
+    },
+        game () {
+      return this.$store.state.game
+    },
+    isTradeAllowed () {
+      return this.game.state.startDate 
+        && this.userPlayer 
+        && this.player != this.userPlayer 
+        && !this.userPlayer.defeated 
+        && !this.isGameFinished 
+        && (this.tradeTechnologyIsEnabled || this.tradeCreditsIsEnabled || this.tradeCreditsSpecialistsIsEnabled)
+    },
+    isTradePossibleByScanning: function () {
+      return this.player.stats.totalStars > 0 
+        && (this.$store.state.game.settings.player.tradeScanning === 'all' || (this.player && this.player.isInScanningRange))
+    },
+    isTradePossibleByDiplomacy: function () {
+      return !DiplomacyHelper.isFormalAlliancesEnabled(this.$store.state.game) || 
+        !DiplomacyHelper.isTradeRestricted(this.$store.state.game) || 
+        (this.diplomaticStatus && this.diplomaticStatus.actualStatus == 'allies')
+    },
+    isGameFinished: function () {
+      return GameHelper.isGameFinished(this.$store.state.game)
+    },
+    tradeCreditsIsEnabled () {
+      return this.game.settings.player.tradeCredits
+    },
+    tradeCreditsSpecialistsIsEnabled () {
+      return this.game.settings.player.tradeCreditsSpecialists
+        && this.game.settings.specialGalaxy.specialistsCurrency === 'creditsSpecialists'
+    },
+    tradeTechnologyIsEnabled () {
+      return this.game.settings.player.tradeCost > 0
+    },
+    isDarkModeExtra () {
+      return gameHelper.isDarkModeExtra(this.$store.state.game)
+    },
+    isTradeEnabled () {
+      return gameHelper.isTradeEnabled(this.$store.state.game)
+    },
+    canCreateConversation: function () {
+      return this.$store.state.game.settings.general.playerLimit > 2
+        && !gameHelper.isTutorialGame(this.$store.state.game)
+    },
+    isFormalAlliancesEnabled () {
+      return DiplomacyHelper.isFormalAlliancesEnabled(this.$store.state.game)
+    
+  }
   }
 }
 </script>

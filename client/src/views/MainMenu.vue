@@ -68,7 +68,7 @@
           />
           <div class="card-img-overlay">
             <h5 class="card-title">
-              <i class="fas fa-play"></i>
+              <i class="fa-solid fa-play fa-bounce"></i>
               <span class="ms-2">Join Game</span>
             </h5>
           </div>
