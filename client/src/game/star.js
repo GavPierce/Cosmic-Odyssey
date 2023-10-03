@@ -7,6 +7,15 @@ import gameHelper from "../services/gameHelper";
 import seededRandom from "random-seed";
 import Helpers from "./helpers";
 
+
+class ColorGenerator {
+  static randomColor() {
+      const red = Math.floor(Math.random() * 256);
+      const green = Math.floor(Math.random() * 256);
+      const blue = Math.floor(Math.random() * 256);
+      return (red << 16) | (green << 8) | blue;
+  }
+};
 class Star extends EventEmitter {
   static culling_margin = 16;
   static nameSize = 4;
@@ -402,7 +411,7 @@ class Star extends EventEmitter {
       }
 
       let player = this._getStarPlayer();
-      let playerColour = player ? player.colour.value : 0xffffff;
+      let playerColour = player ? player.colour.value : ColorGenerator.randomColor();
 
       let rotationDirection = this._getPlanetOrbitDirection();
       let rotationSpeedModifier = this._getPlanetOrbitSpeed();
@@ -411,40 +420,42 @@ class Star extends EventEmitter {
 
       for (let i = 0; i < planetCount; i++) {
         let planetContainer = new PIXI.Container();
-
+    
         let distanceToStar = 15 + 5 * i;
         let planetSize =
-          (Math.floor(Math.abs(this.data.location.y) + distanceToStar) % 1.5) +
-          0.5;
-
+            (Math.floor(Math.abs(this.data.location.y) + distanceToStar) % 1.5) +
+            0.5;
+    
         let orbitGraphics = new PIXI.Graphics();
         orbitGraphics.lineStyle(0.3, 0xffffff);
         orbitGraphics.alpha = 0.1;
         orbitGraphics.drawCircle(0, 0, distanceToStar - planetSize / 2);
         this.container_planets.addChild(orbitGraphics);
-
+    
+        let planetColor = ColorGenerator.randomColor();  // Generate a random color for each planet
+    
         let planetGraphics = new PIXI.Graphics();
-        planetGraphics.beginFill(playerColour);
+        planetGraphics.beginFill(planetColor);  // Use the generated random color
         planetGraphics.drawCircle(planetSize / 2, 0, planetSize);
         planetGraphics.endFill();
-
+    
         if (!this.data.isInScanningRange) {
-          planetGraphics.alpha = 0.3;
+            planetGraphics.alpha = 0.3;
         }
-
+    
         planetContainer.addChild(planetGraphics);
-
+    
         planetContainer.pivot.set(distanceToStar, 0);
-
+    
         let rotationSpeed = (planetCount - i) / rotationSpeedModifier;
-
+    
         this.container_planets.addChild(planetContainer);
-
+    
         this.planets.push({
-          index: i,
-          container: planetContainer,
-          rotationSpeed,
-          rotationDirection
+            index: i,
+            container: planetContainer,
+            rotationSpeed,
+            rotationDirection
         });
       }
 
