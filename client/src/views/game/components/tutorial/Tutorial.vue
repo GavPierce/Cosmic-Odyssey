@@ -46,16 +46,17 @@
         <li>How to win the game</li>
       </ul>
 
+    <!-- COMMENT OUT UNTIL TUTORIAL VIDEO IS MADE
       <div class="ratio ratio-16x9 mb-2">
         <iframe
-          src="https://www.youtube.com/embed/cnRXQMQ43Gs"
+          src="https://www.youtube.com/embed/c5fOpUrDrhY"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen
         ></iframe>
       </div>
-
+    -->
       <p class="pb-2">
         The full Cosmic Odyssey wiki can be found
         <a :href="documentationUrl" target="_blank">here</a>.
