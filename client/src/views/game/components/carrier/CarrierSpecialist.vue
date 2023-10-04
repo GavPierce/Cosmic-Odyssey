@@ -3,7 +3,7 @@
         <div class="col">
           <h5 v-if="!carrier.specialist" class="pt-1 text-danger">None Assigned</h5>
           <h5 v-if="carrier.specialist" class="pt-1 text-warning">
-            <specialist-icon :type="'carrier'" :defaultIcon="'user-astronaut'" :specialist="carrier.specialist"></specialist-icon>
+            <specialist-icon :type="'carrier'" :defaultIcon="'user-microchip'" :specialist="carrier.specialist"></specialist-icon>
             {{carrier.specialist.name}}
           </h5>
         </div>

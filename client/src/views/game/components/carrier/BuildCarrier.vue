@@ -4,7 +4,7 @@
 
     <div class="row bg-dark mb-2">
       <div class="col text-center pt-3">
-        <p>Build a new Carrier at <a href="javascript:;" @click="onOpenStarDetailRequested">{{star.name}}</a>, decide how many ships the new Carrier will have.</p>
+        <p>Build a new carrier at <a href="javascript:;" @click="onOpenStarDetailRequested">{{star.name}}</a>, decide how many ships the new carrier will have.</p>
       </div>
     </div>
 
