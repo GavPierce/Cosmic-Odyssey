@@ -142,6 +142,7 @@ class TextureService {
     this._loadSpecialistTexture("anti-aircraft-gun");
     this._loadSpecialistTexture("beam-satellite");
     //this._loadSpecialistTexture('bolter-gun')
+    this._loadSpecialistTexture("caged-ball");
     this._loadSpecialistTexture("cannister");
     this._loadSpecialistTexture("captain");
     this._loadSpecialistTexture("commander");
@@ -158,6 +159,7 @@ class TextureService {
     //this._loadSpecialistTexture('hazmat-suit')
     this._loadSpecialistTexture("infuse");
     this._loadSpecialistTexture("interceptor-ship");
+    this._loadSpecialistTexture("james-bond-aperture");
     this._loadSpecialistTexture("justice-star");
     this._loadSpecialistTexture("laser-blast");
     this._loadSpecialistTexture("lieutenant");
@@ -169,12 +171,15 @@ class TextureService {
     this._loadSpecialistTexture("metroid");
     this._loadSpecialistTexture("missile-mech");
     //this._loadSpecialistTexture('missile-pod')
+    this._loadSpecialistTexture("moon-orbit");
     this._loadSpecialistTexture("nested-hexagons");
     this._loadSpecialistTexture("observatory");
+    this._loadSpecialistTexture("omega");
     //this._loadSpecialistTexture('pirate')
     this._loadSpecialistTexture("pirate-destroyer");
     this._loadSpecialistTexture("polar-star");
     this._loadSpecialistTexture("power-generator");
+    this._loadSpecialistTexture("processor");
     this._loadSpecialistTexture("radar-dish");
     //this._loadSpecialistTexture('ray-gun')
     //this._loadSpecialistTexture('ringed-planet')
@@ -192,13 +197,16 @@ class TextureService {
     this._loadSpecialistTexture("spiky-field");
     this._loadSpecialistTexture("spoutnik");
     //this._loadSpecialistTexture('space-suit')
+    this._loadSpecialistTexture("star-altar");
     this._loadSpecialistTexture("star-gate");
     this._loadSpecialistTexture("starfighter");
     this._loadSpecialistTexture("stealth-bomber");
     this._loadSpecialistTexture("strafe");
     this._loadSpecialistTexture("targeting");
     this._loadSpecialistTexture("techno-heart");
+    this._loadSpecialistTexture("triple-yin");
     this._loadSpecialistTexture("valve");
+    this._loadSpecialistTexture("vibrating-ball");
     //this._loadSpecialistTexture('vintage-robot')
   }
 
