@@ -114,7 +114,7 @@
               Ships
           </div>
           <div class="col text-end">
-              {{carrier.ships == null ? '???' : carrier.ships}} <i class="fas fa-shuttle-space ms-1"></i>
+              {{carrier.ships == null ? '???' : carrier.ships}} <i class="fas fa-rocket ms-1"></i>
           </div>
       </div>
       <div class="row mb-0 pt-1 pb-1">
