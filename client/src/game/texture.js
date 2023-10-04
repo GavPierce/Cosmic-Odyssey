@@ -139,6 +139,7 @@ class TextureService {
     //this._loadSpecialistTexture('airtight-hatch')
     //this._loadSpecialistTexture('alien-stare')
     //this._loadSpecialistTexture('android-mask')
+    this._loadSpecialistTexture("anti-aircraft-gun");
     this._loadSpecialistTexture("beam-satellite");
     //this._loadSpecialistTexture('bolter-gun')
     this._loadSpecialistTexture("cannister");
