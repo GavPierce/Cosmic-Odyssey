@@ -7,6 +7,7 @@
     "password": null,
     "playerLimit": 8,
     "playerType": "all",
+    "teamGame": "disabled",
     "anonymity": "extra",
     "playerOnlineStatus": "visible",
     "timeMachine": "enabled",
@@ -83,8 +84,8 @@
   "diplomacy": {
     "enabled": "enabled",
     "upkeepCost": "none",
-    "tradeRestricted": "disabled", 
-    "maxAlliances": 7, 
+    "tradeRestricted": "disabled",
+    "maxAlliances": 7,
     "globalEvents": "disabled"
   },
   "technology": {

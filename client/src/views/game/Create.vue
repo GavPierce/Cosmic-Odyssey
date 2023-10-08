@@ -200,7 +200,28 @@
             </option>
           </select>
         </div>
-
+        <div class="mb-2">
+          <label for="teamGame" class="col-form-label"
+            >Team Game
+            <help-tooltip
+              tooltip="Players choose which team to join. Teamembers share vision and can send ships to each other. A team shares victory."
+            ></help-tooltip
+          ></label>
+          <select
+            class="form-control"
+            id="teamGame"
+            v-model="settings.general.teamGame"
+            :disabled="isCreatingGame"
+          >
+            <option
+              v-for="opt in options.general.teamGame"
+              v-bind:key="opt.value"
+              v-bind:value="opt.value"
+            >
+              {{ opt.text }}
+            </option>
+          </select>
+        </div>
         <div class="mb-2">
           <label for="playerType" class="col-form-label"
             >Player Type
