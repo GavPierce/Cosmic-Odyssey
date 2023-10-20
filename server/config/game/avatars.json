@@ -2,7 +2,7 @@
   {
     "id": 0,
     "file": "0.png",
-    "name": "Stellar Humanity Alliance",
+    "name": "United Humanity Federation",
     "description": "An alliance representing interstellar humans, championing peace, and unity amidst a cosmos of diversity.",
     "price": null,
     "isPatronAvatar": false
@@ -26,7 +26,7 @@
   {
     "id": 3,
     "file": "3.png",
-    "name": "Zalorian Empire",
+    "name": "House of Zalor",
     "description": "Aristocratic and proud, the Zalorians' sole purpose is to spread their influence, seeing all other species as subservient.",
     "price": null,
     "isPatronAvatar": false
@@ -34,7 +34,7 @@
   {
     "id": 4,
     "file": "4.png",
-    "name": "Silent Void Coalition",
+    "name": "Nova Coalition",
     "description": "Mysterious figures who observe the universe's events, acting covertly to maintain balance.",
     "price": null,
     "isPatronAvatar": false
@@ -59,7 +59,7 @@
     "id": 7,
     "file": "7.png",
     "name": "Cerebrum Collective",
-    "description": " A network of interconnected minds seeking to expand their knowledge base and integrate all consciousness.",
+    "description": "A network of interconnected minds seeking to expand their knowledge base and integrate all consciousness.",
     "price": null,
     "isPatronAvatar": false
   },
@@ -74,7 +74,7 @@
   {
     "id": 9,
     "file": "9.png",
-    "name": "Stellar Nomads",
+    "name": "Stellar Society",
     "description": "Cosmic travelers who value freedom and exploration, they roam the galaxies, seeking connections and spreading a message of unity amidst stars.",
     "price": null,
     "isPatronAvatar": false
@@ -98,7 +98,7 @@
   {
     "id": 12,
     "file": "12.png",
-    "name": "Wayfarer Navigators",
+    "name": "Wayfarer League",
     "description": "Cartographers of the universe, they delve into the unknown, driven by curiosity and a thirst for discovery.",
     "price": null,
     "isPatronAvatar": false
@@ -122,7 +122,7 @@
   {
     "id": 15,
     "file": "15.png",
-    "name": "Cosmic Constructors",
+    "name": "Cosmic Cartel",
     "description": "Stellar architects, building and molding cosmic structures, desiring a universe crafted in their image.",
     "price": null,
     "isPatronAvatar": false
@@ -130,7 +130,7 @@
   {
     "id": 16,
     "file": "16.png",
-    "name": "Gasborn Titans",
+    "name": "Gasborn Empire",
     "description": "Gaseous entities with immense power, floating through space, looking to expand their nebulous territories.",
     "price": null,
     "isPatronAvatar": false
@@ -162,7 +162,7 @@
   {
     "id": 20,
     "file": "20.png",
-    "name": "Cosmic Conservators",
+    "name": "Cosmic Conservatory",
     "description": "Guardians of nature on a galactic scale, they intervene wherever ecosystems are threatened.",
     "price": null,
     "isPatronAvatar": false
@@ -186,7 +186,7 @@
   {
     "id": 23,
     "file": "23.png",
-    "name": "Celestial Artisans",
+    "name": "Astral Artisans",
     "description": "Creators of cosmic art, they transform entire galaxies into masterpieces, showcasing beauty's power.",
     "price": null,
     "isPatronAvatar": false
@@ -194,7 +194,7 @@
   {
     "id": 24,
     "file": "24.png",
-    "name": "Magnetic Monarchs",
+    "name": "Magnetic Monarchy",
     "description": "Rulers of electromagnetic forces, they seek to attract valuable resources and repel those deemed threats.",
     "price": null,
     "isPatronAvatar": false
@@ -226,7 +226,7 @@
   {
     "id": 28,
     "file": "28.png",
-    "name": "Starship Savants",
+    "name": "Starship Megacorp",
     "description": "Engineers with unmatched starship prowess, they wish to dominate space through superior mobility and tactics.",
     "price": null,
     "isPatronAvatar": false
@@ -268,6 +268,142 @@
     "file": "33.png",
     "name": "Vestige Dominion",
     "description": "Displaced humans mutated into monsterous beings, they strategically and ruthlessly seek galactic control to reclaim their lost humanity.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 34,
+    "file": "34.png",
+    "name": "Geode Consortium",
+    "description": "Mystical miners who extract cosmic energy from rare crystals, desiring to harness the universe's latent powers.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 35,
+    "file": "35.png",
+    "name": "Abyssal Ascendancy",
+    "description": "Entities born from black holes, striving to convert the void's destructive power into a force for cosmic rebirth.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 36,
+    "file": "36.png",
+    "name": "Quantum Quorum",
+    "description": "Masters of the subatomic, they manipulate quantum states to achieve near-impossible feats, shaping reality at its most fundamental.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 37,
+    "file": "37.png",
+    "name": "Helix Academy",
+    "description": "Genetic pioneers aiming to diversify life in the universe, seeing DNA as the canvas for their boundless creativity.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 38,
+    "file": "38.png",
+    "name": "Supernova Sovereignty",
+    "description": "Royalty born from dying stars, their explosive power is both a gift and a burden they seek to control.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 39,
+    "file": "39.png",
+    "name": "Nexus Knights",
+    "description": "Guardians of wormholes and interstellar gateways, they decide who gets passage through the shortcuts of space, wielding immense control over galactic transportation.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 40,
+    "file": "40.png",
+    "name": "Void Vanguard",
+    "description": "Paladins of the cosmos, they crusade against perceived evil, upholding a strict moral code forged from ancient starlight.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 41,
+    "file": "41.png",
+    "name": "Fractal Force",
+    "description": "Harnessing the patterns of existence, they shape reality through geometrical precision, believing in a symmetrical universe.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 42,
+    "file": "42.png",
+    "name": "Omega Order",
+    "description": "Monks who meditate amidst supernovas, seeking enlightenment by understanding the universe's cyclical nature of creation and destruction.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 43,
+    "file": "43.png",
+    "name": "Metamorph Conglomerate",
+    "description": "Shapeshifters of legend, they adapt to any environment, embracing change as the universe's only constant.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 44,
+    "file": "44.png",
+    "name": "Temporal Institute",
+    "description": "Artisans of the time-stream, they weave the past, present, and future into a tapestry of their own design.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 45,
+    "file": "45.png",
+    "name": "Dynamo Dynasty",
+    "description": "Rulers of raw energy, they capture and distribute the universe's power, ensuring that no realm goes dark.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 46,
+    "file": "46.png",
+    "name": "Twilight Supremacy",
+    "description": "Strategists supreme, they use vast networks of intel to dominate foes in a grand cosmic chessboard.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 47,
+    "file": "47.png",
+    "name": "Cyber Cult",
+    "description": "Cybernetic entities who have shed their organic forms, seeking to spread the benefits of digital consciousness.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 48,
+    "file": "48.png",
+    "name": "Freetrade Company",
+    "description": "A union of craftsmen and traders, who value skilled labor and fair trade above all.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 49,
+    "file": "49.png",
+    "name": "Deep Space Command",
+    "description": "Elite warriors trained for combat in the harshest of environments, taking on missions others deem impossible.",
+    "price": null,
+    "isPatronAvatar": false
+  },
+  {
+    "id": 50,
+    "file": "50.png",
+    "name": "Eclipse Khanate",
+    "description": "Rulers of planetoid bodies, they've mastered the arts of reflection and transition, channeling the power of moons and asteroids for strategic advantage.",
     "price": null,
     "isPatronAvatar": false
   }
