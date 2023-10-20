@@ -26,7 +26,7 @@
   {
     "id": 3,
     "file": "3.png",
-    "name": "Zalorian Empire",
+    "name": "House of Zalor",
     "description": "Aristocratic and proud, the Zalorians' sole purpose is to spread their influence, seeing all other species as subservient.",
     "price": null,
     "isPatronAvatar": false
@@ -59,7 +59,7 @@
     "id": 7,
     "file": "7.png",
     "name": "Cerebrum Collective",
-    "description": " A network of interconnected minds seeking to expand their knowledge base and integrate all consciousness.",
+    "description": "A network of interconnected minds seeking to expand their knowledge base and integrate all consciousness.",
     "price": null,
     "isPatronAvatar": false
   },
@@ -130,7 +130,7 @@
   {
     "id": 16,
     "file": "16.png",
-    "name": "Gasborn League",
+    "name": "Gasborn Empire",
     "description": "Gaseous entities with immense power, floating through space, looking to expand their nebulous territories.",
     "price": null,
     "isPatronAvatar": false
@@ -162,7 +162,7 @@
   {
     "id": 20,
     "file": "20.png",
-    "name": "Cosmic Conservators",
+    "name": "Cosmic Conservatory",
     "description": "Guardians of nature on a galactic scale, they intervene wherever ecosystems are threatened.",
     "price": null,
     "isPatronAvatar": false
@@ -186,7 +186,7 @@
   {
     "id": 23,
     "file": "23.png",
-    "name": "Celestial Artisans",
+    "name": "Astral Artisans",
     "description": "Creators of cosmic art, they transform entire galaxies into masterpieces, showcasing beauty's power.",
     "price": null,
     "isPatronAvatar": false
@@ -194,7 +194,7 @@
   {
     "id": 24,
     "file": "24.png",
-    "name": "Magnetic Monarchs",
+    "name": "Magnetic Monarchy",
     "description": "Rulers of electromagnetic forces, they seek to attract valuable resources and repel those deemed threats.",
     "price": null,
     "isPatronAvatar": false
@@ -226,7 +226,7 @@
   {
     "id": 28,
     "file": "28.png",
-    "name": "Starship Savants",
+    "name": "Starship Megacorp",
     "description": "Engineers with unmatched starship prowess, they wish to dominate space through superior mobility and tactics.",
     "price": null,
     "isPatronAvatar": false
@@ -298,7 +298,7 @@
   {
     "id": 37,
     "file": "37.png",
-    "name": "Helix Institute",
+    "name": "Helix Academy",
     "description": "Genetic pioneers aiming to diversify life in the universe, seeing DNA as the canvas for their boundless creativity.",
     "price": null,
     "isPatronAvatar": false
@@ -306,7 +306,7 @@
   {
     "id": 38,
     "file": "38.png",
-    "name": "Supernova Sovereigns",
+    "name": "Supernova Sovereignty",
     "description": "Royalty born from dying stars, their explosive power is both a gift and a burden they seek to control.",
     "price": null,
     "isPatronAvatar": false
@@ -346,7 +346,7 @@
   {
     "id": 43,
     "file": "43.png",
-    "name": "Mythic Metamorphs",
+    "name": "Metamorph Conglomerate",
     "description": "Shapeshifters of legend, they adapt to any environment, embracing change as the universe's only constant.",
     "price": null,
     "isPatronAvatar": false
@@ -354,7 +354,7 @@
   {
     "id": 44,
     "file": "44.png",
-    "name": "Temporal Megacorp",
+    "name": "Temporal Institute",
     "description": "Artisans of the time-stream, they weave the past, present, and future into a tapestry of their own design.",
     "price": null,
     "isPatronAvatar": false
@@ -401,7 +401,7 @@
   },
   {
     "id": 50,
-    "file": "44.png",
+    "file": "50.png",
     "name": "Eclipse Khanate",
     "description": "Rulers of planetoid bodies, they've mastered the arts of reflection and transition, channeling the power of moons and asteroids for strategic advantage.",
     "price": null,
