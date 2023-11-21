@@ -247,7 +247,16 @@ export default class EmailService {
       console.error(err);
     }
   }
-
+  // TODO use this template!
+  // async sendTeamInvite(user: User) {
+  //   try {
+  //     await this.sendTemplate(user.email, this.TEMPLATES.WELCOME, [
+  //       user.username,
+  //     ]);
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // }
   async sendReviewReminderEmail(user: User) {
     if (!user.emailOtherEnabled) {
       throw new Error(`The user is not subscribed to review reminder emails.`);

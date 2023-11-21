@@ -6,7 +6,7 @@ import PlayerSchema from "./player";
 import StarSchema from "./star";
 import CarrierSchema from "./carrier";
 import ConversationSchema from "./conversation";
-
+import TeamSchema from "./team";
 const schema = new Schema({
   settings: {
     general: {
@@ -696,6 +696,7 @@ const schema = new Schema({
   },
   galaxy: {
     players: [PlayerSchema],
+    teams: [TeamSchema],
     stars: [StarSchema],
     carriers: [CarrierSchema],
   },

@@ -17,7 +17,9 @@ export default class DiplomacyUpkeepService {
   }
 
   isAllianceUpkeepEnabled(game: Game) {
-    return game.settings.diplomacy.upkeepCost !== "none";
+    // If teams are enabled. Upkeep is disabled.
+    let teamsEnabled = game.settings.general.teamGame === "enabled";
+    return teamsEnabled ? false : game.settings.diplomacy.upkeepCost !== "none";
   }
 
   async deductUpkeep(

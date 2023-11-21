@@ -342,6 +342,7 @@ export default class GameTickService extends EventEmitter {
     let isAlliancesEnabled =
       this.diplomacyService.isFormalAlliancesEnabled(game);
 
+    let isTeamsEnabled = this.diplomacyService.isTeamsEnabled(game);
     // Get all carriers that are in transit, their current locations
     // and where they will be moving to.
     let carrierPositions: CarrierPosition[] = game.galaxy.carriers

@@ -3,6 +3,7 @@ import { Conversation } from "./Conversation";
 import { DBObjectId } from "./DBObjectId";
 import { Location } from "./Location";
 import { Player } from "./Player";
+import { Team } from "./Team";
 import { Star } from "./Star";
 
 export type GameType =
@@ -289,6 +290,7 @@ export interface Game {
   settings: GameSettings;
   galaxy: {
     players: Player[];
+    teams: Team[];
     stars: Star[];
     carriers: Carrier[];
     homeStars?: DBObjectId[];

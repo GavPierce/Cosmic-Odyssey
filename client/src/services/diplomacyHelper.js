@@ -1,87 +1,110 @@
 class DiplomacyHelper {
-  
-  isFormalAlliancesEnabled (game) {
-    return game.settings.diplomacy.enabled === 'enabled'
+  isFormalAlliancesEnabled(game) {
+    const diplomacyEnabled = game.settings.diplomacy.enabled === "enabled";
+    const teamsEnabled = this.isTeamsEnabled(game);
+
+    return diplomacyEnabled || teamsEnabled;
+  }
+  isTeamsEnabled(game) {
+    return game.settings.general.teamGame === "enabled";
+  }
+  isTradeRestricted(game) {
+    return game.settings.diplomacy.tradeRestricted === "enabled";
   }
 
-  isTradeRestricted (game) {
-    return game.settings.diplomacy.tradeRestricted === 'enabled'
+  maxAlliances(game) {
+    return game.settings.diplomacy.maxAlliances;
   }
 
-  maxAlliances (game) {
-    return game.settings.diplomacy.maxAlliances
+  isMaxAlliancesEnabled(game) {
+    return (
+      game.settings.diplomacy.maxAlliances <
+      game.settings.general.playerLimit - 1
+    );
   }
 
-  isMaxAlliancesEnabled (game) {
-    return game.settings.diplomacy.maxAlliances < game.settings.general.playerLimit - 1
+  isAllianceUpkeepEnabled(game) {
+    // If teams are enabled. Upkeep is disabled.
+    let teamsEnabled = game.settings.general.teamGame === "enabled";
+    return teamsEnabled ? false : game.settings.diplomacy.upkeepCost !== "none";
   }
 
-  isAllianceUpkeepEnabled (game) {
-    return game.settings.diplomacy.upkeepCost !== 'none'
-  }
+  getAllianceUpkeepCost(game, player, cycleCredits, allianceCount) {
+    const costPerAlly =
+      game.constants.diplomacy.upkeepExpenseMultipliers[
+        game.settings.diplomacy.upkeepCost
+      ];
+    const upkeep = Math.round(allianceCount * costPerAlly * cycleCredits);
 
-  getAllianceUpkeepCost (game, player, cycleCredits, allianceCount) {
-    const costPerAlly = game.constants.diplomacy.upkeepExpenseMultipliers[game.settings.diplomacy.upkeepCost];
-    const upkeep = Math.round(allianceCount * costPerAlly * cycleCredits)
-
-    return upkeep
+    return upkeep;
   }
 
   isDiplomaticStatusToPlayersAllied(game, playerId, toPlayerIds) {
     let playerIdA = playerId;
 
     for (let i = 0; i < toPlayerIds.length; i++) {
-        let playerIdB = toPlayerIds[i]
+      let playerIdB = toPlayerIds[i];
 
-        let diplomaticStatus = this.getDiplomaticStatusToPlayer(game, playerIdA, playerIdB)
+      let diplomaticStatus = this.getDiplomaticStatusToPlayer(
+        game,
+        playerIdA,
+        playerIdB
+      );
 
-        if (['enemies', 'neutral'].includes(diplomaticStatus.actualStatus)) {
-            return false
-        }
+      if (["enemies", "neutral"].includes(diplomaticStatus.actualStatus)) {
+        return false;
+      }
     }
 
-    return true
+    return true;
   }
 
   getDiplomaticStatusToPlayer(game, playerIdA, playerIdB) {
     if (playerIdA.toString() === playerIdB.toString()) {
       return {
-          playerIdFrom: playerIdA,
-          playerIdTo: playerIdB,
-          statusFrom: 'allies',
-          statusTo: 'allies',
-          actualStatus: 'allies'
-      }
+        playerIdFrom: playerIdA,
+        playerIdTo: playerIdB,
+        statusFrom: "allies",
+        statusTo: "allies",
+        actualStatus: "allies"
+      };
     }
 
-    let playerA = game.galaxy.players.find(p => p._id.toString() === playerIdA.toString())
-    let playerB = game.galaxy.players.find(p => p._id.toString() === playerIdB.toString())
+    let playerA = game.galaxy.players.find(
+      p => p._id.toString() === playerIdA.toString()
+    );
+    let playerB = game.galaxy.players.find(
+      p => p._id.toString() === playerIdB.toString()
+    );
 
-    let playerADiplo = playerA.diplomacy.find(x => x.playerId.toString() === playerB._id.toString())
-    let playerBDiplo = playerB.diplomacy.find(x => x.playerId.toString() === playerA._id.toString())
+    let playerADiplo = playerA.diplomacy.find(
+      x => x.playerId.toString() === playerB._id.toString()
+    );
+    let playerBDiplo = playerB.diplomacy.find(
+      x => x.playerId.toString() === playerA._id.toString()
+    );
 
-    let statusTo = playerADiplo == null ? 'neutral' : playerADiplo.status
-    let statusFrom = playerBDiplo == null ? 'neutral' : playerBDiplo.status
+    let statusTo = playerADiplo == null ? "neutral" : playerADiplo.status;
+    let statusFrom = playerBDiplo == null ? "neutral" : playerBDiplo.status;
 
-    let actualStatus
+    let actualStatus;
 
-    if (statusTo === 'enemies' || statusFrom === 'enemies') {
-        actualStatus = 'enemies'
-    } else if (statusTo === 'neutral' || statusFrom === 'neutral') {
-        actualStatus = 'neutral'
+    if (statusTo === "enemies" || statusFrom === "enemies") {
+      actualStatus = "enemies";
+    } else if (statusTo === "neutral" || statusFrom === "neutral") {
+      actualStatus = "neutral";
     } else {
-        actualStatus = 'allies'
+      actualStatus = "allies";
     }
 
     return {
-        playerIdFrom: playerIdA,
-        playerIdTo: playerIdB,
-        statusFrom,
-        statusTo,
-        actualStatus
-    }
+      playerIdFrom: playerIdA,
+      playerIdTo: playerIdB,
+      statusFrom,
+      statusTo,
+      actualStatus
+    };
   }
-
 }
 
-export default new DiplomacyHelper()
+export default new DiplomacyHelper();

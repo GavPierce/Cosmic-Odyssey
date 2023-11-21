@@ -12,6 +12,7 @@ import BroadcastService from "./broadcast";
 import CacheService from "./cache";
 import CarrierService from "./carrier";
 import DiplomacyService from "./diplomacy";
+import TeamService from "./team";
 import DistanceService from "./distance";
 import GameService from "./game";
 import GameStateService from "./gameState";
@@ -65,6 +66,7 @@ export default class GameGalaxyService {
   gameTypeService: GameTypeService;
   gameStateService: GameStateService;
   diplomacyService: DiplomacyService;
+  teamService: TeamService;
   avatarService: AvatarService;
   playerStatisticsService: PlayerStatisticsService;
   gameFluxService: GameFluxService;
@@ -95,6 +97,7 @@ export default class GameGalaxyService {
     gameTypeService: GameTypeService,
     gameStateService: GameStateService,
     diplomacyService: DiplomacyService,
+    teamService: TeamService,
     avatarService: AvatarService,
     playerStatisticsService: PlayerStatisticsService,
     gameFluxService: GameFluxService,
@@ -124,6 +127,7 @@ export default class GameGalaxyService {
     this.gameTypeService = gameTypeService;
     this.gameStateService = gameStateService;
     this.diplomacyService = diplomacyService;
+    this.teamService = teamService;
     this.avatarService = avatarService;
     this.playerStatisticsService = playerStatisticsService;
     this.gameFluxService = gameFluxService;
@@ -804,9 +808,17 @@ export default class GameGalaxyService {
     // Check if the user is playing in this game, if so they can only see from
     // their own perspective.
     let userPlayer = this._getUserPlayer(game, userId);
+    let teamMembers: DBObjectId[] = [];
 
     if (userPlayer) {
-      return [userPlayer._id];
+      if (this.diplomacyService.isTeamsEnabled(game)) {
+        // return all team members! Ooo exciting.
+        teamMembers = this.teamService.getTeamMembersOfPlayer(
+          game,
+          userPlayer._id
+        );
+      }
+      return [userPlayer._id, ...teamMembers];
     }
 
     // If the user is spectating then they can see from the perspectives of all
@@ -922,6 +934,22 @@ export default class GameGalaxyService {
     for (let i = 0; i < game.galaxy.stars.length; i++) {
       let gameStar = game.galaxy.stars[i];
 
+      // if An teamMember owns this star, don't mask anything
+      if (this.diplomacyService.isTeamsEnabled(game) && userPlayer) {
+        let teamMembers = this.teamService.getTeamMembersOfPlayer(
+          game,
+          userPlayer?._id
+        );
+
+        if (
+          !isHistorical &&
+          userPlayer &&
+          gameStar.ownedByPlayerId &&
+          teamMembers.includes(gameStar.ownedByPlayerId)
+        ) {
+          continue;
+        }
+      }
       if (
         !isHistorical &&
         userPlayer &&

@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 
 import GameModel from "../db/models/Game";
 import UserModel from "../db/models/User";
+import TeamModel from "../db/models/Team";
 import HistoryModel from "../db/models/History";
 import EventModel from "../db/models/Event";
 import GuildModel from "../db/models/Guild";
@@ -84,12 +85,13 @@ import NotificationService from "./notification";
 import DiscordService from "./discord";
 import ShipService from "./ship";
 import SpectatorService from "./spectator";
-
+import TeamService from "./team";
 import { DependencyContainer } from "./types/DependencyContainer";
 
 import Repository from "./repository";
 import { Game } from "./types/Game";
 import { User } from "./types/User";
+import { Team } from "./types/Team";
 import { GameHistory } from "./types/GameHistory";
 import { GameEvent } from "./types/GameEvent";
 import { Guild } from "./types/Guild";
@@ -101,6 +103,7 @@ const starNames = require("../config/game/starNames");
 
 const gameRepository = new Repository<Game>(GameModel);
 const userRepository = new Repository<User>(UserModel);
+const teamRespository = new Repository<Team>(TeamModel);
 const historyRepository = new Repository<GameHistory>(HistoryModel);
 const eventRepository = new Repository<GameEvent>(EventModel);
 const guildRepository = new Repository<Guild>(GuildModel);
@@ -350,6 +353,7 @@ export default (config, io): DependencyContainer => {
     tradeService,
     diplomacyService
   );
+  const teamService = new TeamService(gameRepository, diplomacyService);
   const gameService = new GameService(
     gameRepository,
     userService,
@@ -509,6 +513,7 @@ export default (config, io): DependencyContainer => {
     gameTypeService,
     gameStateService,
     diplomacyService,
+    teamService,
     avatarService,
     playerStatisticsService,
     gameFluxService,
@@ -625,8 +630,6 @@ export default (config, io): DependencyContainer => {
     tradeService
   );
 
-  console.log("Dependency container initialized.");
-  console.log("TEST", config.connectionString);
   return {
     config,
     adminService,
@@ -640,6 +643,7 @@ export default (config, io): DependencyContainer => {
     emailService,
     eventService,
     leaderboardService,
+    teamService,
     gameService,
     gameJoinService,
     gameCreateValidationService,

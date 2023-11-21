@@ -1,133 +1,166 @@
 <template>
-<div class="menu-page container">
+  <div class="menu-page container">
     <menu-title title="Welcome" @onCloseRequested="onCloseRequested">
-      <button title="View Settings" tag="button" class="btn btn-sm btn-outline-primary" @click="onViewSettingsRequested"><i class="fas fa-cog"></i></button>
+      <button
+        title="View Settings"
+        tag="button"
+        class="btn btn-sm btn-outline-primary"
+        @click="onViewSettingsRequested"
+      >
+        <i class="fas fa-cog"></i>
+      </button>
     </menu-title>
 
-    <div class="row bg-info" v-if="game.settings.general.flux" title="This Game's Cosmic Anomaly">
+    <div
+      class="row bg-info"
+      v-if="game.settings.general.flux"
+      title="This Game's Cosmic Anomaly"
+    >
       <div class="col text-center">
         <!-- <p class="mt-2 mb-2"><small><i class="fas fa-dice-d20 me-1"></i><strong>{{game.settings.general.flux.name}}</strong> - {{game.settings.general.flux.description}} <help-tooltip v-if="game.settings.general.flux.tooltip" :tooltip="game.settings.general.flux.tooltip"/></small></p> -->
-        <p class="mt-2 mb-2"><small><i class="fas fa-dice-d20 me-1"></i>{{game.settings.general.flux.description}} <help-tooltip v-if="game.settings.general.flux.tooltip" :tooltip="game.settings.general.flux.tooltip"/></small></p>
+        <p class="mt-2 mb-2">
+          <small
+            ><i class="fas fa-dice-d20 me-1"></i
+            >{{ game.settings.general.flux.description }}
+          </small>
+        </p>
       </div>
     </div>
 
-    <select-alias v-on:onAliasChanged="onAliasChanged" v-on:onAvatarChanged="onAvatarChanged"/>
+    <select-alias
+      v-on:onAliasChanged="onAliasChanged"
+      v-on:onAvatarChanged="onAvatarChanged"
+    />
 
-    <enter-password v-if="isPasswordRequired" v-on:onPasswordChanged="onPasswordChanged"/>
+    <enter-password
+      v-if="isPasswordRequired"
+      v-on:onPasswordChanged="onPasswordChanged"
+    />
 
-    <form-error-list v-bind:errors="errors" class="mt-2"/>
+    <form-error-list v-bind:errors="errors" class="mt-2" />
 
-    <loading-spinner :loading="isJoiningGame"/>
+    <loading-spinner :loading="isJoiningGame" />
 
-    <select-colour v-if="!isJoiningGame" v-on:onJoinRequested="onJoinRequested" @onOpenPlayerDetailRequested="onOpenPlayerDetailRequested"/>
+    <select-colour
+      v-if="!isJoiningGame"
+      v-on:onJoinRequested="onJoinRequested"
+      @onOpenPlayerDetailRequested="onOpenPlayerDetailRequested"
+    />
 
     <new-player-message />
 
-    <share-link message="Rally your allies and conquer the cosmic expanse as one!"/>
-</div>
+    <share-link
+      message="Rally your allies and conquer the cosmic expanse as one!"
+    />
+  </div>
 </template>
 
 <script>
-import LoadingSpinnerVue from '../../../components/LoadingSpinner'
-import gameService from '../../../../services/api/game'
-import MenuTitle from '../MenuTitle'
-import FormErrorListVue from '../../../components/FormErrorList'
-import SelectAliasVue from './SelectAlias.vue'
-import EnterPasswordVue from './EnterPassword.vue'
-import SelectColourVue from './SelectColour.vue'
-import NewPlayerMessageVue from './NewPlayerMessage'
-import ShareLinkVue from './ShareLink.vue'
+import LoadingSpinnerVue from "../../../components/LoadingSpinner";
+import gameService from "../../../../services/api/game";
+import MenuTitle from "../MenuTitle";
+import FormErrorListVue from "../../../components/FormErrorList";
+import SelectAliasVue from "./SelectAlias.vue";
+import EnterPasswordVue from "./EnterPassword.vue";
+import SelectColourVue from "./SelectColour.vue";
+import NewPlayerMessageVue from "./NewPlayerMessage";
+import ShareLinkVue from "./ShareLink.vue";
 
 export default {
   components: {
-    'loading-spinner': LoadingSpinnerVue,
-    'menu-title': MenuTitle,
-    'form-error-list': FormErrorListVue,
-    'select-alias': SelectAliasVue,
-    'enter-password': EnterPasswordVue,
-    'select-colour': SelectColourVue,
-    'new-player-message': NewPlayerMessageVue,
-    'share-link': ShareLinkVue
+    "loading-spinner": LoadingSpinnerVue,
+    "menu-title": MenuTitle,
+    "form-error-list": FormErrorListVue,
+    "select-alias": SelectAliasVue,
+    "enter-password": EnterPasswordVue,
+    "select-colour": SelectColourVue,
+    "new-player-message": NewPlayerMessageVue,
+    "share-link": ShareLinkVue
   },
-  data () {
+  data() {
     return {
       isJoiningGame: false,
       isPasswordRequired: false,
       errors: [],
       avatar: null,
-      alias: '',
-      password: ''
-    }
+      alias: "",
+      password: ""
+    };
   },
-  mounted () {
-    this.isPasswordRequired = this.$store.state.game.settings.general.passwordRequired
+  mounted() {
+    this.isPasswordRequired = this.$store.state.game.settings.general.passwordRequired;
   },
   methods: {
-    onCloseRequested (e) {
-      this.$emit('onCloseRequested', e)
+    onCloseRequested(e) {
+      this.$emit("onCloseRequested", e);
     },
-    onOpenPlayerDetailRequested (e) {
-      this.$emit('onOpenPlayerDetailRequested', e)
+    onOpenPlayerDetailRequested(e) {
+      this.$emit("onOpenPlayerDetailRequested", e);
     },
-    onViewSettingsRequested (e) {
-      this.$emit('onViewSettingsRequested', e)
+    onViewSettingsRequested(e) {
+      this.$emit("onViewSettingsRequested", e);
     },
-    onAvatarChanged (e) {
-      this.avatar = e
+    onAvatarChanged(e) {
+      this.avatar = e;
     },
-    onAliasChanged (e) {
-      this.alias = e
+    onAliasChanged(e) {
+      this.alias = e;
     },
-    onPasswordChanged (e) {
-      this.password = e
+    onPasswordChanged(e) {
+      this.password = e;
     },
-    async onJoinRequested (playerId) {
-      this.errors = []
+    async onJoinRequested(playerId) {
+      this.errors = [];
 
       if (!this.alias) {
-        this.errors.push('It is required to pick an alias.')
+        this.errors.push("It is required to pick an alias.");
       }
 
       if (!this.avatar) {
-        this.errors.push('Please select your faction.')
+        this.errors.push("Please select your faction.");
       }
 
       if (this.alias && this.alias.length < 3) {
-        this.errors.push('Your alias needs be three characters or more.')
+        this.errors.push("Your alias needs be three characters or more.");
       }
 
       if (this.alias && this.alias.length > 20) {
-        this.errors.push('Your alias needs to be less than 20 characters.')
+        this.errors.push("Your alias needs to be less than 20 characters.");
       }
 
-      if (this.errors.length) return
+      if (this.errors.length) return;
 
       try {
-        this.isJoiningGame = true
+        this.isJoiningGame = true;
 
-        let response = await gameService.joinGame(this.$store.state.game._id, playerId, this.alias, this.avatar.id, this.password)
+        let response = await gameService.joinGame(
+          this.$store.state.game._id,
+          playerId,
+          this.alias,
+          this.avatar.id,
+          this.password
+        );
 
         if (response.status === 200) {
-          location.reload() // It ain't pretty but it is the easiest way to refresh the game board entirely.
+          location.reload(); // It ain't pretty but it is the easiest way to refresh the game board entirely.
         }
       } catch (err) {
         if (err.response.data) {
-          this.errors = err.response.data.errors
+          this.errors = err.response.data.errors;
         }
 
-        console.error(err)
+        console.error(err);
       }
 
-      this.isJoiningGame = false
+      this.isJoiningGame = false;
     }
   },
   computed: {
-    game () {
-      return this.$store.state.game
+    game() {
+      return this.$store.state.game;
     }
   }
-}
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

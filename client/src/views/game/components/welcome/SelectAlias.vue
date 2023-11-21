@@ -39,25 +39,23 @@
                   v-on:keyup="onAliasChanged"
                 />
               </div>
-
               <div class="mb-2">
                 <label for="playerType" class="col-form-label"
-                  >Join Team
-                  <help-tooltip
-                    tooltip="Determines what type of players can join the game"
-                /></label>
+                  >Join or Create Team</label
+                >
                 <select
                   class="form-control"
                   id="team"
-                  v-model="teamList"
-                  @change="teamChanged"
+                  v-model="team"
+                  @change="onTeamChanged($event)"
                 >
                   <option
+                    style="height:3em;"
                     v-for="team in teamList"
-                    v-bind:key="team.value"
-                    v-bind:value="team.value"
+                    :key="team._id"
+                    :value="team"
                   >
-                    {{ team.text }}
+                    {{ team.teamName }}
                   </option>
                   <option class="bg-success" style="height:3em;">
                     Create Team
@@ -68,6 +66,18 @@
                         <p>Your alias must be between 3 and 24 characters.</p>
                     </div> -->
             </div>
+
+            <team-details
+              v-if="showTeamDetails"
+              :team="team"
+              @invite-team-member="inviteTeamMember"
+              @join-team="joinTeam"
+              @delete-team-invitee="removeInviteeFromTeam"
+            ></team-details>
+            <team-create
+              v-if="creatingTeam"
+              @create-team="createTeam"
+            ></team-create>
           </div>
         </form>
       </div>
@@ -77,28 +87,38 @@
 
 <script>
 import UserService from "../../../../services/api/user";
+import TeamService from "../../../../services/api/team";
 import SelectAvatarVue from "./SelectAvatar.vue";
 import GameApiService from "../../../../services/api/game";
+import TeamCreate from "./TeamCreate.vue";
+import TeamDetails from "./TeamDetails.vue";
 export default {
   components: {
-    "select-avatar": SelectAvatarVue
+    "select-avatar": SelectAvatarVue,
+    "team-create": TeamCreate,
+    "team-details": TeamDetails
   },
   data() {
     return {
       alias: null,
+      myId: null,
       avatar: null,
       isTeamGame: false,
       team: null,
-      teamList: null
+      teamList: null,
+      creatingTeam: false,
+      showTeamDetails: false
     };
   },
   async mounted() {
     try {
       let response = await UserService.getMyUserInfo();
       let settings = await GameApiService.getGameInfo(this.$route.query.id);
+      this.teamList = this.$store.state.game.galaxy.teams;
 
       if (response.status === 200) {
         this.alias = response.data.username;
+        this.myId = response.data._id;
         this.onAliasChanged(this.alias);
       }
       if (settings.status === 200) {
@@ -118,6 +138,46 @@ export default {
       this.avatar = e;
 
       this.$emit("onAvatarChanged", e);
+    },
+    onTeamChanged(e) {
+      var selectedTeam = event.target.value;
+      if (selectedTeam == "Create Team") {
+        this.creatingTeam = true;
+        this.showTeamDetails = false;
+      } else {
+        this.creatingTeam = false;
+        this.showTeamDetails = true;
+      }
+    },
+    async createTeam(e) {
+      let response = await TeamService.createTeam(
+        this.$route.query.id,
+        e.teamName,
+        e.logo
+      );
+    },
+    async inviteTeamMember(e) {
+      console.log("Inviting...");
+      let response = await TeamService.inviteTeamMember(
+        this.$route.query.id,
+        this.team._id,
+        e.member._id
+      );
+    },
+    async joinTeam() {
+      let response = await TeamService.joinTeam(
+        this.$route.query.id,
+        this.team._id,
+        this.myId
+      );
+    },
+    async removeInviteeFromTeam(e) {
+      console.log("Removing Invite...", e);
+      let response = await TeamService.removeInviteeFromTeam(
+        this.$route.query.id,
+        this.team._id,
+        e
+      );
     }
   }
 };

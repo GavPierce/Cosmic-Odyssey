@@ -20,6 +20,7 @@ import EmailService from "../email";
 import EventService from "../event";
 import GameService from "../game";
 import GameJoinService from "../gameJoin";
+import TeamService from "../team";
 import GameCreateService from "../gameCreate";
 import GameCreateValidationService from "../gameCreateValidation";
 import GameFluxService from "../gameFlux";
@@ -39,7 +40,7 @@ import StarMovementService from "../starMovement";
 import PasswordService from "../password";
 import PaypalService from "../paypal";
 import PlayerService from "../player";
-import PlayerAfkService from '../playerAfk'
+import PlayerAfkService from "../playerAfk";
 import PlayerCreditsService from "../playerCredits";
 import PlayerCycleRewardsService from "../playerCycleRewards";
 import PlayerReadyService from "../playerReady";
@@ -70,74 +71,75 @@ import ShipService from "../ship";
 import SpectatorService from "../spectator";
 
 export interface DependencyContainer {
-    config: Config,
-    adminService: AdminService,
-    passwordService: PasswordService,
-    authService: AuthService,
-    discordService: DiscordService,
-    broadcastService: BroadcastService,
-    carrierService: CarrierService,
-    combatService: CombatService,
-    distanceService: DistanceService,
-    emailService: EmailService,
-    eventService: EventService,
-    leaderboardService: LeaderboardService,
-    gameService: GameService,
-    gameJoinService: GameJoinService,
-    gameCreateValidationService: GameCreateValidationService,
-    gameCreateService: GameCreateService,
-    gameGalaxyService: GameGalaxyService,
-    gameListService: GameListService,
-    gameTickService: GameTickService,
-    gameTypeService: GameTypeService,
-    gameStateService: GameStateService,
-    guildService: GuildService,
-    guildUserService: UserGuildService,
-    mapService: MapService,
-    playerService: PlayerService,
-    playerAfkService: PlayerAfkService,
-    userLevelService: UserLevelService,
-    playerReadyService: PlayerReadyService,
-    randomService: RandomService,
-    researchService: ResearchService,
-    starService: StarService,
-    starDistanceService: StarDistanceService,
-    nameService: NameService,
-    starUpgradeService: StarUpgradeService,
-    technologyService: TechnologyService,
-    tradeService: TradeService,
-    userService: UserService,
-    waypointService: WaypointService,
-    shipTransferService: ShipTransferService,
-    historyService: HistoryService,
-    ledgerService: LedgerService,
-    specialistService: SpecialistService,
-    specialistBanService: SpecialistBanService,
-    specialistHireService: SpecialistHireService,
-    specialStarBanService: SpecialStarBanService;
-    achievementService: AchievementService,
-    conversationService: ConversationService,
-    reputationService: ReputationService,
-    aiService: AIService,
-    battleRoyaleService: BattleRoyaleService,
-    starMovementService: StarMovementService,
-    cacheService: CacheService,
-    recaptchaService: RecaptchaService,
-    ratingService: RatingService,
-    diplomacyService: DiplomacyService,
-    avatarService: AvatarService,
-    paypalService: PaypalService,
-    badgeService: BadgeService,
-    reportService: ReportService,
-    playerStatisticsService: PlayerStatisticsService,
-    playerCreditsService: PlayerCreditsService,
-    diplomacyUpkeepService: DiplomacyUpkeepService,
-    carrierGiftService: CarrierGiftService,
-    carrierMovementService: CarrierMovementService,
-    playerCycleRewardsService: PlayerCycleRewardsService,
-    starContestedService: StarContestedService,
-    gameFluxService: GameFluxService,
-    notificationService: NotificationService,
-    shipService: ShipService,
-    spectatorService: SpectatorService,
-};
+  config: Config;
+  adminService: AdminService;
+  passwordService: PasswordService;
+  authService: AuthService;
+  discordService: DiscordService;
+  broadcastService: BroadcastService;
+  carrierService: CarrierService;
+  combatService: CombatService;
+  distanceService: DistanceService;
+  emailService: EmailService;
+  eventService: EventService;
+  leaderboardService: LeaderboardService;
+  gameService: GameService;
+  gameJoinService: GameJoinService;
+  teamService: TeamService;
+  gameCreateValidationService: GameCreateValidationService;
+  gameCreateService: GameCreateService;
+  gameGalaxyService: GameGalaxyService;
+  gameListService: GameListService;
+  gameTickService: GameTickService;
+  gameTypeService: GameTypeService;
+  gameStateService: GameStateService;
+  guildService: GuildService;
+  guildUserService: UserGuildService;
+  mapService: MapService;
+  playerService: PlayerService;
+  playerAfkService: PlayerAfkService;
+  userLevelService: UserLevelService;
+  playerReadyService: PlayerReadyService;
+  randomService: RandomService;
+  researchService: ResearchService;
+  starService: StarService;
+  starDistanceService: StarDistanceService;
+  nameService: NameService;
+  starUpgradeService: StarUpgradeService;
+  technologyService: TechnologyService;
+  tradeService: TradeService;
+  userService: UserService;
+  waypointService: WaypointService;
+  shipTransferService: ShipTransferService;
+  historyService: HistoryService;
+  ledgerService: LedgerService;
+  specialistService: SpecialistService;
+  specialistBanService: SpecialistBanService;
+  specialistHireService: SpecialistHireService;
+  specialStarBanService: SpecialStarBanService;
+  achievementService: AchievementService;
+  conversationService: ConversationService;
+  reputationService: ReputationService;
+  aiService: AIService;
+  battleRoyaleService: BattleRoyaleService;
+  starMovementService: StarMovementService;
+  cacheService: CacheService;
+  recaptchaService: RecaptchaService;
+  ratingService: RatingService;
+  diplomacyService: DiplomacyService;
+  avatarService: AvatarService;
+  paypalService: PaypalService;
+  badgeService: BadgeService;
+  reportService: ReportService;
+  playerStatisticsService: PlayerStatisticsService;
+  playerCreditsService: PlayerCreditsService;
+  diplomacyUpkeepService: DiplomacyUpkeepService;
+  carrierGiftService: CarrierGiftService;
+  carrierMovementService: CarrierMovementService;
+  playerCycleRewardsService: PlayerCycleRewardsService;
+  starContestedService: StarContestedService;
+  gameFluxService: GameFluxService;
+  notificationService: NotificationService;
+  shipService: ShipService;
+  spectatorService: SpectatorService;
+}
