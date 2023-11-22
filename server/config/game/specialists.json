@@ -24,7 +24,7 @@
             "id": 2,
             "key": "commander",
             "name": "Commander",
-            "description": "Adds +2 Weapons to your side in combat. Deducts -1 Hyperspace Range from the carrier and decreases carrier speed to 90%.",
+            "description": "Adds +2 Weapons to your side in combat. Deducts -1 Hyperspace Range from the carrier.",
             "active": {
                 "official": true,
                 "custom": true
@@ -36,8 +36,7 @@
             "modifiers": {
                 "local": {
                     "weapons": 2,
-                    "hyperspace": -1,
-                    "speed": 0.9
+                    "hyperspace": -2
                 }
             }
         },
@@ -45,7 +44,7 @@
             "id": 3,
             "key": "captain",
             "name": "Captain",
-            "description": "Adds +3 Weapons to your side in combat. Deducts -2 Hyperspace Range from the carrier and decreases carrier speed to 80%.",
+            "description": "Adds +3 Weapons to your side in combat. Deducts -2 Hyperspace Range from the carrier.",
             "active": {
                 "official": true,
                 "custom": true
@@ -57,8 +56,7 @@
             "modifiers": {
                 "local": {
                     "weapons": 3,
-                    "hyperspace": -2,
-                    "speed": 0.8
+                    "hyperspace": -3
                 }
             }
         },
@@ -66,7 +64,7 @@
             "id": 4,
             "key": "admiral",
             "name": "Admiral",
-            "description": "Adds +4 Weapons to your side in combat. Deducts -3 Hyperspace Range from the carrier and decreases carrier speed to 70%.",
+            "description": "Adds +4 Weapons to your side in combat. Deducts -3 Hyperspace Range from the carrier.",
             "active": {
                 "official": true,
                 "custom": true
@@ -78,8 +76,7 @@
             "modifiers": {
                 "local": {
                     "weapons": 4,
-                    "hyperspace": -3,
-                    "speed": 0.7
+                    "hyperspace": -4
                 }
             }
         },
@@ -87,7 +84,7 @@
             "id": 5,
             "key": "fleet-admiral",
             "name": "Fleet Admiral",
-            "description": "Adds +5 Weapons to your side in combat. Deducts -4 Hyperspace Range from the carrier and decreases carrier speed to 60%.",
+            "description": "Adds +5 Weapons to your side in combat. Deducts -4 Hyperspace Range from the carrier.",
             "active": {
                 "official": true,
                 "custom": true
@@ -99,8 +96,7 @@
             "modifiers": {
                 "local": {
                     "hyperspace": -5,
-                    "weapons": 5,
-                    "speed": 0.6
+                    "weapons": 5
                 }
             }
         },
@@ -108,28 +104,7 @@
             "id": 6,
             "key": "lunar-module",
             "name": "Explorer",
-            "description": "Adds +3 Hyperspace Range and increases carrier speed by x1.5. Deducts -3 Weapons from your side in combat.",
-            "active": {
-                "official": true,
-                "custom": true
-            },
-            "baseCostCredits": 300,
-            "baseCostCreditsSpecialists": 3,
-            "oneShot": false,
-            "expireTicks": null,
-            "modifiers": {
-                "local": {
-                    "speed": 1.5,
-                    "hyperspace": 3,
-                    "weapons": -3
-                }
-            }
-        },
-        {
-            "id": 7,
-            "key": "forward-field",
-            "name": "Hyperspace Transport",
-            "description": "Powerful vessel propulsion increases speed of carrier to 200%. It's added fuel reserves expand hyperspace range by +2. Weapons efficiency diminishes by -3.",
+            "description": "Adds +5 Hyperspace Range. Deducts -5 Weapons from your side in combat.",
             "active": {
                 "official": true,
                 "custom": true
@@ -140,9 +115,28 @@
             "expireTicks": null,
             "modifiers": {
                 "local": {
-                    "speed": 2,
-                    "hyperspace": 2,
-                    "weapons": -3
+                    "hyperspace": 5,
+                    "weapons": -5
+                }
+            }
+        },
+        {
+            "id": 7,
+            "key": "forward-field",
+            "name": "Hyperspace Transport",
+            "description": "Powerful vessel propulsion increases speed of carrier to 300%. Weapons efficiency diminishes by -5.",
+            "active": {
+                "official": true,
+                "custom": true
+            },
+            "baseCostCredits": 500,
+            "baseCostCreditsSpecialists": 5,
+            "oneShot": false,
+            "expireTicks": null,
+            "modifiers": {
+                "local": {
+                    "speed": 3,
+                    "weapons": -5
                 }
             }
         },
@@ -150,7 +144,7 @@
             "id": 8,
             "key": "mars-pathfinder",
             "name": "Cargo Freighter",
-            "description": "Increases carrier speed by 50% and increases hyperspace range by 2. Deducts -1 Weapons from your side in combat.",
+            "description": "Increases carrier speed by 10% and increases hyperspace range by 3. Deducts -5 Weapons from your side in combat.",
             "active": {
                 "official": true,
                 "custom": true
@@ -161,9 +155,9 @@
             "expireTicks": null,
             "modifiers": {
                 "local": {
-                    "speed": 1.50,
-                    "weapons": -2,
-                    "hyperspace": 2
+                    "speed": 1.1,
+                    "weapons": -5,
+                    "hyperspace": 3
                 }
             }
         },
@@ -198,8 +192,8 @@
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 300,
-            "baseCostCreditsSpecialists": 2,
+            "baseCostCredits": 100,
+            "baseCostCreditsSpecialists": 1,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -337,8 +331,8 @@
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 300,
-            "baseCostCreditsSpecialists": 3,
+            "baseCostCredits": 100,
+            "baseCostCreditsSpecialists": 1,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -364,8 +358,8 @@
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 800,
-            "baseCostCreditsSpecialists": 8,
+            "baseCostCredits": 500,
+            "baseCostCreditsSpecialists": 5,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -387,8 +381,8 @@
                 "official": false,
                 "custom": false
             },
-            "baseCostCredits": 1000,
-            "baseCostCreditsSpecialists": 10,
+            "baseCostCredits": 500,
+            "baseCostCreditsSpecialists": 5,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -406,8 +400,8 @@
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 400,
-            "baseCostCreditsSpecialists": 6,
+            "baseCostCredits": 300,
+            "baseCostCreditsSpecialists": 3,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -425,21 +419,21 @@
             "id": 20,
             "key": "metroid",
             "name": "Experimental Lifeform",
-            "description": "When attacking a star, adds +10 Weapons to your side in combat. When attacking in hyperspace, -2 Weapons to your side in combat. Dies after 30 ticks. Gains no rewards from invading.",
+            "description": "When attacking a star, adds +10 Weapons to your side in star combat. When attacking in hyperspace, -2 Weapons to your side in hyperspace combat. Dies after 30 ticks. Gains no rewards from invading.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 800,
-            "baseCostCreditsSpecialists": 8,
+            "baseCostCredits": 600,
+            "baseCostCreditsSpecialists": 6,
             "oneShot": true,
             "//comment": "Set to -1 if you want it to be random or a specific key for life duration, code needs to be implemented first",
-            "expireTicks": 25,
+            "expireTicks": 30,
             "modifiers": {
                 "local": {
                     "carrierToStarCombat": {
                         "attacker": {
-                            "weapons": 8,
+                            "weapons": 10,
                             "starCaptureRewardMultiplier": 0
                         }
                     },
@@ -598,8 +592,8 @@
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 1200,
-            "baseCostCreditsSpecialists": 12,
+            "baseCostCredits": 2000,
+            "baseCostCreditsSpecialists": 20,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -682,8 +676,8 @@
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 1000,
-            "baseCostCreditsSpecialists": 5,
+            "baseCostCredits": 400,
+            "baseCostCreditsSpecialists": 4,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -724,7 +718,7 @@
             "id": 12,
             "key": "vibrating-ball",
             "name": "Research Network Transmitter",
-            "description": "Amplified by the star's scientific knowledge, it adds +6 credits per tick for each science point it holds.",
+            "description": "Amplified by the star's scientific knowledge, it adds +5 credits per tick for each science point it holds.",
             "active": {
                 "official": true,
                 "custom": true
@@ -735,7 +729,7 @@
             "expireTicks": null,
             "modifiers": {
                 "special": {
-                    "creditsPerTickByScience": 6
+                    "creditsPerTickByScience": 5
                 }
             }
         },
@@ -763,18 +757,18 @@
             "id": 14,
             "key": "energy-tank",
             "name": "Genesis Terraformer",
-            "description": "Harnesses star energy to boost the terraforming capability by +2, speeding up the process of improving planetary biomes.",
+            "description": "Harnesses star energy to boost the terraforming capability by +5, speeding up the process of improving planetary biomes.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 100,
-            "baseCostCreditsSpecialists": 1,
+            "baseCostCredits": 200,
+            "baseCostCreditsSpecialists": 2,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
                 "local": {
-                    "terraforming": 2
+                    "terraforming": 5
                 }
             }
         },
@@ -807,8 +801,8 @@
                 "official": false,
                 "custom": true
             },
-            "baseCostCredits": 700,
-            "baseCostCreditsSpecialists": 7,
+            "baseCostCredits": 600,
+            "baseCostCreditsSpecialists": 6,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -827,8 +821,8 @@
                 "official": false,
                 "custom": true
             },
-            "baseCostCredits": 1000,
-            "baseCostCreditsSpecialists": 10,
+            "baseCostCredits": 900,
+            "baseCostCreditsSpecialists": 9,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -860,45 +854,7 @@
             "id": 19,
             "key": "valve",
             "name": "Geosculpting Manipulator",
-            "description": "Taps into planetary cores to boost the star's terraforming capability by +4, reshaping worlds.",
-            "active": {
-                "official": true,
-                "custom": true
-            },
-            "baseCostCredits": 300,
-            "baseCostCreditsSpecialists": 3,
-            "oneShot": false,
-            "expireTicks": null,
-            "modifiers": {
-                "local": {
-                    "terraforming": 4
-                }
-            }
-        },
-        {
-            "id": 20,
-            "key": "moon-orbit",
-            "name": "Planetary Orbital Forge",
-            "description": "An orbiting megastructure amplify the star's terraforming ability by +6.",
-            "active": {
-                "official": true,
-                "custom": true
-            },
-            "baseCostCredits": 700,
-            "baseCostCreditsSpecialists": 7,
-            "oneShot": false,
-            "expireTicks": null,
-            "modifiers": {
-                "local": {
-                    "terraforming": 6
-                }
-            }
-        },
-        {
-            "id": 21,
-            "key": "observatory",
-            "name": "Deep-space Vision Interface",
-            "description": "Enhances star's scanning by +5 with advanced sensors but reduces weapon strength by -2 in battles.",
+            "description": "Taps into planetary cores to boost the star's terraforming capability by +10, reshaping worlds.",
             "active": {
                 "official": true,
                 "custom": true
@@ -909,8 +865,45 @@
             "expireTicks": null,
             "modifiers": {
                 "local": {
-                    "scanning": 5,
-                    "weapons": -2
+                    "terraforming": 10
+                }
+            }
+        },
+        {
+            "id": 20,
+            "key": "moon-orbit",
+            "name": "Planetary Orbital Forge",
+            "description": "An orbiting megastructure amplify the star's terraforming ability by +15.",
+            "active": {
+                "official": true,
+                "custom": true
+            },
+            "baseCostCredits": 1000,
+            "baseCostCreditsSpecialists": 10,
+            "oneShot": false,
+            "expireTicks": null,
+            "modifiers": {
+                "local": {
+                    "terraforming": 15
+                }
+            }
+        },
+        {
+            "id": 21,
+            "key": "observatory",
+            "name": "Deep-space Vision Interface",
+            "description": "Enhances star's scanning by +5 with advanced sensors.",
+            "active": {
+                "official": true,
+                "custom": true
+            },
+            "baseCostCredits": 500,
+            "baseCostCreditsSpecialists": 5,
+            "oneShot": false,
+            "expireTicks": null,
+            "modifiers": {
+                "local": {
+                    "scanning": 5
                 }
             }
         },
@@ -918,7 +911,7 @@
             "id": 22,
             "key": "radar-dish",
             "name": "Neutrino Optics Matrix",
-            "description": "Expands star's scanning reach by +7 through advanced optics but sacrifices -3 Weapons strength in battles.",
+            "description": "Expands star's scanning reach by +7 through advanced optics.",
             "active": {
                 "official": true,
                 "custom": true
@@ -929,8 +922,7 @@
             "expireTicks": null,
             "modifiers": {
                 "local": {
-                    "scanning": 7,
-                    "weapons": -3
+                    "scanning": 7
                 }
             }
         },
@@ -949,7 +941,7 @@
             "expireTicks": null,
             "modifiers": {
                 "special": {
-                    "defenderBonus": 2
+                    "defenderBonus": 3
                 }
             }
         },
@@ -968,7 +960,7 @@
             "expireTicks": null,
             "modifiers": {
                 "special": {
-                    "defenderBonus": 3
+                    "defenderBonus": 5
                 }
             }
         },
@@ -976,19 +968,18 @@
             "id": 25,
             "key": "caged-ball",
             "name": "Dyson Sphere",
-            "description": "A star-encircling megastructure boosts star production by +5 but diminishes terraforming by -5 due to energy extraction.",
+            "description": "A star-encircling megastructure boosts starship manufacturing by +10.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 400,
-            "baseCostCreditsSpecialists": 4,
+            "baseCostCredits": 500,
+            "baseCostCreditsSpecialists": 5,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
                 "local": {
-                    "manufacturing": 5,
-                    "terraforming": -5
+                    "manufacturing": 10
                 }
             }
         }
