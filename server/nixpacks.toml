@@ -1,1 +1,1 @@
-providers = ['...', 'python']
+providers = ['...', 'python3.8']
