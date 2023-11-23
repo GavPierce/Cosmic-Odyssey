@@ -6,6 +6,7 @@
     "mode": "conquest",
     "password": null,
     "playerLimit": 8,
+    "teamGame": "disabled",
     "playerType": "all",
     "anonymity": "normal",
     "playerOnlineStatus": "hidden",
@@ -86,8 +87,8 @@
   "diplomacy": {
     "enabled": "enabled",
     "upkeepCost": "none",
-    "tradeRestricted": "disabled", 
-    "maxAlliances": 7, 
+    "tradeRestricted": "disabled",
+    "maxAlliances": 7,
     "globalEvents": "disabled"
   },
   "technology": {
@@ -121,8 +122,8 @@
     "isTickLimited": "disabled",
     "tickLimit": 1000,
     "startDelay": 240,
-    "turnJumps":6,
-    "maxTurnWait":1440,
+    "turnJumps": 6,
+    "maxTurnWait": 1440,
     "afk": {
       "lastSeenTimeout": 2,
       "cycleTimeout": 3,

@@ -6,6 +6,7 @@
     "mode": "conquest",
     "password": null,
     "playerLimit": 2,
+    "teamGame": "disabled",
     "playerType": "all",
     "anonymity": "normal",
     "playerOnlineStatus": "hidden",
@@ -83,8 +84,8 @@
   "diplomacy": {
     "enabled": "disabled",
     "upkeepCost": "none",
-    "maxAlliances": 1, 
-    "tradeRestricted": "disabled", 
+    "maxAlliances": 1,
+    "tradeRestricted": "disabled",
     "globalEvents": "disabled"
   },
   "technology": {

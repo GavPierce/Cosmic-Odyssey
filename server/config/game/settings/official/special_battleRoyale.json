@@ -6,6 +6,7 @@
     "mode": "battleRoyale",
     "password": null,
     "playerLimit": 8,
+    "teamGame": "disabled",
     "playerType": "all",
     "anonymity": "normal",
     "playerOnlineStatus": "hidden",
@@ -83,8 +84,8 @@
   "diplomacy": {
     "enabled": "enabled",
     "upkeepCost": "none",
-    "tradeRestricted": "disabled", 
-    "maxAlliances": 7, 
+    "tradeRestricted": "disabled",
+    "maxAlliances": 7,
     "globalEvents": "disabled"
   },
   "technology": {

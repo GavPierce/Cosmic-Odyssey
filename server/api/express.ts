@@ -15,7 +15,6 @@ export default async (config: Config, app, container: DependencyContainer) => {
       limit: "1000kb", // Note: This allows large custom galaxies to be uploaded.
     })
   );
-  console.log("CONFIG", config.connectionString);
 
   // ---------------
   // Set up MongoDB session store
@@ -44,7 +43,6 @@ export default async (config: Config, app, container: DependencyContainer) => {
     })
   );
 
-  console.log(config.clientUrl);
   // ---------------
   // Enable CORS
   app.use((req, res, next) => {
