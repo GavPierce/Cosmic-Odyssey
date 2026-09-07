@@ -329,6 +329,16 @@ export default class TradeService extends EventEmitter {
 
         this._tradeScanningCheck(game, fromPlayer, toPlayer);
 
+        let toPlayerTech = toPlayer.research[technology];
+
+        if (!toPlayerTech) {
+            throw new ValidationError(`The technology ${technology} cannot be traded with this player.`);
+        }
+
+        if (techLevel > toPlayerTech.level + 1) {
+            throw new ValidationError(`Cannot skip technology levels. The recipient must receive ${technology} level ${toPlayerTech.level + 1} first.`);
+        }
+
         let tradeTechs = this.listTradeableTechnologies(game, fromPlayer, toPlayerId);
 
         let tradeTech = tradeTechs.find(t => t.name === technology && t.level === techLevel);
@@ -336,8 +346,6 @@ export default class TradeService extends EventEmitter {
         if (!tradeTech) {
             throw new ValidationError(`The technology ${technology} cannot be traded with this player.`);
         }
-
-        let toPlayerTech = toPlayer.research[tradeTech.name];
 
         if (toPlayerTech.level >= tradeTech.level) {
             throw new ValidationError(`The recipient already owns technology ${technology} level ${tradeTech.level} or greater.`);
@@ -426,8 +434,8 @@ export default class TradeService extends EventEmitter {
             throw new ValidationError('Cannot trade with the same player');
         }
 
-        // Get all of the technologies that the from player has that have a higher
-        // level than the to player.
+        // Only the next sequential unowned level is tradeable for each technology.
+        // Skipping unpaid/unowned prior levels is not allowed.
         let techKeys: ResearchTypeNotRandom[] = Object.keys(fromPlayer.research)
             .filter(k => {
                 return k.match(/^[^_\$]/) != null;
@@ -440,16 +448,14 @@ export default class TradeService extends EventEmitter {
             let techFromPlayer = fromPlayer.research[techKey];
             let techToPlayer = toPlayer.research[techKey];
 
-            let techLevel = techFromPlayer.level
+            if (techFromPlayer.level > techToPlayer.level) {
+                let nextLevel = techToPlayer.level + 1;
 
-            while (techLevel > techToPlayer.level) {
                 tradeTechs.push({
                     name: techKey,
-                    level: techLevel,
-                    cost: techLevel * game.settings.player.tradeCost
+                    level: nextLevel,
+                    cost: nextLevel * game.settings.player.tradeCost
                 });
-
-                techLevel--;
             }
         }
 

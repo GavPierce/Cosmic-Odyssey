@@ -5,7 +5,7 @@
   </div>
 
   <div class="col-12">
-    <p class="mb-2">Share Technology. (Costs <span class="text-warning">${{getTradeCost()}}</span> per tech level)</p>
+    <p class="mb-2">Share Technology. Only the next unowned level can be shared. (Costs <span class="text-warning">${{getTradeCost()}}</span> per tech level)</p>
 
     <form class="row">
       <div class="col-7">
@@ -75,10 +75,15 @@ export default {
         let response = await TradeApiService.getTradeableTechnologies(this.$store.state.game._id, this.player._id)
 
         if (response.status === 200) {
-          this.availableTechnologies = response.data
+          this.availableTechnologies = (response.data || []).filter(t => {
+            const recipientTech = this.player && this.player.research && this.player.research[t.name]
+            return recipientTech && t.level === recipientTech.level + 1
+          })
 
           if (this.availableTechnologies.length) {
             this.selectedTechnology = this.availableTechnologies[0]
+          } else {
+            this.selectedTechnology = null
           }
         }
       } catch (err) {
