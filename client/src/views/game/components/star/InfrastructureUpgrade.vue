@@ -1,134 +1,135 @@
 <template>
-    <div class="row" v-if="economy != null || industry != null || science != null">
-        <div class="col text-center pt-2 pb-2">
-          <div class="d-grid gap-2">
-            <button class="btn" v-if="economy != null"
-              :class="{'btn-success': availableCredits >= economy, 'btn-secondary': availableCredits < economy}"
-              :disabled="$isHistoricalMode() || isUpgradingEconomy || availableCredits < economy || isGameFinished"
-              @click="upgradeEconomy"><small>Buy for ${{economy}}</small></button>
-          </div>
-        </div>
-        <div class="col text-center bg-dark pt-2 pb-2">
-          <div class="d-grid gap-2">
-            <button class="btn" v-if="industry != null"
-              :class="{'btn-success': availableCredits >= industry, 'btn-secondary': availableCredits < industry}"
-              :disabled="$isHistoricalMode() || isUpgradingIndustry || availableCredits < industry || isGameFinished"
-              @click="upgradeIndustry"><small>Buy for ${{industry}}</small></button>
-          </div>
-        </div>
-        <div class="col text-center pt-2 pb-2">
-          <div class="d-grid gap-2">
-            <button class="btn" v-if="science != null"
-              :class="{'btn-success': availableCredits >= science, 'btn-secondary': availableCredits < science}"
-              :disabled="$isHistoricalMode() || isUpgradingScience || availableCredits < science || isGameFinished"
-              @click="upgradeScience"><small>Buy for ${{science}}</small></button>
-          </div>
-        </div>
+  <div
+    class="row"
+    v-if="economy != null || industry != null || science != null"
+  >
+    <div class="col text-center pt-2 pb-2">
+      <div class="d-grid gap-2">
+        <button
+          class="btn"
+          v-if="economy != null"
+          :class="{
+            'btn-success': availableCredits >= economy,
+            'btn-secondary': availableCredits < economy,
+          }"
+          :disabled="
+            isHistoricalMode ||
+            isUpgradingEconomy ||
+            availableCredits < economy ||
+            isGameFinished
+          "
+          @click="upgradeEconomy"
+        >
+          <small>Buy for ${{ economy }}</small>
+        </button>
+      </div>
     </div>
+    <div class="col text-center bg-dark pt-2 pb-2">
+      <div class="d-grid gap-2">
+        <button
+          class="btn"
+          v-if="industry != null"
+          :class="{
+            'btn-success': availableCredits >= industry,
+            'btn-secondary': availableCredits < industry,
+          }"
+          :disabled="
+            isHistoricalMode ||
+            isUpgradingIndustry ||
+            availableCredits < industry ||
+            isGameFinished
+          "
+          @click="upgradeIndustry"
+        >
+          <small>Buy for ${{ industry }}</small>
+        </button>
+      </div>
+    </div>
+    <div class="col text-center pt-2 pb-2">
+      <div class="d-grid gap-2">
+        <button
+          class="btn"
+          v-if="science != null"
+          :class="{
+            'btn-success': availableCredits >= science,
+            'btn-secondary': availableCredits < science,
+          }"
+          :disabled="
+            isHistoricalMode ||
+            isUpgradingScience ||
+            availableCredits < science ||
+            isGameFinished
+          "
+          @click="upgradeScience"
+        >
+          <small>Buy for ${{ science }}</small>
+        </button>
+      </div>
+    </div>
+  </div>
 </template>
 
-<script>
-import starService from '../../../../services/api/star'
-import GameHelper from '../../../../services/gameHelper'
-import AudioService from '../../../../game/audio'
+<script setup lang="ts">
+import { useGameStore } from "@/stores/game";
+import GameHelper from "../../../../services/gameHelper";
+import type { Star } from "@/types/game";
+import { httpInjectionKey } from "@/services/typedapi";
 
-export default {
-  props: {
-    star: Object,
-    availableCredits: Number,
-    economy: Number,
-    industry: Number,
-    science: Number
-  },
-  data () {
-    return {
-      data: null,
-      isUpgradingEconomy: false,
-      isUpgradingIndustry: false,
-      isUpgradingScience: false
-    }
-  },
-  methods: {
-    async upgradeEconomy (e) {
-      if (this.$store.state.settings.star.confirmBuildEconomy === 'enabled' 
-        && !await this.$confirm('Upgrade Economy', `Are you sure you want to upgrade Economy at ${this.star.name} for $${this.star.upgradeCosts.economy} credits?`)) {
-        return
-      }
+import { ref, computed, inject } from "vue";
+import {
+  upgradeEconomy as upgradeEconomyReq,
+  upgradeIndustry as upgradeIndustryReq,
+  upgradeScience as upgradeScienceReq,
+} from "@/services/typedapi/star";
+import { useIsHistoricalMode } from "@/util/reactiveHooks";
+import { makeUpgrade } from "@/views/game/components/star/upgrade";
+import { eventBusInjectionKey } from "@/eventBus";
 
-      try {
-        this.isUpgradingEconomy = true
+import { useToast } from "vue-toast-notification";
+const props = defineProps<{
+  star: Star;
+  availableCredits: number;
+  economy: number | null;
+  industry: number | null;
+  science: number | null;
+}>();
 
-        let response = await starService.upgradeEconomy(this.$store.state.game._id, this.star._id)
+const eventBus = inject(eventBusInjectionKey)!;
+const httpClient = inject(httpInjectionKey)!;
+const toast = useToast();
 
-        if (response.status === 200) {
-          this.$toasted.show(`Economy upgraded at ${this.star.name}.`)
+const store = useGameStore();
 
-          this.$store.commit('gameStarEconomyUpgraded', response.data)
-          
-          AudioService.hover()
-        }
-      } catch (err) {
-        console.error(err)
-      }
+const isUpgradingEconomy = ref(false);
+const isUpgradingIndustry = ref(false);
+const isUpgradingScience = ref(false);
 
-      this.isUpgradingEconomy = false
-    },
-    async upgradeIndustry (e) {
-      if (this.$store.state.settings.star.confirmBuildIndustry === 'enabled' 
-        && !await this.$confirm('Upgrade Industry', `Are you sure you want to upgrade Industry at ${this.star.name} for $${this.star.upgradeCosts.industry} credits?`)) {
-        return
-      }
+const isGameFinished = computed(() => GameHelper.isGameFinished(store.game!));
+const isHistoricalMode = useIsHistoricalMode(store);
 
-      try {
-        this.isUpgradingIndustry = true
+const upgrade = makeUpgrade(store, eventBus, toast, props.star);
 
-        let response = await starService.upgradeIndustry(this.$store.state.game._id, this.star._id)
-
-        if (response.status === 200) {
-          this.$toasted.show(`Industry upgraded at ${this.star.name}.`)
-
-          this.$store.commit('gameStarIndustryUpgraded', response.data)
-          
-          AudioService.hover()
-        }
-      } catch (err) {
-        console.error(err)
-      }
-
-      this.isUpgradingIndustry = false
-    },
-    async upgradeScience (e) {
-      if (this.$store.state.settings.star.confirmBuildScience === 'enabled' 
-        && !await this.$confirm('Upgrade Science', `Are you sure you want to upgrade Science at ${this.star.name} for $${this.star.upgradeCosts.science} credits?`)) {
-        return
-      }
-
-      try {
-        this.isUpgradingScience = true
-
-        let response = await starService.upgradeScience(this.$store.state.game._id, this.star._id)
-
-        if (response.status === 200) {
-          this.$toasted.show(`Science upgraded at ${this.star.name}.`)
-
-          this.$store.commit('gameStarScienceUpgraded', response.data)
-          
-          AudioService.hover()
-        }
-      } catch (err) {
-        console.error(err)
-      }
-
-      this.isUpgradingScience = false
-    }
-  },
-  computed: {
-    isGameFinished: function () {
-      return GameHelper.isGameFinished(this.$store.state.game)
-    }
-  }
-}
+const upgradeEconomy = upgrade(
+  "economy",
+  store.settings!.star.confirmBuildEconomy === "enabled",
+  isUpgradingEconomy,
+  (eb, data) => store.gameStarEconomyUpgraded(eb, data),
+  upgradeEconomyReq(httpClient),
+);
+const upgradeIndustry = upgrade(
+  "industry",
+  store.settings!.star.confirmBuildIndustry === "enabled",
+  isUpgradingIndustry,
+  (eb, data) => store.gameStarIndustryUpgraded(eb, data),
+  upgradeIndustryReq(httpClient),
+);
+const upgradeScience = upgrade(
+  "science",
+  store.settings!.star.confirmBuildScience === "enabled",
+  isUpgradingScience,
+  (eb, data) => store.gameStarScienceUpgraded(eb, data),
+  upgradeScienceReq(httpClient),
+);
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

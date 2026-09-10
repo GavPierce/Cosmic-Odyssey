@@ -8,14 +8,14 @@
               <th></th>
               <th></th>
               <th></th>
-              <th class="text-end" title="Your number will be red if you are the lowest and green if you are the highest.">You</th>
+              <th class="text-end">You</th>
             </tr>
           </thead>
           <tbody>
             <research-row
               v-if="isTechnologyEnabled('scanning')"
               research="scanning"
-              iconClass="fa-satellite-dish"
+              iconClass="fa-binoculars"
               title="Scanning"
               :player="player"
               :userPlayer="userPlayer"
@@ -23,7 +23,7 @@
             <research-row
               v-if="isTechnologyEnabled('hyperspace')"
               research="hyperspace"
-              iconClass="fa-forward"
+              iconClass="fa-gas-pump"
               title="Hyperspace Range"
               :player="player"
               :userPlayer="userPlayer"
@@ -31,7 +31,7 @@
             <research-row
               v-if="isTechnologyEnabled('terraforming')"
               research="terraforming"
-              iconClass="fa-globe"
+              iconClass="fa-globe-europe"
               title="Terraforming"
               :player="player"
               :userPlayer="userPlayer"
@@ -39,7 +39,7 @@
             <research-row
               v-if="isTechnologyEnabled('experimentation')"
               research="experimentation"
-              iconClass="fa-atom"
+              iconClass="fa-microscope"
               title="Experimentation"
               :player="player"
               :userPlayer="userPlayer"
@@ -47,7 +47,7 @@
             <research-row
               v-if="isTechnologyEnabled('weapons')"
               research="weapons"
-              iconClass="fa-crosshairs"
+              iconClass="fa-gun"
               title="Weapons"
               :player="player"
               :userPlayer="userPlayer"
@@ -55,7 +55,7 @@
             <research-row
               v-if="isTechnologyEnabled('banking')"
               research="banking"
-              iconClass="fa-coins"
+              iconClass="fa-money-bill-alt"
               title="Banking"
               :player="player"
               :userPlayer="userPlayer"
@@ -63,7 +63,7 @@
             <research-row
               v-if="isTechnologyEnabled('manufacturing')"
               research="manufacturing"
-              iconClass="fa-wrench"
+              iconClass="fa-industry"
               title="Manufacturing"
               :player="player"
               :userPlayer="userPlayer"
@@ -71,7 +71,7 @@
             <research-row
               v-if="isTechnologyEnabled('specialists')"
               research="specialists"
-              iconClass="fa-microchip"
+              iconClass="fa-user-astronaut"
               title="Specialists"
               :player="player"
               :userPlayer="userPlayer"
@@ -83,35 +83,32 @@
   </div>
 </template>
 
-<script>
-import gameHelper from "../../../../services/gameHelper"
-import TechnologyHelper from "../../../../services/technologyHelper"
-import ResearchRow from "./ResearchRow"
+<script setup lang="ts">
+import { useGameStore } from "@/stores/game";
+import { computed } from "vue";
+import gameHelper from "../../../../services/gameHelper";
+import TechnologyHelper from "../../../../services/technologyHelper";
+import ResearchRow from "./ResearchRow.vue";
+import type { Game } from "@/types/game.ts";
+import GameHelper from "@/services/gameHelper.ts";
+import type { ResearchTypeNotRandom } from "@solaris/common";
+import { useGameServices } from "@/util/gameServices.ts";
 
-export default {
-  components: {
-    "research-row": ResearchRow,
-  },
-  props: {
-    playerId: String,
-  },
-  methods: {
-    isTechnologyEnabled (technologyKey) {
-      return TechnologyHelper.isTechnologyEnabled(this.$store.state.game, technologyKey)
-    },
-    isTechnologyResearchable (technologyKey) {
-      return TechnologyHelper.isTechnologyResearchable(this.$store.state.game, technologyKey)
-    }
-  },
-  computed: {
-    player() {
-      return gameHelper.getPlayerById(this.$store.state.game, this.playerId);
-    },
-    userPlayer() {
-      return gameHelper.getUserPlayer(this.$store.state.game);
-    },
-  },
-};
+const props = defineProps<{
+  playerId: string;
+}>();
+
+const store = useGameStore();
+const services = useGameServices();
+
+const game = computed<Game>(() => store.game!);
+const player = computed(() =>
+  GameHelper.getPlayerById(game.value, props.playerId)!,
+);
+const userPlayer = computed(() => GameHelper.getUserPlayer(game.value));
+
+const isTechnologyEnabled = (technologyKey: ResearchTypeNotRandom) =>
+  services.technologyService.isTechnologyEnabled(game.value, technologyKey);
 </script>
 
 <style scoped>

@@ -3,8 +3,4 @@ export interface Badge {
     name: string;
     description: string;
     price: number;
-};
-
-export interface UserBadge extends Badge {
-    awarded: number;
-};
+}

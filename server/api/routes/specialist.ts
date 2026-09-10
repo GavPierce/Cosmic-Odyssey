@@ -1,79 +1,92 @@
-import { Router } from "express";
-import { ExpressJoiInstance } from "express-joi-validation";
 import { DependencyContainer } from "../../services/types/DependencyContainer";
-import SpecialistController from '../controllers/specialist';
+import SpecialistController from "../controllers/specialist";
 import { MiddlewareContainer } from "../middleware";
+import { SingleRouter } from "../singleRoute";
+import { createSpecialistRoutes } from "@solaris/common";
+import { DBObjectId } from "../../services/types/DBObjectId";
+import { createRoutes } from "../typedapi/routes";
 
-export default (router: Router, mw: MiddlewareContainer, validator: ExpressJoiInstance, container: DependencyContainer) => {
+export default (
+    router: SingleRouter,
+    mw: MiddlewareContainer,
+    container: DependencyContainer,
+) => {
     const controller = SpecialistController(container);
+    const routes = createSpecialistRoutes<DBObjectId>();
 
-    router.get('/api/game/specialists/bans',
-        controller.listBans,
-        mw.core.handleError);
+    const answer = createRoutes(router, mw);
 
-    router.get('/api/game/specialists/carrier',
-        controller.listCarrier,
-        mw.core.handleError);
+    answer(routes.listBans, controller.listBans);
 
-    router.get('/api/game/specialists/star',
-        controller.listStar,
-        mw.core.handleError);
+    answer(routes.listCarrier, controller.listCarrier);
 
-    router.get('/api/game/:gameId/specialists/carrier',
+    answer(routes.listStar, controller.listStar);
+
+    answer(
+        routes.listCarrierForGame,
         mw.game.loadGame({
             lean: true,
             settings: true,
             state: true,
             galaxy: true,
-            constants: true
+            constants: true,
         }),
         controller.listCarrierForGame,
-        mw.core.handleError);
+    );
 
-    router.get('/api/game/:gameId/specialists/star',
+    answer(
+        routes.listStarForGame,
         mw.game.loadGame({
             lean: true,
             settings: true,
             state: true,
             galaxy: true,
-            constants: true
+            constants: true,
         }),
         controller.listStarForGame,
-        mw.core.handleError);
+    );
 
-    router.put('/api/game/:gameId/carrier/:carrierId/hire/:specialistId',
+    answer(
+        routes.hireCarrier,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             settings: true,
             state: true,
             galaxy: true,
-            constants: true
+            constants: true,
         }),
         mw.game.validateGameState({
             isUnlocked: true,
-            isNotFinished: true
+            isNotFinished: true,
         }),
         mw.player.loadPlayer,
-        mw.player.validatePlayerState({ isPlayerUndefeated: true }), controller.hireCarrier,
-        mw.core.handleError);
+        mw.player.validatePlayerState({ isPlayerUndefeated: true }),
+        controller.hireCarrier,
+        mw.playerMutex.release(),
+    );
 
-    router.put('/api/game/:gameId/star/:starId/hire/:specialistId',
+    answer(
+        routes.hireStar,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             settings: true,
             state: true,
             galaxy: true,
-            constants: true
+            constants: true,
         }),
         mw.game.validateGameState({
             isUnlocked: true,
-            isNotFinished: true
+            isNotFinished: true,
         }),
         mw.player.loadPlayer,
-        mw.player.validatePlayerState({ isPlayerUndefeated: true }), controller.hireStar,
-        mw.core.handleError);
+        mw.player.validatePlayerState({ isPlayerUndefeated: true }),
+        controller.hireStar,
+        mw.playerMutex.release(),
+    );
 
     return router;
-}
+};

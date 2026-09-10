@@ -1,10 +1,10 @@
 import { Game } from "./types/Game";
 import { Player } from "./types/Player";
+import { GameWinner } from "./leaderboard";
 
-const moment = require('moment');
+import { DateTime } from "luxon";
 
 export default class GameStateService {
-
     isInProgress(game: Game) {
         return game.state.startDate != null && game.state.endDate == null;
     }
@@ -22,17 +22,26 @@ export default class GameStateService {
     }
 
     updateStatePlayerCount(game: Game) {
-        if (game.settings.general.type === 'tutorial') {
-            game.state.players = game.galaxy.players.filter(p => !p.defeated && !p.afk).length;
+        if (game.settings.general.type === "tutorial") {
+            game.state.players = game.galaxy.players.filter(
+                (p) => !p.defeated && !p.afk,
+            ).length;
         } else {
-            game.state.players = game.galaxy.players.filter(p => p.userId && !p.defeated && !p.afk).length;
+            game.state.players = game.galaxy.players.filter(
+                (p) => p.userId && !p.defeated && !p.afk,
+            ).length;
         }
     }
 
-    finishGame(game: Game, winnerPlayer: Player) {
+    finishGame(game: Game, winner: GameWinner) {
         game.state.paused = true;
-        game.state.endDate = moment().utc();
-        game.state.winner = winnerPlayer._id;
+        game.state.endDate = DateTime.utc().toJSDate();
+
+        if (winner.kind === "player") {
+            game.state.winner = winner.player._id;
+        } else if (winner.kind === "team") {
+            game.state.winningTeam = winner.team._id;
+        }
     }
 
     isCountingDownToEnd(game: Game) {
@@ -40,7 +49,10 @@ export default class GameStateService {
     }
 
     isCountingDownToEndInLastCycle(game: Game) {
-        return this.isCountingDownToEnd(game) && game.state.ticksToEnd! < game.settings.galaxy.productionTicks;
+        return (
+            this.isCountingDownToEnd(game) &&
+            game.state.ticksToEnd! < game.settings.galaxy.productionTicks
+        );
     }
 
     countdownToEnd(game: Game) {
@@ -48,9 +60,11 @@ export default class GameStateService {
         // Otherwise, try to start the countdown.
         if (this.isCountingDownToEnd(game)) {
             game.state.ticksToEnd!--;
-        } else {
+        } else if (game.settings.general.mode === "kingOfTheHill") {
             // Note: This should only occur if in KotH mode.
-            game.state.ticksToEnd = game.settings.kingOfTheHill.productionCycles * game.settings.galaxy.productionTicks;
+            game.state.ticksToEnd =
+                game.settings.kingOfTheHill!.productionCycles *
+                game.settings.galaxy.productionTicks;
         }
     }
 
@@ -61,5 +75,4 @@ export default class GameStateService {
     hasReachedCountdownEnd(game: Game) {
         return game.state.ticksToEnd! <= 0;
     }
-
 }

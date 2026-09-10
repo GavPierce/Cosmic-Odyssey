@@ -1,32 +1,43 @@
 <template>
-  <view-container>
-    <view-title title="Faction Collection" />
+  <view-container :is-auth-page="true">
+    <view-title title="Avatar Shop" />
 
     <p>
-      In the vast expanse of the cosmos, unveil hidden factions and enigmatic species using the coveted <strong>Galactic Credits</strong>. Amass these stellar tokens by triumphing in interstellar galactic domination.
+      Unlock new races to play with
+      <strong class="text-warning">Galactic Credits</strong>.
+      <router-link :to="{ name: 'galactic-credits-shop' }"
+        ><i class="fas fa-shopping-basket"></i> Purchase Galactic
+        Credits</router-link
+      >
+      or earn credits by winning official games.
     </p>
     <h5 v-if="userCredits">
       You have
       <span class="text-warning"
-        ><strong>{{ userCredits.credits }}</strong> </span
-      > Galactic Credits.
+        ><strong>{{ userCredits }}</strong> Galactic Credits</span
+      >.
     </h5>
 
     <hr />
 
-    <loading-spinner v-if="isLoading" />
+    <loading-spinner :loading="isLoading" />
 
     <div v-if="avatars">
-      <div class="row mb-4" v-for="avatar in sortedAvatars" :key="avatar.id" :class="{ 'hovering-avatar': hovering === avatar.id }">
+      <div class="row mb-4" v-for="avatar in sortedAvatars" :key="avatar.id">
         <div class="col-auto">
-          <img :src="getAvatarImage(avatar)" width="128" height="128" class="avatar-border"
-              @mouseover="hovering = avatar.id"
-              @mouseleave="hovering = null" />
+          <picture style="display: contents">
+            <source
+              v-if="getAvatarWebpImage(avatar)"
+              :srcset="getAvatarWebpImage(avatar)"
+              type="image/webp"
+            />
+            <img :src="getAvatarImage(avatar)" width="128" height="128" />
+          </picture>
         </div>
         <div class="col">
           <div class="row">
             <div class="col">
-              <h5 class="faction-name">
+              <h5>
                 {{ avatar.name
                 }}<span
                   class="badge bg-success ms-2"
@@ -38,7 +49,7 @@
             <div class="col-auto">
               <button
                 class="btn btn-sm btn-success"
-                v-if="!avatar.purchased && userCredits.credits >= avatar.price"
+                v-if="!avatar.purchased && (userCredits || 0) >= avatar.price"
                 @click="purchaseAvatar(avatar)"
               >
                 <i class="fas fa-shopping-basket"></i>
@@ -47,12 +58,10 @@
               <router-link
                 :to="{ name: 'galactic-credits-shop' }"
                 class="btn btn-sm btn-outline-danger"
-                v-if="!avatar.purchased && userCredits.credits < avatar.price"
+                v-if="!avatar.purchased && (userCredits || 0) < avatar.price"
               >
-                <i class="fas fa-coins"></i> {{ avatar.price }} Credit<span
-                  v-if="avatar.price > 1"
-                  >s</span
-                >
+                <i class="fas fa-coins"></i>
+                {{ avatar.price }} Credit<span v-if="avatar.price > 1">s</span>
               </router-link>
               <h5>
                 <span class="badge bg-primary" v-if="avatar.purchased"
@@ -72,220 +81,120 @@
   </view-container>
 </template>
 
-<script>
-import ViewTitle from "../components/ViewTitle";
-import ViewContainer from "../components/ViewContainer";
-import UserApiService from "../../services/api/user";
-import LoadingSpinnerVue from "../components/LoadingSpinner";
+<script setup lang="ts">
+import ViewTitle from "../components/ViewTitle.vue";
+import ViewContainer from "../components/ViewContainer.vue";
+import LoadingSpinner from "../components/LoadingSpinner.vue";
+import { computed, inject, onMounted, ref, type Ref } from "vue";
+import type { UserAvatar } from "@solaris/common";
+import { formatError, httpInjectionKey, isOk } from "@/services/typedapi";
+import {
+  getCredits,
+  listMyAvatars,
+  purchaseAvatar as reqPurchaseAvatar,
+} from "@/services/typedapi/user";
+import { useConfirm } from "@/hooks/confirm";
+import { useUserStore } from "@/stores/user";
 
-export default {
-  components: {
-    "view-container": ViewContainer,
-    "view-title": ViewTitle,
-    "loading-spinner": LoadingSpinnerVue
-  },
-  data() {
-    return {
-      isLoading: false,
-      userCredits: null,
-      avatars: [],
-      hovering: null
-    };
-  },
-  async mounted() {
-    this.isLoading = true;
-    await this.loadGalacticCredits();
-    await this.loadAvatars();
-    this.isLoading = false;
-  },
-  methods: {
-    async loadGalacticCredits() {
-      try {
-        let response = await UserApiService.getUserCredits();
+const httpClient = inject(httpInjectionKey)!;
+const userStore = useUserStore();
+const confirm = useConfirm();
 
-        if (response.status === 200) {
-          this.userCredits = response.data;
+const isLoading = ref(false);
+const userCredits: Ref<number | null> = ref(null);
+const avatars: Ref<UserAvatar[]> = ref([]);
 
-          this.$store.commit("setUserCredits", response.data.credits);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    },
-    async loadAvatars() {
-      try {
-        let response = await UserApiService.getUserAvatars();
+const sortedAvatars = computed(() => {
+  return new Array(...avatars.value).sort(
+    (a, b) => Number(a.isPatronAvatar) - Number(b.isPatronAvatar),
+  );
+});
 
-        if (response.status === 200) {
-          this.avatars = response.data;
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    },
-    async purchaseAvatar(avatar) {
-      if (avatar.purchased) {
-        return;
-      }
+const loadGalacticCredits = async () => {
+  const response = await getCredits(httpClient)();
 
-      if (
-        !(await this.$confirm(
-          `Purchase Faction`,
-          `Are you sure you want to purchase this faction for ${avatar.price} credits?`
-        ))
-      ) {
-        return;
-      }
-
-      avatar.isLoading = true;
-
-      try {
-        let response = await UserApiService.purchaseAvatar(avatar.id);
-
-        if (response.status === 200) {
-          avatar.purchased = true;
-          this.userCredits.credits -= avatar.price;
-
-          this.$store.commit("setUserCredits", this.userCredits.credits);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-
-      avatar.isLoading = false;
-    },
-    getAvatarImage(avatar) {
-      try {
-        return require("../../assets/avatars/" + avatar.file);
-      } catch (err) {
-        console.error(err);
-
-        return null;
-      }
-    }
-  },
-  computed: {
-    sortedAvatars: function() {
-      return this.avatars.sort((a, b) => a.isPatronAvatar - b.isPatronAvatar);
-    }
+  if (isOk(response)) {
+    userCredits.value = response.data.credits;
+    userStore.setCredits(response.data.credits);
+  } else {
+    console.error(formatError(response));
   }
 };
+
+const loadAvatars = async () => {
+  const response = await listMyAvatars(httpClient)();
+
+  if (isOk(response)) {
+    avatars.value = response.data;
+  } else {
+    console.error(formatError(response));
+  }
+};
+
+const purchaseAvatar = async (avatar: UserAvatar) => {
+  if (avatar.purchased) {
+    return;
+  }
+
+  if (
+    !(await confirm(
+      `Purchase Avatar`,
+      `Are you sure you want to purchase this avatar for ${avatar.price} credits?`,
+    ))
+  ) {
+    return;
+  }
+
+  isLoading.value = true;
+
+  const response = await reqPurchaseAvatar(httpClient)(avatar.id);
+
+  if (isOk(response)) {
+    avatar.purchased = true;
+    userCredits.value! -= avatar.price;
+
+    userStore.setCredits(userCredits.value!);
+  } else {
+    console.error(formatError(response));
+  }
+
+  isLoading.value = false;
+};
+
+const getAvatarImage = (avatar: UserAvatar) => {
+  try {
+    return new URL(`../../assets/avatars/${avatar.file}`, import.meta.url).href;
+  } catch (err) {
+    console.error(err);
+
+    return undefined;
+  }
+};
+
+const getAvatarWebpImage = (avatar: UserAvatar) => {
+  if (["jpg", "png", "jpeg"].some((ext) => avatar.file.endsWith(ext))) {
+    try {
+      const base = avatar.file.replace(/\.[^.]+$/, "");
+      return new URL(`../../assets/avatars/${base}.webp`, import.meta.url).href;
+    } catch (err) {
+      console.error(err);
+
+      return undefined;
+    }
+  }
+
+  return undefined;
+};
+
+onMounted(async () => {
+  isLoading.value = true;
+  await Promise.all([loadAvatars(), loadGalacticCredits()]);
+  isLoading.value = false;
+});
 </script>
 
 <style scoped>
 .linebreaks {
   white-space: break-spaces;
-}
-
-.avatar-border {
-    border-radius: 50% !important;
-    border: 3px solid #000000 !important;
-    box-shadow: 0 4px 8px rgba(230, 230, 234, 0.1) !important;
-    overflow: hidden !important;
-}
-
-.faction-name {
-    font-family: 'Orbitron', sans-serif;
-    background-color: #000;
-    padding: 10px;
-    border-radius: 8px;
-    color: #fff;
-}
-
-.row.mb-4 {
-    border-bottom: 1px solid #000000;
-    padding-bottom: 10px;
-    margin-bottom: 20px;                
-}
-
-button:hover, .btn:hover {
-    transform: scale(1.02);
-    transition: transform 0.2s ease-in-out;
-}
-
-button:disabled {
-    opacity: 0.6;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-.avatar-border:hover {
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes neonFlicker {
-  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
-    text-shadow:
-      0 0 4px #FF0000,
-      0 0 11px #FF0000,
-      0 0 19px #FF7F00,
-      0 0 40px #FF7F00,
-      0 0 80px #FF7F00,
-      0 0 90px #FF7F00,
-      0 0 100px #FF7F00,
-      0 0 150px #FF7F00;
-  }
-  
-  20%, 24%, 55% {
-    text-shadow: none;
-  }
-}
-
-.faction-name {
-    font-family: 'Orbitron', sans-serif;
-    background-color: #000;              
-    padding: 10px;
-    border-radius: 8px;
-    color: #FF7F00;
-    transition: 0.5s;
-}
-
-.avatar-border:hover ~ .col .row .faction-name,
-.row.mb-4:hover .faction-name {
-    animation: neonFlicker 3.5s infinite alternate;
-}
-
-button:before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 50px;
-  height: 2px;
-  background-color: #FFD700;
-  opacity: 0;
-  transform: translate(-50%, -50%) rotate(45deg);
-  transition: opacity 0.3s, width 0.3s;
-  z-index: -1;
-}
-
-button:hover:before {
-  opacity: 1;
-  width: 100%;
-}
-
-.text-warning {
-  animation: glow 6s infinite alternate;
-  color: #000000;
-  text-shadow: 0 0 3px #FFD700, 0 0 3px #FFD700;  /* Reduced intensity */
-}
-
-@keyframes glow {
-  0% {
-    text-shadow: 0 0 1px #FFD700, 0 0 1px #FFD700;
-  }
-  100% {
-    text-shadow: 0 0 15px #FFD700, 0 0 10px #FFD700, 0 0 25px #FFA500;
-  }
 }
 </style>

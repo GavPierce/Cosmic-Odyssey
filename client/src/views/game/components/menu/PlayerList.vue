@@ -1,83 +1,107 @@
 <template>
-    <ul class="list-group list-group-horizontal">
-        <li class="list-group-item grow" v-for="p in sortedPlayers" v-bind:key="p._id" v-on:click="onPlayerClicked(p)"
-          :title="p.colour.alias + ' ' + p.shape + ' - ' + p.alias">
-          <player-avatar :player="p"/>
+  <ul class="list-group list-group-horizontal">
+    <li
+      class="list-group-item grow"
+      v-for="p in sortedPlayers"
+      v-bind:key="p._id"
+      v-on:click="(e) => onPlayerClicked(p, e)"
+      :title="p.colour.alias + ' ' + p.shape + ' - ' + p.alias"
+    >
+      <player-avatar :player="p" />
 
-          <div class="colour-bar" v-bind:style="{'background-color':getFriendlyColour(p.colour.value)}">
-          </div>
-        </li>
-    </ul>
+      <div
+        class="colour-bar"
+        v-bind:style="{ 'background-color': getPlayerColour(p) }"
+      ></div>
+    </li>
+  </ul>
 </template>
 
-<script>
-import gameHelper from '../../../../services/gameHelper'
-import PlayerAvatarVue from './PlayerAvatar'
+<script setup lang="ts">
+import gameHelper from "../../../../services/gameHelper";
+import PlayerAvatar from "./PlayerAvatar.vue";
 
-export default {
-  components: {
-    'player-avatar': PlayerAvatarVue
-  },
-  methods: {
-    getFriendlyColour (colour) {
-      return gameHelper.getFriendlyColour(colour)
-    },
-    onPlayerClicked (player) {
-      // dispatch click to the store to intercept it when adding the player name to a message
-      this.$store.commit('playerClicked', {
-        player,
-        permitCallback: () => this.$emit('onOpenPlayerDetailRequested', player._id)
-      })
-    }
-  },
-  computed: {
-    sortedPlayers: function () {
-      return gameHelper.getSortedLeaderboardPlayerList(this.$store.state.game)
-    }
+import { computed } from "vue";
+import type { Player } from "@/types/game";
+import { useMentionStore } from "@/stores/mention.ts";
+import { useColourStore } from "@/stores/colour";
+import { useGameStore } from "@/stores/game";
+
+const emit = defineEmits<{
+  onOpenPlayerDetailRequested: [playerId: string];
+}>();
+
+const store = useGameStore();
+const mentionStore = useMentionStore();
+const colourStore = useColourStore();
+
+const sortedPlayers = computed(() =>
+  gameHelper.getSortedLeaderboardPlayerList(store.game!),
+);
+
+const onPlayerClicked = (player: Player, e: MouseEvent) => {
+  const click = () => emit("onOpenPlayerDetailRequested", player._id);
+
+  const doNormalClick =
+    store.settings!.interface.shiftKeyMentions === "enabled" && !e.shiftKey;
+  if (doNormalClick) {
+    click();
+    return;
   }
-}
+
+  mentionStore.playerClicked({
+    player,
+    permitCallback: click,
+  });
+};
+
+const getPlayerColour = (player: Player) => {
+  return colourStore.getColourForPlayer(store.game, player._id)!.value;
+};
 </script>
 
 <style scoped>
 .list-group-item {
-    padding: 0;
-    border: 0;
-    overflow:hidden;
-    cursor: pointer;
-    border-radius: 0 !important;
-    height: 68px;
-    width: 59px;
-    min-width: 59px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 0 !important;
+  height: 68px;
+  width: 59px;
+  min-width: 59px;
 }
 
 .colour-bar {
-    min-height: 8px;
+  min-height: 8px;
 }
 
-@media screen and (max-width: 576px) { 
+@media screen and (max-width: 576px) {
   .list-group-item {
-      height: 40px;
-      width: 35px;
-      min-width: 35px;
+    height: 40px;
+    width: 35px;
+    min-width: 35px;
   }
 
   .colour-bar {
-      min-height: 4px;
+    min-height: 4px;
   }
 }
 
 ul {
-  overflow: visible;
   white-space: nowrap;
   overflow-x: auto;
-  scrollbar-color: #375a7f #303030;
+  max-width: 100%;
 }
 
 li {
   display: inline-block;
+  pointer-events: auto;
 }
 
-.grow .colour-bar { transition: all .1s linear; }
+.grow .colour-bar {
+  transition: all 0.1s linear;
+}
 .grow:hover .colour-bar {
   transform: scale(1.5);
   transform-origin: bottom;

@@ -1,4 +1,4 @@
-use Cosmic Odyssey;
+use solaris;
 
 let gameId = ObjectId('gameid');
 

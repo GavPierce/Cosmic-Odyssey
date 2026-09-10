@@ -1,135 +1,185 @@
 <template>
-<div>
-    <div class="row avatar-container text-center">
-        <img v-if="avatar != null" :src="getAvatarImage()" width="128" height="128">
-        <p v-if="avatar == null" class="select-avatar-warning text-warning">Select an avatar</p>
-        <p v-if="avatar && !avatar.purchased" class="select-avatar-locked"><i class="fas fa-lock"></i></p>
+  <div v-if="!isLoading">
+    <div class="avatar-container">
+      <picture class="avatar-image" v-if="avatar != null">
+        <source :srcset="getAvatarWebpImage()" type="image/webp" />
+        <img :src="getAvatarImage()" width="128" height="128" />
+      </picture>
+      <span v-if="avatar == null" class="select-avatar-warning text-warning">
+        Select an avatar
+      </span>
+      <span v-if="avatar && !avatar.purchased" class="select-avatar-locked">
+        <i class="fas fa-lock"></i>
+      </span>
     </div>
 
     <div class="row mt-1 mb-1">
       <div class="col pe-0 ps-0">
-        <button class="btn btn-primary" @click="prevAvatar()"><i class="fas fa-chevron-left"></i></button>
+        <button class="btn btn-primary" @click="prevAvatar()">
+          <i class="fas fa-chevron-left"></i>
+        </button>
       </div>
       <div class="col-auto pe-0 ps-0">
-        <button class="btn btn-primary" @click="nextAvatar()"><i class="fas fa-chevron-right"></i></button>
+        <button class="btn btn-primary" @click="nextAvatar()">
+          <i class="fas fa-chevron-right"></i>
+        </button>
       </div>
     </div>
 
     <div class="row">
       <div class="col-12 pe-0 ps-0 mt-1 mb-1">
         <div class="d-grid gap-2">
-          <router-link :to="{ name: 'avatars'}" class="btn btn-sm btn-success">
+          <router-link :to="{ name: 'avatars' }" class="btn btn-sm btn-success">
             <i class="fas fa-shopping-cart"></i> Shop
           </router-link>
         </div>
       </div>
     </div>
-</div>
+  </div>
 </template>
 
-<script>
-import UserApiService from '../../../../services/api/user'
+<script setup lang="ts">
+import { ref, type Ref, inject, onMounted } from "vue";
+import { sorterByProperty, type UserAvatar } from "@solaris/common";
+import { formatError, httpInjectionKey, isOk } from "@/services/typedapi";
+import { listMyAvatars } from "@/services/typedapi/user";
 
-export default {
-  data () {
-    return {
-      isLoading: false,
-      avatar: null,
-      avatars: []
-    }
-  },
-  async mounted () {
-    await this.reloadAvatars()
-  },
-  methods: {
-    onAvatarChanged (e) {
-      this.$emit('onAvatarChanged', this.avatar)
-    },
-    async reloadAvatars () {
-      this.isLoading = true
+const httpClient = inject(httpInjectionKey)!;
 
-      try {
-        let response = await UserApiService.getUserAvatars()
+const emit = defineEmits<{
+  onAvatarChanged: [avatar: UserAvatar];
+}>();
 
-        if (response.status === 200) {
-          this.avatars = response.data
-        }
-      } catch (err) {
-        console.error(err)
-      }
+const isLoading = ref(false);
+const avatar: Ref<UserAvatar | null> = ref(null);
+const avatars: Ref<UserAvatar[]> = ref([]);
 
-      this.isLoading = false
-    },
-    nextAvatar (e) {
-      if (this.avatar == null) {
-        this.avatar = this.avatars.find(a => a.id === 0)
-      } else {
-        let currentIndex = this.avatars.indexOf(this.avatar)
+const reloadAvatars = async () => {
+  isLoading.value = true;
 
-        currentIndex++
+  const response = await listMyAvatars(httpClient)();
 
-        if (currentIndex > this.avatars.length - 1) {
-            currentIndex = 0
-        }
+  if (isOk(response)) {
+    const purchased = response.data.filter((a) => a.purchased);
+    const notPurchased = response.data.filter((a) => !a.purchased);
 
-        this.avatar = this.avatars[currentIndex]
-      }
+    const sorter = sorterByProperty("id");
 
-      this.onAvatarChanged(this.avatar)
-    },
-    prevAvatar (e) {
-      if (this.avatar == null) {
-        this.avatar = this.avatars.find(a => a.id === 21)
-      } else {
-        let currentIndex = this.avatars.indexOf(this.avatar)
+    avatars.value = purchased.sort(sorter).concat(notPurchased.sort(sorter));
+    console.log(avatars.value);
+  } else {
+    console.error(formatError(response));
+  }
 
-        currentIndex--
+  isLoading.value = false;
+};
 
-        if (currentIndex < 0) {
-            currentIndex = this.avatars.length - 1
-        }
+const onAvatarChanged = () => {
+  emit("onAvatarChanged", avatar.value!);
+};
 
-        this.avatar = this.avatars[currentIndex]
-      }
+const getAvatarImage = () => {
+  try {
+    return new URL(
+      `../../../../assets/avatars/${avatar.value!.file}`,
+      import.meta.url,
+    ).href;
+  } catch (err) {
+    console.error(err);
 
-      this.onAvatarChanged(this.avatar)
-    },
-    getAvatarImage () {
-      try {
-        return require('../../../../assets/avatars/' + this.avatar.file)
-      } catch (err) {
-        console.error(err)
-        
-        return null
-      }
+    return undefined;
+  }
+};
+
+const getAvatarWebpImage = () => {
+  if (["jpg", "png", "jpeg"].some((ext) => avatar.value!.file.endsWith(ext))) {
+    try {
+      const base = avatar.value!.file.replace(/\.[^.]+$/, "");
+      return new URL(`../../../../assets/avatars/${base}.webp`, import.meta.url)
+        .href;
+    } catch (err) {
+      console.error(err);
+
+      return undefined;
     }
   }
-}
+
+  return undefined;
+};
+
+const nextAvatar = () => {
+  if (!avatar.value) {
+    avatar.value = avatars.value[0];
+  } else {
+    let currentIndex = avatars.value.indexOf(avatar.value);
+
+    currentIndex++;
+
+    if (currentIndex > avatars.value.length - 1) {
+      currentIndex = 0;
+    }
+
+    avatar.value = avatars.value[currentIndex];
+  }
+
+  onAvatarChanged();
+};
+
+const prevAvatar = () => {
+  if (!avatar.value) {
+    avatar.value = avatars.value[avatars.value.length - 1];
+  } else {
+    let currentIndex = avatars.value.indexOf(avatar.value);
+
+    currentIndex--;
+
+    if (currentIndex < 0) {
+      currentIndex = avatars.value.length - 1;
+    }
+
+    avatar.value = avatars.value[currentIndex];
+  }
+
+  onAvatarChanged();
+};
+
+onMounted(async () => {
+  await reloadAvatars();
+});
 </script>
 
 <style scoped>
 .avatar-container {
+  display: grid;
+  grid-template-areas: "a";
+  width: 128px;
+  height: 128px;
+}
+
+.avatar-image {
+  grid-area: a;
   width: 128px;
   height: 128px;
 }
 
 .select-avatar-warning {
-  display: table-cell;
   width: 128px;
   height: 128px;
-  padding: 20px 0px;
+  grid-area: a;
   border: 3px dashed #fff;
-  vertical-align: middle;
+  text-align: center;
+  vertical-align: center;
+  padding-top: 24px;
 }
 
 .select-avatar-locked {
-  display: table-cell;
+  padding-top: 24px;
   width: 128px;
   height: 128px;
-  padding: 20px 0px;
-  vertical-align: middle;
-  position: absolute;
+  grid-area: a;
   font-size: 55px;
-  opacity: 0.75;
+  text-align: center;
+  vertical-align: center;
+  color: white;
 }
 </style>

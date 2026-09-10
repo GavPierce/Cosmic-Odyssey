@@ -1,82 +1,97 @@
 <template>
-  <view-container>
-    <view-title title="Forgot Password" navigation="home"/>
+  <view-container :is-auth-page="false">
+    <view-title title="Forgot Password" navigation="home" />
 
-    <form-error-list v-bind:errors="errors"/>
+    <form-error-list v-bind:errors="errors" />
 
     <form @submit.prevent="handleSubmit">
       <div class="mb-2">
         <label for="email">Email Address</label>
-        <input type="email" required="required" class="form-control" name="email" v-model="email" :disabled="isLoading">
+        <input
+          type="email"
+          :required="false"
+          class="form-control"
+          name="email"
+          v-model="email"
+          :disabled="isLoading"
+        />
       </div>
 
       <div>
-        <button type="submit" class="btn btn-success" :disabled="isLoading">Reset Password</button>
-        <router-link to="/" tag="button" class="btn btn-danger float-end">Cancel</router-link>
+        <button type="submit" class="btn btn-success" :disabled="isLoading">
+          Reset Password
+        </button>
+        <router-link to="/" tag="button" class="btn btn-danger float-end"
+          >Cancel</router-link
+        >
       </div>
     </form>
 
-    <p class="mt-3">Not receiving emails? Contact a developer on <a href="https://discord.com/invite/v7PD33d">Discord</a>.</p>
+    <p class="mt-3">
+      Not receiving emails? Contact a developer on
+      <a href="https://discord.com/invite/v7PD33d">Discord</a>.
+    </p>
 
-    <loading-spinner :loading="isLoading"/>
+    <loading-spinner :loading="isLoading" />
   </view-container>
 </template>
 
-<script>
-import LoadingSpinnerVue from '../components/LoadingSpinner'
-import ViewContainer from '../components/ViewContainer'
-import router from '../../router'
-import ViewTitle from '../components/ViewTitle'
-import FormErrorList from '../components/FormErrorList'
-import userService from '../../services/api/user'
+<script setup lang="ts">
+import LoadingSpinner from "../components/LoadingSpinner.vue";
+import ViewContainer from "../components/ViewContainer.vue";
+import router from "../../router";
+import ViewTitle from "../components/ViewTitle.vue";
+import FormErrorList from "../components/FormErrorList.vue";
+import { inject, ref } from "vue";
+import {
+  extractErrors,
+  formatError,
+  httpInjectionKey,
+  isOk,
+} from "@/services/typedapi";
+import { requestPasswordReset } from "@/services/typedapi/user";
 
-export default {
-  components: {
-    'loading-spinner': LoadingSpinnerVue,
-    'view-container': ViewContainer,
-    'view-title': ViewTitle,
-    'form-error-list': FormErrorList
-  },
-  data () {
-    return {
-      isLoading: false,
-      errors: [],
-      email: null
-    }
-  },
-  methods: {
-    async handleSubmit (e) {
-      this.errors = []
+import { useToast } from "vue-toast-notification";
+const httpClient = inject(httpInjectionKey)!;
+const toast = useToast();
 
-      if (!this.email) {
-        this.errors.push('Email required.')
-      }
+const isLoading = ref(false);
+const errors = ref<string[]>([]);
+const email = ref("");
 
-      e.preventDefault()
+const handleSubmit = async (e: Event) => {
+  errors.value = [];
 
-      if (this.errors.length) return
-
-      try {
-        this.isLoading = true
-
-        let response = await userService.requestResetPassword(this.email)
-
-        if (response.status === 200) {
-          this.$toasted.show(`A password reset email has been sent to the email address, please check your email inbox.`, { type: 'success' })
-        } else {
-          this.$toasted.show(`There was a problem resetting your password, please check that you entered your email address correctly.`, { type: 'error' })
-        }
-
-        router.push({ name: 'home' })
-      } catch (err) {
-        this.errors = err.response.data.errors || []
-      }
-
-      this.isLoading = false
-    }
+  if (!email.value) {
+    errors.value.push("Email required.");
   }
-}
+
+  e.preventDefault();
+
+  if (errors.value.length) {
+    return;
+  }
+
+  isLoading.value = true;
+
+  const response = await requestPasswordReset(httpClient)(email.value);
+
+  if (isOk(response)) {
+    toast.success(
+      `A password reset email has been sent to the email address, please check your email inbox.`,
+    );
+  } else {
+    console.error(formatError(response));
+    errors.value = extractErrors(response);
+    toast.error(
+      `There was a problem resetting your password, please check that you entered your email address correctly.`,
+    );
+  }
+
+  router.push({ name: "home" });
+
+  isLoading.value = false;
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

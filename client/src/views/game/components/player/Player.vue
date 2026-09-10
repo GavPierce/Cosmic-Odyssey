@@ -1,201 +1,216 @@
 <template>
-<div class="menu-page container">
-    <!-- TODO: Text for premium player and lifetime premium player -->
+  <div class="menu-page container">
     <menu-title title="Player" @onCloseRequested="onCloseRequested">
       <span class="me-2" v-if="user && user.roles">
-        <i class="fas fa-hands-helping" v-if="user.roles.contributor" title="This player is a contributor"></i>
-        <i class="fas fa-code ms-1" v-if="user.roles.developer" title="This player is an active developer"></i>
-        <i class="fas fa-user-friends ms-1" v-if="user.roles.communityManager" title="This player is an active community manager"></i>
-        <i class="fas fa-dice ms-1" v-if="user.roles.gameMaster" title="This player is an active game master"></i>
+        <i
+          class="fas fa-hands-helping"
+          v-if="user.roles.contributor"
+          title="This player is a contributor"
+        ></i>
+        <i
+          class="fas fa-code ms-1"
+          v-if="user.roles.developer"
+          title="This player is an active developer"
+        ></i>
+        <i
+          class="fas fa-user-friends ms-1"
+          v-if="user.roles.communityManager"
+          title="This player is an active community manager"
+        ></i>
+        <i
+          class="fas fa-dice ms-1"
+          v-if="user.roles.gameMaster"
+          title="This player is an active game master"
+        ></i>
       </span>
-      <elo-rating v-if="is1v1Game" :user="user" class="me-2"/>
-      <button @click="onOpenPrevPlayerDetailRequested" class="btn btn-sm btn-outline-info"><i class="fas fa-chevron-left"></i></button>
-      <button @click="onOpenNextPlayerDetailRequested" class="btn btn-sm btn-outline-info ms-1"><i class="fas fa-chevron-right"></i></button>
-      <button @click="panToPlayer" class="btn btn-sm btn-outline-info ms-1"><i class="fas fa-eye"></i></button>
+      <elo-rating v-if="user && is1v1Game" :user="user" class="me-2" />
+      <button
+        @click="onOpenPrevPlayerDetailRequested"
+        class="btn btn-sm btn-outline-info"
+      >
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button
+        @click="onOpenNextPlayerDetailRequested"
+        class="btn btn-sm btn-outline-info ms-1"
+      >
+        <i class="fas fa-chevron-right"></i>
+      </button>
+      <button @click="panToPlayer" class="btn btn-sm btn-outline-info ms-1">
+        <i class="fas fa-eye"></i>
+      </button>
     </menu-title>
 
-    <overview v-if="player" :playerId="player._id"
+    <overview
+      v-if="player"
+      :playerId="player._id"
       @onViewCompareIntelRequested="onViewCompareIntelRequested"
-      @onOpenTradeRequested="onOpenTradeRequested"/>
+      @onOpenTradeRequested="onOpenTradeRequested"
+      @onViewColourOverrideRequested="onViewColourOverrideRequested"
+    />
 
     <h4 v-if="player" class="mt-2">Infrastructure</h4>
 
-    <infrastructure v-if="player" :playerId="player._id"/>
+    <infrastructure v-if="player" :playerId="player._id" />
 
-    <yourInfrastructure v-if="userPlayer && player != userPlayer"
-                    :comparePlayerId="player._id"/>
+    <yourInfrastructure
+      v-if="player && userPlayer && player != userPlayer"
+      :comparePlayerId="player._id"
+    />
 
     <h4 v-if="player && player.research" class="mt-2">Technology</h4>
-    
-    <research v-if="player && player.research" :playerId="player._id"/>
 
-    <loading-spinner :loading="player && !player.isOpenSlot && !user"/>
+    <research v-if="player && player.research" :playerId="player._id" />
 
-    <h4 class="mt-2" v-if="canViewAchievements">Achievements</h4>
+    <loading-spinner :loading="isLoading" />
 
-    <achievements v-if="canViewAchievements"
-                    :level="user.achievements.level"
-                    :victories="user.achievements.victories"
-                    :rank="user.achievements.rank"
-                    :renown="user.achievements.renown"/>
+    <player-user-info
+      v-if="player && !isLoading"
+      :game="game"
+      :player="player"
+      :user="user"
+      :userPlayer="userPlayer"
+      @onOpenPurchasePlayerBadgeRequested="onOpenPurchasePlayerBadgeRequested"
+    />
 
-    <sendRenown v-if="canSendRenown" :player="player" :userPlayer="userPlayer"
-      @onRenownSent="onRenownSent"/>
-
-    <h4 class="mt-2" v-if="canAwardBadge">Badges</h4>
-
-    <player-badges v-if="canAwardBadge" 
+    <player-report
+      v-if="player && player.isRealUser && userPlayer && player !== userPlayer"
       :playerId="player._id"
-      @onOpenPurchasePlayerBadgeRequested="onOpenPurchasePlayerBadgeRequested"/>
-
-    <player-report 
-      v-if="player && player.isRealUser && userPlayer && player != userPlayer"
-      :playerId="player._id"
-      @onOpenReportPlayerRequested="onOpenReportPlayerRequested"/>
-</div>
+      @onOpenReportPlayerRequested="onOpenReportPlayerRequested"
+    />
+  </div>
 </template>
 
-<script>
-import LoadingSpinnerVue from '../../../components/LoadingSpinner'
-import MenuTitle from '../MenuTitle'
-import Overview from './Overview'
-import Infrastructure from '../shared/Infrastructure'
-import YourInfrastructure from './YourInfrastructure'
-import Research from './Research'
-import Achievements from './Achievements'
-import SendRenown from './SendRenown'
-import PlayerBadges from '../badges/PlayerBadges'
-import Reputation from './Reputation'
-import EloRating from './EloRating'
-import PlayerReport from './PlayerReport'
-import gameService from '../../../../services/api/game'
-import GameHelper from '../../../../services/gameHelper'
-import GameContainer from '../../../../game/container'
+<script setup lang="ts">
+import { useGameStore } from "@/stores/game";
+import { MapCommandEventBusEventNames } from "@solaris/map-rendering";
+import MenuTitle from "../MenuTitle.vue";
+import Overview from "./Overview.vue";
+import Infrastructure from "../shared/Infrastructure.vue";
+import YourInfrastructure from "./YourInfrastructure.vue";
+import Research from "./Research.vue";
+import EloRating from "./EloRating.vue";
+import PlayerReport from "./PlayerReport.vue";
+import GameHelper from "../../../../services/gameHelper";
+import { eventBusInjectionKey } from "@/eventBus";
+import { inject, ref, computed, type Ref, onMounted } from "vue";
+import type { InGameUser, Player, UserPublic } from "@solaris/common";
+import PlayerUserInfo from "@/views/game/components/player/PlayerUserInfo.vue";
+import LoadingSpinner from "@/views/components/LoadingSpinner.vue";
+import { getPlayerUser } from "@/services/typedapi/game";
+import { formatError, httpInjectionKey, isOk } from "@/services/typedapi";
+import { useGameServices } from "@/util/gameServices";
+import type { Game } from "@/types/game";
+import { useUserStore } from "@/stores/user";
 
-export default {
-  components: {
-    'loading-spinner': LoadingSpinnerVue,
-    'menu-title': MenuTitle,
-    'overview': Overview,
-    'infrastructure': Infrastructure,
-    'yourInfrastructure': YourInfrastructure,
-    'research': Research,
-    'achievements': Achievements,
-    'sendRenown': SendRenown,
-    'player-badges': PlayerBadges,
-    'reputation': Reputation,
-    'elo-rating': EloRating,
-    'player-report': PlayerReport
-  },
-  props: {
-    playerId: String
-  },
-  data () {
-    return {
-      player: null,
-      user: null,
-      userPlayer: null,
-      playerIndex: 0
-    }
-  },
-  async mounted () {
-    this.player = GameHelper.getPlayerById(this.$store.state.game, this.playerId)
-    this.userPlayer = GameHelper.getUserPlayer(this.$store.state.game)
-    this.playerIndex = this.$store.state.game.galaxy.players.indexOf(this.player)
+const props = defineProps<{
+  playerId: string;
+}>();
 
-    // If there is a legit user associated with this user then get the
-    // user info so we can show more info like achievements.
-    if (this.$store.state.userId && !this.player.isOpenSlot && GameHelper.isNormalAnonymity(this.$store.state.game)) {
-      try {
-        let response = await gameService.getPlayerUserInfo(this.$store.state.game._id, this.player._id)
+const emit = defineEmits<{
+  onCloseRequested: [];
+  onViewCompareIntelRequested: [playerId: string];
+  onViewColourOverrideRequested: [playerId: string];
+  onOpenTradeRequested: [playerId: string];
+  onOpenPurchasePlayerBadgeRequested: [playerId: string];
+  onOpenReportPlayerRequested: [{ playerId: string }];
+  onOpenPlayerDetailRequested: [playerId: string];
+}>();
 
-        this.user = response.data
-      } catch (err) {
-        console.error(err)
-      }
-    }
+const eventBus = inject(eventBusInjectionKey)!;
+const httpClient = inject(httpInjectionKey)!;
 
-    if (this.user == null) {
-      this.user = {}
-    }
-  },
-  methods: {
-    onCloseRequested (e) {
-      this.$emit('onCloseRequested', e)
-    },
-    onViewCompareIntelRequested (e) {
-      this.$emit('onViewCompareIntelRequested', e)
-    },
-    onOpenTradeRequested (e) {
-      this.$emit('onOpenTradeRequested', this.playerId)
-    },
-    onOpenPurchasePlayerBadgeRequested (e) {
-      this.$emit('onOpenPurchasePlayerBadgeRequested', e)
-    },
-    onOpenReportPlayerRequested (e) {
-      this.$emit('onOpenReportPlayerRequested', e)
-    },
-    panToPlayer (e) {
-      GameContainer.map.panToPlayer(this.$store.state.game, this.player)
-    },
-    onOpenPrevPlayerDetailRequested (e) {
-      let prevIndex = this.playerIndex - 1
+const store = useGameStore();
+const userStore = useUserStore();
 
-      if (prevIndex < 0) {
-        prevIndex = this.$store.state.game.galaxy.players.length - 1
-      }
+const isLoading = ref(false);
+const player: Ref<Player<string> | null> = ref(null);
+const user: Ref<InGameUser<string> | null> = ref(null);
+const userPlayer: Ref<Player<string> | null> = ref(null);
+const leaderboard: Ref<Player<string>[] | null> = ref(null);
+const playerIndex = ref(0);
 
-      this.onOpenPlayerDetailRequested(prevIndex)
-    },
-    onOpenNextPlayerDetailRequested (e) {
-      let nextIndex = this.playerIndex + 1
+const game = computed<Game>(() => store.game!);
 
-      if (nextIndex > this.$store.state.game.galaxy.players.length - 1) {
-        nextIndex = 0
-      }
+const serviceProvider = useGameServices();
 
-      this.onOpenPlayerDetailRequested(nextIndex)
-    },
-    onOpenPlayerDetailRequested (e) {
-      let player = this.$store.state.game.galaxy.players[e]
+const isGameFinished = computed(() => GameHelper.isGameFinished(game.value));
+const playersAreAnonymous = computed(() =>
+  isGameFinished.value
+    ? serviceProvider.gameTypeService.isAnonymousAfterEnd(game.value)
+    : serviceProvider.gameTypeService.isAnonymousGameDuringGame(game.value),
+);
 
-      this.$emit('onOpenPlayerDetailRequested', player._id)
-    },
-    onRenownSent (e) {
-      if (this.user.achievements) {
-        this.user.achievements.renown += e
-      }
-    }
-  },
-  computed: {
-    game () {
-      return this.$store.state.game
-    },
-    isGameFinished: function () {
-      return GameHelper.isGameFinished(this.$store.state.game)
-    },
-    isAnonymousGame () {
-      return this.game.settings.general.anonymity === 'extra'
-    },
-    is1v1Game () {
-      return GameHelper.is1v1Game(this.game)
-    },
-    canViewAchievements () {
-      return this.player && this.player.isRealUser && this.user && this.user.achievements
-    },
-    canSendRenown () {
-      if (this.isAnonymousGame) {
-        return this.player && this.game.state.startDate && this.player.isRealUser && this.userPlayer && this.player != this.userPlayer && this.isGameFinished
-      } else {
-        return this.player && this.game.state.startDate && this.player.isRealUser && this.userPlayer && this.player != this.userPlayer
-      }
-    },
-    canAwardBadge () {
-      return this.player && this.player.isRealUser && this.userPlayer && this.player != this.userPlayer
+onMounted(async () => {
+  isLoading.value = true;
+
+  player.value = GameHelper.getPlayerById(store.game!, props.playerId) || null;
+  userPlayer.value = GameHelper.getUserPlayer(store.game!) || null;
+  playerIndex.value = store.game!.galaxy.players.indexOf(player.value!);
+  leaderboard.value = GameHelper.getSortedLeaderboardPlayerList(store.game!);
+
+  // If there is a legit user associated with this user then get the
+  // user info so we can show more info like achievements.
+  if (
+    userStore.userId &&
+    !player.value!.isOpenSlot &&
+    !playersAreAnonymous.value
+  ) {
+    const response = await getPlayerUser(httpClient)(
+      store.game!._id,
+      player.value!._id,
+    );
+
+    if (isOk(response)) {
+      user.value = response.data;
+    } else {
+      console.error(formatError(response));
     }
   }
-}
+
+  isLoading.value = false;
+});
+
+const is1v1Game = computed(() => GameHelper.is1v1Game(store.game!));
+const onCloseRequested = () => emit("onCloseRequested");
+const onViewCompareIntelRequested = (playerId: string) =>
+  emit("onViewCompareIntelRequested", playerId);
+const onViewColourOverrideRequested = (playerId: string) =>
+  emit("onViewColourOverrideRequested", playerId);
+const onOpenTradeRequested = () => emit("onOpenTradeRequested", props.playerId);
+const onOpenReportPlayerRequested = () =>
+  emit("onOpenReportPlayerRequested", { playerId: props.playerId });
+const panToPlayer = () =>
+  eventBus.emit(MapCommandEventBusEventNames.MapCommandPanToPlayer, {
+    player: player.value!,
+  });
+const onOpenPlayerDetailRequested = (player: Player<string>) =>
+  emit("onOpenPlayerDetailRequested", player._id);
+const onOpenPurchasePlayerBadgeRequested = () =>
+  emit("onOpenPurchasePlayerBadgeRequested", props.playerId);
+
+const onOpenPrevPlayerDetailRequested = () => {
+  let prevLeaderboardIndex = leaderboard.value!.indexOf(player.value!) - 1;
+  if (prevLeaderboardIndex < 0) {
+    prevLeaderboardIndex = leaderboard.value!.length - 1;
+  }
+
+  const prevPlayer = leaderboard.value![prevLeaderboardIndex];
+
+  onOpenPlayerDetailRequested(prevPlayer);
+};
+
+const onOpenNextPlayerDetailRequested = () => {
+  let nextLeaderboardIndex = leaderboard.value!.indexOf(player.value!) + 1;
+
+  if (nextLeaderboardIndex > leaderboard.value!.length - 1) {
+    nextLeaderboardIndex = 0;
+  }
+
+  const nextPlayer = leaderboard.value![nextLeaderboardIndex];
+
+  onOpenPlayerDetailRequested(nextPlayer);
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

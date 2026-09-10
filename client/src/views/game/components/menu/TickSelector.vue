@@ -1,139 +1,251 @@
 <template>
-
-<div>
+  <div>
     <div @click="toggleDisplay" class="pointer">
-        <span class="me-1">
-            <i class="fas fa-stopwatch"></i>
-        </span>
-        <span class="d-none d-md-inline-block me-1">
-            Tick
-        </span>
-        <span class="d-none d-sm-inline-block user-select-none me-1">
-            {{tick}}
-        </span>
-        <span>
-            <i class="fas" :class="{'fa-chevron-down':!display,'fa-chevron-up':display}"></i>
-        </span>
+      <span class="me-1">
+        <i class="fas fa-stopwatch"></i>
+      </span>
+      <span class="d-none d-md-inline-block me-1"> Tick </span>
+      <span class="d-none d-sm-inline-block user-select-none me-1">
+        {{ tick }}
+      </span>
+      <span>
+        <i
+          class="fas"
+          :class="{
+            'fa-chevron-down': !display,
+            'fa-chevron-up': display,
+          }"
+        ></i>
+      </span>
     </div>
 
-    <div class="tick-form container mt-1 p-3" :class="{'header-bar-bg':!$isHistoricalMode(),'bg-dark':$isHistoricalMode()}" v-if="display">
-        <div class="row mt-0 pt-2 pb-2 g-0">
-            <div class="col-12 mb-1">
-                <input type="range" :min="minimumTick" :max="stateTick" class="slider" v-model="tick" @change="onRequestedTickChanged" :disabled="isLoading">
-            </div>
-			<div class="col-5">
-				<button class="btn btn-sm btn-secondary" @click="loadPreviousTick(6)" :disabled="isLoading || tick <= minimumTick" title="Jump back 6 ticks">
-                    <i class="fas fa-angle-double-left"></i>
-                </button>
-                <button class="btn btn-sm btn-secondary ms-1" @click="loadPreviousTick(1)" :disabled="isLoading || tick <= minimumTick" title="Previous tick">
-                    <i class="fas fa-angle-left"></i> Prev
-                </button>
-			</div>
-            <div class="col-2 text-center">
-                {{tick}}
-            </div>
-			<div class="col-5 text-end">
-				<button class="btn btn-sm btn-secondary" @click="loadNextTick(1)" :disabled="isLoading || tick >= stateTick" title="Next tick">
-                    Next <i class="fas fa-angle-right"></i>
-                </button>
-                <button class="btn btn-sm btn-secondary ms-1" @click="loadNextTick(6)" :disabled="isLoading || tick >= stateTick" title="Jump forward 6 ticks">
-                    <i class="fas fa-angle-double-right"></i>
-                </button>
-			</div>
+    <div
+      class="tick-form container mt-1 p-3"
+      :class="{
+        'header-bar-bg': !isHistoricalMode,
+        'bg-dark': isHistoricalMode,
+      }"
+      v-if="display"
+    >
+      <div class="row mt-0 pt-2 pb-2 g-0">
+        <div class="col-12 mb-1">
+          <input
+            type="range"
+            :min="minimumTick"
+            :max="stateTick"
+            class="slider"
+            v-model="tick"
+            @change="onRequestedTickChanged"
+            :disabled="isLoading"
+          />
         </div>
+        <div class="col-5">
+          <buttonF
+            class="btn btn-sm btn-secondary"
+            @click="loadPreviousTick(turnTicks)"
+            :disabled="isLoading || tick <= minimumTick"
+            :title="`Jump back ${turnTicks} ticks`"
+          >
+            <i class="fas fa-angle-double-left"></i>
+          </buttonF>
+          <button
+            class="btn btn-sm btn-secondary ms-1"
+            @click="loadPreviousTick(1)"
+            :disabled="isLoading || tick <= minimumTick"
+            title="Previous tick"
+          >
+            <i class="fas fa-angle-left"></i> Prev
+          </button>
+        </div>
+        <div class="col-2 text-center">
+          <div v-if="isInputMode" class="tickInputContainer">
+            <input
+              type="number"
+              v-model="inputTick"
+              class="tickInput"
+              :min="minimumTick"
+              :max="stateTick"
+              @blur="confirmInput"
+            />
+            <button class="btn btn-sm btn-primary" @click="confirmInput">
+              Go
+            </button>
+          </div>
+          <button
+            v-else
+            class="btn btn-sm btn-primary px-3"
+            @click="toggleMode"
+          >
+            {{ tick }}
+          </button>
+        </div>
+        <div class="col-5 text-end">
+          <button
+            class="btn btn-sm btn-secondary"
+            @click="loadNextTick(1)"
+            :disabled="isLoading || tick >= stateTick"
+            title="Next tick"
+          >
+            Next <i class="fas fa-angle-right"></i>
+          </button>
+          <button
+            class="btn btn-sm btn-secondary ms-1"
+            @click="loadNextTick(turnTicks)"
+            :disabled="isLoading || tick >= stateTick"
+            :title="`Jump forward ${turnTicks} ticks`"
+          >
+            <i class="fas fa-angle-double-right"></i>
+          </button>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 </template>
 
-<script>
-import GameApiService from '../../../../services/api/game'
+<script setup lang="ts">
+import { useGameStore } from "@/stores/game";
+import { eventBusInjectionKey } from "../../../../eventBus";
+import GameEventBusEventNames from "../../../../eventBusEventNames/game";
+import { computed, inject, onMounted, onUnmounted, ref } from "vue";
+import { useIsHistoricalMode } from "@/util/reactiveHooks";
+import { detailGalaxy } from "@/services/typedapi/game";
+import { formatError, httpInjectionKey, isOk } from "@/services/typedapi";
+import type { Game } from "@/types/game";
 
-export default {
-  data () {
-    return {
-        isLoading: false,
-        display: false,
-        tick: 0
-    }
-  },
-  mounted () {
-      this.tick = this.stateTick
-  },
-  methods: {
-    toggleDisplay () {
-        this.display = !this.display
-    },
-    async onRequestedTickChanged () {
-        if (this.isLoading || this.tick < 1 || this.tick > this.stateTick || this.tick === this.gameTick) {
-            return
-        }
+const eventBus = inject(eventBusInjectionKey)!;
+const httpClient = inject(httpInjectionKey)!;
 
-        this.isLoading = true
+const store = useGameStore();
 
-        let game = this.$store.state.game
+const isHistoricalMode = useIsHistoricalMode(store);
 
-        try {
-            let response = await GameApiService.getGameGalaxy(game._id, this.tick)
+const stateTick = computed(() => store.tick);
 
-            if (response.status === 200) {
-                this.$store.commit('setGame', response.data)
-                this.tick = response.data.state.tick
-            }
-        } catch (err) {
-            console.error(err)
-        }
-        
-        this.isLoading = false
-    },
-    async loadCurrentTick () {
-        this.tick = this.stateTick
-        await this.onRequestedTickChanged()
-    },
-    async loadPreviousTick (ticks) {
-        this.tick = Math.max(this.minimumTick, this.tick - ticks)
-        await this.onRequestedTickChanged()
-    },
-    async loadNextTick (ticks) {
-        this.tick = Math.min(this.stateTick, this.tick + ticks)
-        await this.onRequestedTickChanged()
-    }
-  },
-  computed: {
-      stateTick: function () {
-          return this.$store.state.tick
-      },
-      gameTick: function () {
-          return this.$store.state.game.state.tick
-      },
-      minimumTick: function () {
-          return 1
-          // let min = this.stateTick - 24 // Maximum of 24 ticks ago.
+const isInputMode = ref(false);
+const isLoading = ref(false);
+const display = ref(false);
+const tick = ref(0);
+const inputTick = ref(stateTick.value);
 
-          // return Math.max(1, min)
-      }
+const game = computed<Game>(() => store.game!);
+
+const gameTick = computed(() => game.value.state.tick);
+
+const minimumTick = computed(
+  () => store.game!.state.timeMachineMinimumTick ?? 1,
+);
+
+const turnTicks = computed(() =>
+  store.game!.settings.gameTime.gameType === "turnBased"
+    ? store.game!.settings.gameTime.turnJumps
+    : 6,
+);
+
+const onGameTick = () => {
+  const oneIncrement =
+    game.value.settings.gameTime.gameType === "turnBased"
+      ? game.value.settings.gameTime.turnJumps
+      : 1;
+
+  if (tick.value === gameTick.value - oneIncrement) {
+    tick.value = gameTick.value;
   }
-}
+};
+
+const confirmInput = async () => {
+  tick.value = Math.max(
+    minimumTick.value,
+    Math.min(inputTick.value, stateTick.value),
+  );
+  isInputMode.value = false;
+
+  await onRequestedTickChanged();
+};
+
+const toggleMode = () => {
+  isInputMode.value = !isInputMode.value;
+};
+
+const toggleDisplay = () => {
+  display.value = !display.value;
+};
+
+const onRequestedTickChanged = async () => {
+  if (
+    isLoading.value ||
+    tick.value < minimumTick.value ||
+    tick.value > stateTick.value ||
+    tick.value === gameTick.value
+  ) {
+    return;
+  }
+
+  isLoading.value = true;
+
+  const game = store.game!;
+
+  const response = await detailGalaxy(httpClient)(game._id, tick.value);
+
+  if (isOk(response)) {
+    store.setGame(response.data as any);
+    tick.value = response.data.state.tick;
+    inputTick.value = response.data.state.tick;
+  } else {
+    console.error(formatError(response));
+  }
+
+  isLoading.value = false;
+};
+
+const loadPreviousTick = async (ticks: number) => {
+  tick.value = Math.max(minimumTick.value, tick.value - ticks);
+  await onRequestedTickChanged();
+};
+
+const loadNextTick = async (ticks: number) => {
+  tick.value = Math.min(stateTick.value, tick.value + ticks);
+  await onRequestedTickChanged();
+};
+
+onMounted(() => {
+  tick.value = stateTick.value;
+  eventBus.on(GameEventBusEventNames.OnGameTick, onGameTick);
+});
+
+onUnmounted(() => {
+  eventBus.off(GameEventBusEventNames.OnGameTick, onGameTick);
+});
 </script>
 
 <style scoped>
+.tickInputContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tickInput {
+}
+
 .pointer {
-  cursor:pointer;
+  cursor: pointer;
 }
 
 .user-select-none {
-    user-select: none;
+  user-select: none;
 }
 
 .slider {
   -webkit-appearance: none;
   width: 100%;
   height: 15px;
-  border-radius: 5px;  
+  border-radius: 5px;
   background: #444;
   outline: none;
   opacity: 0.7;
-  -webkit-transition: .2s;
-  transition: opacity .2s;
+  -webkit-transition: 0.2s;
+  transition: opacity 0.2s;
 }
 
 .slider::-webkit-slider-thumb {
@@ -141,7 +253,7 @@ export default {
   appearance: none;
   width: 25px;
   height: 25px;
-  border-radius: 50%; 
+  border-radius: 50%;
   background: #00bc8c;
   cursor: pointer;
 }
@@ -155,15 +267,18 @@ export default {
 }
 
 .tick-form {
-    z-index: 1;
-    position:absolute;
-    width:300px;
-    left:0px;
+  z-index: 120;
+  position: absolute;
+  width: 300px;
+  left: 50px;
+  background: #1d2835;
+  border: black 2px solid;
+  border-radius: 4px;
 }
 
 @media screen and (max-width: 473px) {
-    .tick-form {
-        left: 0px;
-    }
+  .tick-form {
+    left: 0px;
+  }
 }
 </style>

@@ -1,84 +1,102 @@
-import { Router } from "express";
-import { ExpressJoiInstance } from "express-joi-validation";
 import { DependencyContainer } from "../../services/types/DependencyContainer";
-import SpectatorController from '../controllers/spectator';
+import SpectatorController from "../controllers/spectator";
 import { MiddlewareContainer } from "../middleware";
-import { spectatorInviteSpectatorRequestSchema } from "../requests/spectator";
+import { SingleRouter } from "../singleRoute";
+import { createSpectatorRoutes } from "@solaris/common";
+import { DBObjectId } from "../../services/types/DBObjectId";
+import { createRoutes } from "../typedapi/routes";
 
-export default (router: Router, mw: MiddlewareContainer, validator: ExpressJoiInstance, container: DependencyContainer) => {
+export default (
+    router: SingleRouter,
+    mw: MiddlewareContainer,
+    container: DependencyContainer,
+) => {
     const controller = SpectatorController(container);
+    const routes = createSpectatorRoutes<DBObjectId>();
+    const answer = createRoutes(router, mw);
 
-    router.get('/api/game/:gameId/spectators',
+    answer(
+        routes.listSpectators,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             settings: true,
             state: true,
             galaxy: true,
-            constants: false
+            constants: false,
         }),
         mw.game.validateGameState({
             isUnlocked: true,
-            isNotFinished: true
+            isNotFinished: true,
         }),
         mw.player.loadPlayer,
         controller.list,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
-    router.put('/api/game/:gameId/spectators/invite',
+    answer(
+        routes.inviteSpectators,
         mw.auth.authenticate(),
-        validator.body(spectatorInviteSpectatorRequestSchema),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             settings: true,
             state: true,
             galaxy: true,
-            constants: false
+            constants: false,
         }),
         mw.game.validateGameState({
             isUnlocked: true,
-            isNotFinished: true
+            isNotFinished: true,
         }),
         mw.player.loadPlayer,
         mw.player.validatePlayerState({ isPlayerUndefeated: true }),
         controller.invite,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
-    router.put('/api/game/:gameId/spectators/uninvite/:userId',
+    answer(
+        routes.uninviteSpectator,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             settings: true,
             state: true,
             galaxy: true,
-            constants: false
+            constants: false,
         }),
         mw.game.validateGameState({
             isUnlocked: true,
-            isNotFinished: true
+            isNotFinished: true,
         }),
         mw.player.loadPlayer,
         mw.player.validatePlayerState({ isPlayerUndefeated: true }),
         controller.uninvite,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
-    router.delete('/api/game/:gameId/spectators',
+    answer(
+        routes.clearSpectators,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             settings: true,
             state: true,
             galaxy: true,
-            constants: false
+            constants: false,
         }),
         mw.game.validateGameState({
             isUnlocked: true,
-            isNotFinished: true
+            isNotFinished: true,
         }),
         mw.player.loadPlayer,
         mw.player.validatePlayerState({ isPlayerUndefeated: true }),
         controller.clear,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
     return router;
-}
+};

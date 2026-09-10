@@ -1,32 +1,36 @@
-import { Router } from "express";
-import { ExpressJoiInstance } from "express-joi-validation";
 import { DependencyContainer } from "../../services/types/DependencyContainer";
-import AuthController from '../controllers/auth';
+import AuthController from "../controllers/auth";
 import { MiddlewareContainer } from "../middleware";
-import { authLoginRequestSchema } from "../requests/auth";
+import { SingleRouter } from "../singleRoute";
+import { createAuthRoutes } from "@solaris/common";
+import { DBObjectId } from "../../services/types/DBObjectId";
+import { createRoutes } from "../typedapi/routes";
 
-export default (router: Router, mw: MiddlewareContainer, validator: ExpressJoiInstance, container: DependencyContainer) => {
+export default (
+    router: SingleRouter,
+    mw: MiddlewareContainer,
+    container: DependencyContainer,
+) => {
     const controller = AuthController(container);
+    const routes = createAuthRoutes<DBObjectId>();
+    const answer = createRoutes(router, mw);
 
-    router.post('/api/auth/login',
-        validator.body(authLoginRequestSchema),
-        controller.login,
-        mw.core.handleError);
+    answer(routes.login, controller.login);
 
-    router.post('/api/auth/logout',
-        controller.logout,
-        mw.core.handleError);
+    answer(routes.logout, controller.logout);
 
-    router.post('/api/auth/verify',
-        controller.verify);
+    answer(routes.verify, controller.verify);
 
-    router.get('/api/auth/discord',
-        controller.authoriseDiscord); // TODO: This should be in another api file. oauth.js?
-        
-    router.delete('/api/auth/discord',
+    answer(
+        routes.authoriseDiscord,
+        controller.authoriseDiscord, // TODO: This should be in another api file. oauth.js?
+    );
+
+    answer(
+        routes.unauthoriseDiscord,
         mw.auth.authenticate(),
         controller.unauthoriseDiscord,
-        mw.core.handleError);
+    );
 
     return router;
-}
+};

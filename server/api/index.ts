@@ -1,50 +1,67 @@
-const express = require("express");
-const http = require("http");
+import http from "http";
+import { Server } from "socket.io";
 import config from "../config";
-import expressLoader from "./express";
 import mongooseLoader from "../db";
-import socketLoader from "./sockets";
 import containerLoader from "../services";
+import { logger, setupLogging } from "../utils/logging";
+import expressLoader from "./express";
+import express from "express";
 
 let mongo;
+Error.stackTraceLimit = 1000;
 
-console.log(`Node ${process.version}`);
+setupLogging();
+
+const log = logger();
+
+log.info(`Node ${process.version}`);
 
 async function startServer() {
-  console.log("Starting server");
-  mongo = await mongooseLoader(config, {});
+    mongo = await mongooseLoader(config, {});
 
-  const app = express();
-  const server = http.createServer(app);
+    const app = express();
+    const server: http.Server = http.createServer(app);
 
-  const io = socketLoader(server);
-  const container = containerLoader(config, io);
+    const socketServer = new Server(server, {
+        cors: {
+            origin: config.corsUrls,
+            methods: ["POST", "PUT", "PATCH", "GET", "DELETE", "OPTIONS"],
+            credentials: true,
+        },
+        transports: ["websocket", "polling"],
+    });
 
-  await expressLoader(config, app, container);
+    log.info("Sockets initialized.");
 
-  server.listen(config.port, (err) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
+    const container = containerLoader(config, socketServer, log);
 
-    console.log(`Server is running on port ${config.port}.`);
-  });
+    const { sessionStore } = await expressLoader(config, app, container);
+    container.sessionService.setSessionStorage(sessionStore);
+    container.socketService.setSessionStorage(sessionStore);
 
-  // await container.discordService.initialize();
-  // container.notificationService.initialize();
+    server.on("error", (err) => {
+        if (err) {
+            log.error(err);
+        }
+    });
+
+    server.listen(config.port, () => {
+        log.info(`Server is running on port ${config.port}.`);
+    });
+
+    await container.discordService.initialize();
 }
 
 process.on("SIGINT", async () => {
-  console.log("Shutting down...");
+    log.info("Shutting down...");
 
-  console.log("Disconnecting from MongoDB...");
-  await mongo.disconnect();
-  console.log("MongoDB disconnected.");
+    log.info("Disconnecting from MongoDB...");
+    await mongo.disconnect();
+    log.info("MongoDB disconnected.");
 
-  console.log("Shutdown complete.");
+    log.info("Shutdown complete.");
 
-  process.exit();
+    process.exit(0);
 });
 
 startServer();

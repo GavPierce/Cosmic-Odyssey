@@ -1,20 +1,18 @@
 <template>
-    <p v-if="errors.length">
-        <b class="text-danger">Please correct the following error(s):</b>
-        <ul>
-            <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
-        </ul>
-    </p>
+  <div v-if="props?.errors?.length">
+    <b class="text-danger">Please correct the following error(s):</b>
+    <ul>
+      <li v-for="error in props.errors" v-bind:key="error">
+        {{ error }}
+      </li>
+    </ul>
+  </div>
 </template>
 
-<script>
-export default {
-  props: {
-    errors: Array
-  }
-}
+<script setup lang="ts">
+const props = defineProps<{
+  errors: string[] | null;
+}>();
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -1,179 +1,224 @@
-import { Router } from "express";
-import { ExpressJoiInstance } from "express-joi-validation";
 import { DependencyContainer } from "../../services/types/DependencyContainer";
-import ConversationController from '../controllers/conversation';
+import ConversationController from "../controllers/conversation";
 import { MiddlewareContainer } from "../middleware";
+import { SingleRouter } from "../singleRoute";
+import { createConversationRoutes } from "@solaris/common";
+import { DBObjectId } from "../../services/types/DBObjectId";
+import { createRoutes } from "../typedapi/routes";
 
-export default (router: Router, mw: MiddlewareContainer, validator: ExpressJoiInstance, container: DependencyContainer) => {
+export default (
+    router: SingleRouter,
+    mw: MiddlewareContainer,
+    container: DependencyContainer,
+) => {
     const controller = ConversationController(container);
+    const routes = createConversationRoutes<DBObjectId>();
+    const answer = createRoutes(router, mw);
 
-    router.get('/api/game/:gameId/conversations',
+    answer(
+        routes.list,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             state: true,
             conversations: true,
-            'galaxy.players': true
+            "galaxy.players": true,
         }),
         mw.player.loadPlayer,
         controller.list,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
-    router.get('/api/game/:gameId/conversations/private/:withPlayerId',
+    answer(
+        routes.listPrivate,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             state: true,
             conversations: true,
-            'galaxy.players': true
+            "galaxy.players": true,
         }),
         mw.player.loadPlayer,
         controller.listPrivate,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
-    router.get('/api/game/:gameId/conversations/unread',
+    answer(
+        routes.getUnreadCount,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             state: true,
             conversations: true,
-            'galaxy.players': true
+            "galaxy.players": true,
         }),
         mw.player.loadPlayer,
         controller.getUnreadCount,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
-    router.get('/api/game/:gameId/conversations/:conversationId',
+    answer(
+        routes.detail,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             state: true,
             conversations: true,
-            'galaxy.players': true
+            "galaxy.players": true,
         }),
         mw.player.loadPlayer,
         controller.detail,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
-    router.post('/api/game/:gameId/conversations',
+    answer(
+        routes.create,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             state: true,
             conversations: true,
-            'galaxy.players': true
+            "galaxy.players": true,
         }),
         mw.game.validateGameState({
-            isUnlocked: true
+            isUnlocked: true,
         }),
         mw.player.loadPlayer,
         controller.create,
-        mw.core.handleError);
-        
-    router.patch('/api/game/:gameId/conversations/:conversationId/send',
+        mw.playerMutex.release(),
+    );
+
+    answer(
+        routes.sendMessage,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             state: true,
+            settings: true,
             conversations: true,
-            'galaxy.players': true
+            "galaxy.players": true,
         }),
         mw.game.validateGameState({
-            isUnlocked: true
+            isUnlocked: true,
         }),
         mw.player.loadPlayer,
         controller.sendMessage,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
-    router.patch('/api/game/:gameId/conversations/:conversationId/markAsRead',
+    answer(
+        routes.markAsRead,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             state: true,
             conversations: true,
-            'galaxy.players': true
+            "galaxy.players": true,
         }),
         mw.game.validateGameState({
-            isUnlocked: true
+            isUnlocked: true,
         }),
         mw.player.loadPlayer,
         controller.markAsRead,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
-    router.patch('/api/game/:gameId/conversations/:conversationId/mute',
+    answer(
+        routes.mute,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             state: true,
             conversations: true,
-            'galaxy.players': true
+            "galaxy.players": true,
         }),
         mw.game.validateGameState({
-            isUnlocked: true
+            isUnlocked: true,
         }),
         mw.player.loadPlayer,
         controller.mute,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
-    router.patch('/api/game/:gameId/conversations/:conversationId/unmute',
+    answer(
+        routes.unmute,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             state: true,
             conversations: true,
-            'galaxy.players': true
+            "galaxy.players": true,
         }),
         mw.game.validateGameState({
-            isUnlocked: true
+            isUnlocked: true,
         }),
         mw.player.loadPlayer,
         controller.unmute,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
-    router.patch('/api/game/:gameId/conversations/:conversationId/leave',
+    answer(
+        routes.leave,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             state: true,
             conversations: true,
-            'galaxy.players': true
+            "galaxy.players": true,
         }),
         mw.game.validateGameState({
-            isUnlocked: true
+            isUnlocked: true,
         }),
         mw.player.loadPlayer,
         controller.leave,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
-    router.patch('/api/game/:gameId/conversations/:conversationId/pin/:messageId',
+    answer(
+        routes.pinMessage,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             state: true,
             conversations: true,
-            'galaxy.players': true
+            "galaxy.players": true,
         }),
         mw.game.validateGameState({
-            isUnlocked: true
+            isUnlocked: true,
         }),
         mw.player.loadPlayer,
         controller.pinMessage,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
-    router.patch('/api/game/:gameId/conversations/:conversationId/unpin/:messageId',
+    answer(
+        routes.unpinMessage,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             state: true,
             conversations: true,
-            'galaxy.players': true
+            "galaxy.players": true,
         }),
         mw.game.validateGameState({
-            isUnlocked: true
+            isUnlocked: true,
         }),
         mw.player.loadPlayer,
         controller.unpinMessage,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
     return router;
-}
+};

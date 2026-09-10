@@ -1,5 +1,10 @@
-import * as Joi from 'joi';
+import { type Validator, array, object, username } from "@solaris/common";
 
-export const spectatorInviteSpectatorRequestSchema = Joi.object({
-    username: Joi.string().required().min(3).max(24)
-});
+export type SpectatorInviteRequest = {
+    usernames: string[];
+};
+
+export const parseSpectatorInviteRequest: Validator<SpectatorInviteRequest> =
+    object({
+        usernames: array(username),
+    });

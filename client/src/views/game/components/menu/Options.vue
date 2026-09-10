@@ -1,29 +1,38 @@
 <template>
-<div class="menu-page">
-  <div class="container">
-    <menu-title title="Options" @onCloseRequested="onCloseRequested"/>
+  <div class="menu-page">
+    <div class="container">
+      <menu-title
+        title="Game Options"
+        @onCloseRequested="onCloseRequested"
+        @onTitleClicked="onTitleClicked"
+      />
 
-    <options-form @onOptionsSaved="onCloseRequested" :isInGame="true"/>
+      <options-form
+        v-if="showErrorsCounter < 3"
+        @onOptionsSaved="onCloseRequested"
+        :isInGame="true"
+      />
+
+      <error-log v-else />
+    </div>
   </div>
-</div>
 </template>
 
-<script>
-import MenuTitle from '../MenuTitle'
-import OptionsFormVue from './OptionsForm'
+<script setup lang="ts">
+import { ref } from "vue";
+import MenuTitle from "../MenuTitle.vue";
+import OptionsForm from "./OptionsForm.vue";
+import ErrorLog from "./ErrorLog.vue";
 
-export default {
-  components: {
-    'options-form': OptionsFormVue,
-    'menu-title': MenuTitle
-  },
-  methods: {
-    onCloseRequested (e) {
-      this.$emit('onCloseRequested', e)
-    }
-  }
-}
+const emit = defineEmits<{
+  onCloseRequested: [];
+}>();
+
+const onCloseRequested = () => emit("onCloseRequested");
+
+const showErrorsCounter = ref(0);
+
+const onTitleClicked = () => (showErrorsCounter.value += 1);
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

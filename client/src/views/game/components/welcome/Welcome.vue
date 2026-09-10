@@ -1,28 +1,22 @@
 <template>
   <div class="menu-page container">
-    <menu-title title="Welcome" @onCloseRequested="onCloseRequested">
-      <button
-        title="View Settings"
-        tag="button"
-        class="btn btn-sm btn-outline-primary"
-        @click="onViewSettingsRequested"
-      >
-        <i class="fas fa-cog"></i>
-      </button>
+    <menu-title
+      :title="'Welcome to ' + game.settings.general.name"
+      @onCloseRequested="() => emit('onCloseRequested')"
+    >
     </menu-title>
 
     <div
       class="row bg-info"
       v-if="game.settings.general.flux"
-      title="This Game's Cosmic Anomaly"
+      title="This Game's Flux"
     >
       <div class="col text-center">
-        <!-- <p class="mt-2 mb-2"><small><i class="fas fa-dice-d20 me-1"></i><strong>{{game.settings.general.flux.name}}</strong> - {{game.settings.general.flux.description}} <help-tooltip v-if="game.settings.general.flux.tooltip" :tooltip="game.settings.general.flux.tooltip"/></small></p> -->
         <p class="mt-2 mb-2">
           <small
             ><i class="fas fa-dice-d20 me-1"></i
-            >{{ game.settings.general.flux.description }}
-          </small>
+            >{{ game.settings.general.flux.description }}</small
+          >
         </p>
       </div>
     </div>
@@ -30,6 +24,7 @@
     <select-alias
       v-on:onAliasChanged="onAliasChanged"
       v-on:onAvatarChanged="onAvatarChanged"
+      :isAnonymousGame="isAnonymousGame"
     />
 
     <enter-password
@@ -37,130 +32,153 @@
       v-on:onPasswordChanged="onPasswordChanged"
     />
 
+    <div class="row bg-dark" v-if="isJoinRandomSlot && !isJoiningGame">
+      <div class="col text-center">
+        <span>You will be placed in a random slot</span>
+
+        <button class="btn btn-success m-4 btn-lg" @click="joinRandomSlot()">
+          Join
+        </button>
+      </div>
+    </div>
+
+    <div class="row p-1" v-if="isInProgress">
+      <p>
+        Joining an afk slot <i class="fas fa-user-clock"></i> means you gain
+        1.5x rank and will lose none.
+      </p>
+    </div>
+
     <form-error-list v-bind:errors="errors" class="mt-2" />
 
     <loading-spinner :loading="isJoiningGame" />
 
+    <player-leaderboard
+      v-if="isJoinRandomSlot"
+      @onOpenPlayerDetailRequested="
+        (e) => emit('onOpenPlayerDetailRequested', e)
+      "
+    />
+
     <select-colour
-      v-if="!isJoiningGame"
+      v-if="!isJoinRandomSlot && !isJoiningGame"
       v-on:onJoinRequested="onJoinRequested"
-      @onOpenPlayerDetailRequested="onOpenPlayerDetailRequested"
+      @onOpenPlayerDetailRequested="
+        (e) => emit('onOpenPlayerDetailRequested', e)
+      "
     />
 
     <new-player-message />
 
     <share-link
-      message="Rally your allies and conquer the cosmic expanse as one!"
+      message="Invite your friends and take on the Galaxy together!"
     />
   </div>
 </template>
 
-<script>
-import LoadingSpinnerVue from "../../../components/LoadingSpinner";
-import gameService from "../../../../services/api/game";
-import MenuTitle from "../MenuTitle";
-import FormErrorListVue from "../../../components/FormErrorList";
-import SelectAliasVue from "./SelectAlias.vue";
-import EnterPasswordVue from "./EnterPassword.vue";
-import SelectColourVue from "./SelectColour.vue";
-import NewPlayerMessageVue from "./NewPlayerMessage";
-import ShareLinkVue from "./ShareLink.vue";
+<script setup lang="ts">
+import { useGameStore } from "@/stores/game";
+import LoadingSpinner from "../../../components/LoadingSpinner.vue";
+import MenuTitle from "../MenuTitle.vue";
+import FormErrorList from "../../../components/FormErrorList.vue";
+import SelectAlias from "./SelectAlias.vue";
+import EnterPassword from "./EnterPassword.vue";
+import SelectColour from "./SelectColour.vue";
+import NewPlayerMessage from "./NewPlayerMessage.vue";
+import ShareLink from "./ShareLink.vue";
+import gameHelper from "@/services/gameHelper";
+import { ref, computed, inject, type Ref } from "vue";
+import type { Game } from "@/types/game";
+import {
+  extractErrors,
+  formatError,
+  httpInjectionKey,
+  isOk,
+} from "@/services/typedapi";
+import { join } from "@/services/typedapi/game";
+import PlayerLeaderboard from "@/views/game/components/leaderboard/PlayerLeaderboard.vue";
+import { useGameServices } from "@/util/gameServices";
+import GameHelper from "@/services/gameHelper";
 
-export default {
-  components: {
-    "loading-spinner": LoadingSpinnerVue,
-    "menu-title": MenuTitle,
-    "form-error-list": FormErrorListVue,
-    "select-alias": SelectAliasVue,
-    "enter-password": EnterPasswordVue,
-    "select-colour": SelectColourVue,
-    "new-player-message": NewPlayerMessageVue,
-    "share-link": ShareLinkVue
-  },
-  data() {
-    return {
-      isJoiningGame: false,
-      isPasswordRequired: false,
-      errors: [],
-      avatar: null,
-      alias: "",
-      password: ""
-    };
-  },
-  mounted() {
-    this.isPasswordRequired = this.$store.state.game.settings.general.passwordRequired;
-  },
-  methods: {
-    onCloseRequested(e) {
-      this.$emit("onCloseRequested", e);
-    },
-    onOpenPlayerDetailRequested(e) {
-      this.$emit("onOpenPlayerDetailRequested", e);
-    },
-    onViewSettingsRequested(e) {
-      this.$emit("onViewSettingsRequested", e);
-    },
-    onAvatarChanged(e) {
-      this.avatar = e;
-    },
-    onAliasChanged(e) {
-      this.alias = e;
-    },
-    onPasswordChanged(e) {
-      this.password = e;
-    },
-    async onJoinRequested(playerId) {
-      this.errors = [];
+const httpClient = inject(httpInjectionKey)!;
 
-      if (!this.alias) {
-        this.errors.push("It is required to pick an alias.");
-      }
+const emit = defineEmits<{
+  onCloseRequested: [];
+  onOpenPlayerDetailRequested: [playerId: string];
+}>();
 
-      if (!this.avatar) {
-        this.errors.push("Please select your faction.");
-      }
+const isJoiningGame = ref(false);
+const errors: Ref<string[]> = ref([]);
+const avatar = ref<number | null>(null);
+const alias = ref("");
+const password = ref("");
 
-      if (this.alias && this.alias.length < 3) {
-        this.errors.push("Your alias needs be three characters or more.");
-      }
+const serviceProvider = useGameServices();
 
-      if (this.alias && this.alias.length > 20) {
-        this.errors.push("Your alias needs to be less than 20 characters.");
-      }
+const store = useGameStore();
+const game = computed(() => store.game as Game);
+const isAnonymousGame = computed(() =>
+  serviceProvider.gameTypeService.isAnonymousGameDuringGame(game.value),
+);
+const isPasswordRequired = computed(
+  () => game.value.settings.general.passwordRequired,
+);
+const isJoinRandomSlot = computed(
+  () => game.value.settings.general.joinRandomSlot === "enabled",
+);
 
-      if (this.errors.length) return;
-
-      try {
-        this.isJoiningGame = true;
-
-        let response = await gameService.joinGame(
-          this.$store.state.game._id,
-          playerId,
-          this.alias,
-          this.avatar.id,
-          this.password
-        );
-
-        if (response.status === 200) {
-          location.reload(); // It ain't pretty but it is the easiest way to refresh the game board entirely.
-        }
-      } catch (err) {
-        if (err.response.data) {
-          this.errors = err.response.data.errors;
-        }
-
-        console.error(err);
-      }
-
-      this.isJoiningGame = false;
-    }
-  },
-  computed: {
-    game() {
-      return this.$store.state.game;
-    }
-  }
+const onAliasChanged = (newAlias: string) => {
+  alias.value = newAlias;
 };
+
+const onAvatarChanged = (newAvatar: number) => {
+  avatar.value = newAvatar;
+};
+
+const onPasswordChanged = (newPassword: string) => {
+  password.value = newPassword;
+};
+
+const onJoinRequested = async (playerId: string | undefined) => {
+  errors.value = [];
+
+  if (!alias.value) {
+    errors.value.push("Alias is required.");
+  }
+
+  if (avatar.value === null) {
+    errors.value.push("Please select an avatar.");
+  }
+
+  if (errors.value.length) {
+    return;
+  }
+
+  isJoiningGame.value = true;
+
+  const response = await join(httpClient)(
+    game.value._id,
+    playerId,
+    alias.value,
+    avatar.value!,
+    password.value,
+  );
+
+  if (isOk(response)) {
+    location.reload(); // todo: do we really need to do this?
+  } else {
+    console.error(formatError(response));
+    errors.value = extractErrors(response);
+  }
+
+  isJoiningGame.value = false;
+};
+
+const joinRandomSlot = async () => {
+  await onJoinRequested(undefined);
+};
+
+const isInProgress = computed(() => GameHelper.isGameInProgress(game.value));
 </script>
 
 <style scoped></style>

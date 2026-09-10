@@ -1,79 +1,97 @@
 <template>
-  <view-container>
+  <view-container :isAuthPage="false">
     <view-title title="Reset Username" />
 
     <form @submit.prevent="handleSubmit">
       <div class="mb-2">
         <label for="username">New Username</label>
-        <input type="text" required="required" class="form-control" minlength="3" maxlength="24" v-model="username" :disabled="isLoading"/>
+        <input
+          type="text"
+          :required="true"
+          class="form-control"
+          minlength="3"
+          maxlength="24"
+          v-model="username"
+          :disabled="isLoading"
+        />
       </div>
 
-      <form-error-list v-bind:errors="errors"/>
+      <form-error-list v-bind:errors="errors" />
 
       <div>
-        <button type="submit" class="btn btn-success" :disabled="isLoading">Change Username</button>
-        <router-link to="/account/settings" tag="button" class="btn btn-danger float-end">Cancel</router-link>
+        <button type="submit" class="btn btn-success" :disabled="isLoading">
+          Change Username
+        </button>
+        <router-link
+          to="/account/settings"
+          tag="button"
+          class="btn btn-danger float-end"
+          >Cancel</router-link
+        >
       </div>
     </form>
 
-    <loading-spinner :loading="isLoading"/>
+    <loading-spinner :loading="isLoading" />
   </view-container>
 </template>
 
-<script>
-import LoadingSpinnerVue from '../components/LoadingSpinner'
-import ViewContainer from '../components/ViewContainer'
-import router from '../../router'
-import ViewTitle from '../components/ViewTitle'
-import FormErrorList from '../components/FormErrorList'
-import userService from '../../services/api/user'
+<script setup lang="ts">
+import LoadingSpinner from "../components/LoadingSpinner.vue";
+import ViewContainer from "../components/ViewContainer.vue";
+import router from "../../router";
+import ViewTitle from "../components/ViewTitle.vue";
+import FormErrorList from "../components/FormErrorList.vue";
+import {
+  extractErrors,
+  formatError,
+  httpInjectionKey,
+  isOk,
+} from "@/services/typedapi";
+import { updateUsername } from "@/services/typedapi/user";
+import { ref, inject } from "vue";
+import { useUserStore } from "@/stores/user";
 
-export default {
-  components: {
-    'loading-spinner': LoadingSpinnerVue,
-    'view-container': ViewContainer,
-    'view-title': ViewTitle,
-    'form-error-list': FormErrorList
-  },
-  data () {
-    return {
-      isLoading: false,
-      errors: [],
-      username: null
-    }
-  },
-  methods: {
-    async handleSubmit (e) {
-      this.errors = []
+import { useToast } from "vue-toast-notification";
+const httpClient = inject(httpInjectionKey)!;
+const toast = useToast();
 
-      if (!this.username) {
-        this.errors.push('Username required.')
-      }
+const userStore = useUserStore();
 
-      e.preventDefault()
+const isLoading = ref(false);
+const errors = ref<string[]>([]);
+const username = ref<string>("");
 
-      if (this.errors.length) return
+const handleSubmit = async (e) => {
+  errors.value = [];
 
-      try {
-        this.isLoading = true
-
-        let response = await userService.updateUsername(this.username)
-
-        if (response.status === 200) {
-          this.$toasted.show(`Username updated.`, { type: 'success' })
-          router.push({ name: 'account-settings' })
-        } else {
-          this.$toasted.show(`There was a problem updating your username, please try again.`, { type: 'error' })
-        }
-      } catch (err) {
-        this.errors = err.response.data.errors || []
-      }
-
-      this.isLoading = false
-    }
+  if (!username.value) {
+    errors.value.push("Username required.");
   }
-}
+
+  e.preventDefault();
+
+  if (errors.value.length) {
+    return;
+  }
+
+  isLoading.value = true;
+
+  const response = await updateUsername(httpClient)(username.value);
+
+  if (isOk(response)) {
+    userStore.setUsername(username.value);
+    toast.success(`Username updated.`);
+    router.push({ name: "account-settings" });
+  } else {
+    console.error(formatError(response));
+    errors.value = extractErrors(response);
+    toast.error(
+      `There was a problem updating your username, please try again.`,
+    );
+  }
+
+  isLoading.value = false;
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

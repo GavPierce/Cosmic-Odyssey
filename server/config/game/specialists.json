@@ -2,149 +2,9 @@
     "carrier": [
         {
             "id": 1,
-            "key": "lieutenant",
-            "name": "Lieutenant",
-            "description": "Adds +1 Weapons to your side in combat. Deducts -1 Hyperspace Range from the carrier.",
-            "active": {
-                "official": true,
-                "custom": true
-            },
-            "baseCostCredits": 100,
-            "baseCostCreditsSpecialists": 1,
-            "oneShot": false,
-            "expireTicks": null,
-            "modifiers": {
-                "local": {
-                    "weapons": 1,
-                    "hyperspace": -1
-                }
-            }
-        },
-        {
-            "id": 2,
-            "key": "commander",
-            "name": "Commander",
-            "description": "Adds +2 Weapons to your side in combat. Deducts -1 Hyperspace Range from the carrier.",
-            "active": {
-                "official": true,
-                "custom": true
-            },
-            "baseCostCredits": 200,
-            "baseCostCreditsSpecialists": 2,
-            "oneShot": false,
-            "expireTicks": null,
-            "modifiers": {
-                "local": {
-                    "weapons": 2,
-                    "hyperspace": -2
-                }
-            }
-        },
-        {
-            "id": 3,
-            "key": "captain",
-            "name": "Captain",
-            "description": "Adds +3 Weapons to your side in combat. Deducts -2 Hyperspace Range from the carrier.",
-            "active": {
-                "official": true,
-                "custom": true
-            },
-            "baseCostCredits": 300,
-            "baseCostCreditsSpecialists":3,
-            "oneShot": false,
-            "expireTicks": null,
-            "modifiers": {
-                "local": {
-                    "weapons": 3,
-                    "hyperspace": -3
-                }
-            }
-        },
-        {
-            "id": 4,
-            "key": "admiral",
+            "key": "mecha-head",
             "name": "Admiral",
-            "description": "Adds +4 Weapons to your side in combat. Deducts -3 Hyperspace Range from the carrier.",
-            "active": {
-                "official": true,
-                "custom": true
-            },
-            "baseCostCredits": 400,
-            "baseCostCreditsSpecialists": 4,
-            "oneShot": false,
-            "expireTicks": null,
-            "modifiers": {
-                "local": {
-                    "weapons": 4,
-                    "hyperspace": -4
-                }
-            }
-        },
-        {
-            "id": 5,
-            "key": "fleet-admiral",
-            "name": "Fleet Admiral",
-            "description": "Adds +5 Weapons to your side in combat. Deducts -4 Hyperspace Range from the carrier.",
-            "active": {
-                "official": true,
-                "custom": true
-            },
-            "baseCostCredits": 500,
-            "baseCostCreditsSpecialists": 5,
-            "oneShot": false,
-            "expireTicks": null,
-            "modifiers": {
-                "local": {
-                    "hyperspace": -5,
-                    "weapons": 5
-                }
-            }
-        },
-        {
-            "id": 6,
-            "key": "lunar-module",
-            "name": "Explorer",
-            "description": "Adds +5 Hyperspace Range. Deducts -5 Weapons from your side in combat.",
-            "active": {
-                "official": true,
-                "custom": true
-            },
-            "baseCostCredits": 500,
-            "baseCostCreditsSpecialists": 5,
-            "oneShot": false,
-            "expireTicks": null,
-            "modifiers": {
-                "local": {
-                    "hyperspace": 5,
-                    "weapons": -5
-                }
-            }
-        },
-        {
-            "id": 7,
-            "key": "forward-field",
-            "name": "Hyperspace Transport",
-            "description": "Powerful vessel propulsion increases speed of carrier to 300%. Weapons efficiency diminishes by -5.",
-            "active": {
-                "official": true,
-                "custom": true
-            },
-            "baseCostCredits": 500,
-            "baseCostCreditsSpecialists": 5,
-            "oneShot": false,
-            "expireTicks": null,
-            "modifiers": {
-                "local": {
-                    "speed": 3,
-                    "weapons": -5
-                }
-            }
-        },
-        {
-            "id": 8,
-            "key": "mars-pathfinder",
-            "name": "Cargo Freighter",
-            "description": "Increases carrier speed by 10% and increases hyperspace range by 3. Deducts -5 Weapons from your side in combat.",
+            "description": "Increases carrier speed by x1.5. Deducts -1 Weapons from your side in combat and -2 Hyperspace Range to the carrier.",
             "active": {
                 "official": true,
                 "custom": true
@@ -155,45 +15,167 @@
             "expireTicks": null,
             "modifiers": {
                 "local": {
-                    "speed": 1.1,
-                    "weapons": -5,
-                    "hyperspace": 3
+                    "speed": 1.5,
+                    "weapons": -1,
+                    "hyperspace": -2
                 }
             }
         },
         {
-            "id": 9,
-            "key": "nested-hexagons",
-            "name": "Cloak Field Generator",
-            "description": "Prevents other players from seeing how many ships the carrier has but decreases it's speed by 10%",
+            "id": 2,
+            "key": "mecha-mask",
+            "name": "Lieutenant",
+            "description": "Adds +1 Weapons to your side in combat. Deducts -1 Hyperspace Range from the carrier.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 600,
-            "baseCostCreditsSpecialists": 6,
+            "baseCostCredits": 200,
+            "baseCostCreditsSpecialists": 2,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
                 "local": {
-                    "speed": 0.9
-                },
+                    "weapons": 1,
+                    "hyperspace": -1
+                }
+            }
+        },
+        {
+            "id": 3,
+            "key": "android-mask",
+            "name": "Colonel",
+            "description": "Adds +2 Weapons to your side in combat. Deducts -1 Hyperspace Range from the carrier and decreases carrier speed to x0.75.",
+            "active": {
+                "official": true,
+                "custom": true
+            },
+            "baseCostCredits": 300,
+            "baseCostCreditsSpecialists": 3,
+            "oneShot": false,
+            "expireTicks": null,
+            "modifiers": {
+                "local": {
+                    "weapons": 2,
+                    "hyperspace": -1,
+                    "speed": 0.75
+                }
+            }
+        },
+        {
+            "id": 4,
+            "key": "hazmat-suit",
+            "name": "General",
+            "description": "Adds +3 Weapons to your side in combat. Deducts -1 Hyperspace Range from the carrier and decreases carrier speed to x0.5.",
+            "active": {
+                "official": true,
+                "custom": true
+            },
+            "baseCostCredits": 500,
+            "baseCostCreditsSpecialists": 5,
+            "oneShot": false,
+            "expireTicks": null,
+            "modifiers": {
+                "local": {
+                    "weapons": 3,
+                    "hyperspace": -1,
+                    "speed": 0.5
+                }
+            }
+        },
+        {
+            "id": 5,
+            "key": "cyborg-face",
+            "name": "Smuggler",
+            "description": "Increased carrier speed by x2. Deducts -1 Weapons from your side in combat and -1 Hyperspace Range from the carrier.",
+            "active": {
+                "official": true,
+                "custom": true
+            },
+            "baseCostCredits": 500,
+            "baseCostCreditsSpecialists": 5,
+            "oneShot": false,
+            "expireTicks": null,
+            "modifiers": {
+                "local": {
+                    "speed": 2,
+                    "hyperspace": -1,
+                    "weapons": -1
+                }
+            }
+        },
+        {
+            "id": 6,
+            "key": "lunar-module",
+            "name": "Explorer",
+            "description": "Adds +3 Hyperspace Range and increases carrier speed by x1.5. Deducts -3 Weapons from your side in combat.",
+            "active": {
+                "official": true,
+                "custom": true
+            },
+            "baseCostCredits": 300,
+            "baseCostCreditsSpecialists": 3,
+            "oneShot": false,
+            "expireTicks": null,
+            "modifiers": {
+                "local": {
+                    "speed": 1.5,
+                    "hyperspace": 3,
+                    "weapons": -3
+                }
+            }
+        },
+        {
+            "id": 7,
+            "key": "spaceship",
+            "name": "Destroyer",
+            "description": "Adds +5 Weapons to your side in combat. Deducts -3 Hyperspace Range from the carrier and decreases carrier speed to x0.5.",
+            "active": {
+                "official": true,
+                "custom": true
+            },
+            "baseCostCredits": 1000,
+            "baseCostCreditsSpecialists": 10,
+            "oneShot": false,
+            "expireTicks": null,
+            "modifiers": {
+                "local": {
+                    "hyperspace": -3,
+                    "weapons": 5,
+                    "speed": 0.5
+                }
+            }
+        },
+        {
+            "id": 8,
+            "key": "power-generator",
+            "name": "Scrambler",
+            "description": "Prevents other players from seeing how many ships the carrier has.",
+            "active": {
+                "official": true,
+                "custom": true
+            },
+            "baseCostCredits": 300,
+            "baseCostCreditsSpecialists": 3,
+            "oneShot": false,
+            "expireTicks": null,
+            "modifiers": {
                 "special": {
                     "hideShips": true
                 }
             }
         },
         {
-            "id": 10,
-            "key": "stealth-bomber",
+            "id": 9,
+            "key": "energise",
             "name": "Infiltrator",
             "description": "When participating in combat, deducts -1 Weapons from the opposing side.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 100,
-            "baseCostCreditsSpecialists": 1,
+            "baseCostCredits": 300,
+            "baseCostCreditsSpecialists": 3,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -203,16 +185,35 @@
             }
         },
         {
+            "id": 10,
+            "key": "afterburn",
+            "name": "Warp Stabilizer",
+            "description": "Warp Scramblers do not affect the carrier.",
+            "active": {
+                "official": true,
+                "custom": true
+            },
+            "baseCostCredits": 500,
+            "baseCostCreditsSpecialists": 5,
+            "oneShot": false,
+            "expireTicks": null,
+            "modifiers": {
+                "special": {
+                    "unlockWarpGates": true
+                }
+            }
+        },
+        {
             "id": 11,
             "key": "strafe",
-            "name": "Assault Frigate",
+            "name": "Raider",
             "description": "Increases carrier speed by x2 and grants x2 star capture rewards for destroying infrastructure in combat. Deducts -2 Weapons from your side in combat.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 200,
-            "baseCostCreditsSpecialists": 2,
+            "baseCostCredits": 500,
+            "baseCostCreditsSpecialists": 5,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -227,20 +228,20 @@
         },
         {
             "id": 12,
-            "key": "scout-ship",
-            "name": "Blockade Runner",
-            "description": "Increases carrier speed by 50% and the carrier does not participate in carrier-to-carrier combat.",
+            "key": "alien-stare",
+            "name": "Coward",
+            "description": "Increases carrier speed by x2 and the carrier does not participate in carrier-to-carrier combat.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 6000,
-            "baseCostCreditsSpecialists": 6,
+            "baseCostCredits": 1000,
+            "baseCostCreditsSpecialists": 10,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
                 "local": {
-                    "speed": 1.5
+                    "speed": 2
                 },
                 "special": {
                     "avoidCombatCarrierToCarrier": true
@@ -249,9 +250,9 @@
         },
         {
             "id": 13,
-            "key": "spiky-field",
-            "name": "Hyperspace Interceptor",
-            "description": "Adds +3 Weapons to your side in carrier-to-carrier combat and increases carrier speed by 50%. Deducts -2 Weapons from your side in carrier-to-star combat.",
+            "key": "pirate",
+            "name": "Pirate",
+            "description": "Adds +3 Weapons to your side in carrier-to-carrier combat and increases carrier speed by x1.5. Deducts -2 Weapons from your side in carrier-to-star combat.",
             "active": {
                 "official": true,
                 "custom": true
@@ -280,8 +281,8 @@
         {
             "id": 14,
             "key": "spoutnik",
-            "name": "Pathfinder Probe",
-            "description": "Adds +1 hyperspace range, 50% more speed and -10 weapons to the carrier.",
+            "name": "Pathfinder",
+            "description": "Adds +1 Hyperspace Range to the carrier.",
             "active": {
                 "official": true,
                 "custom": true
@@ -292,17 +293,15 @@
             "expireTicks": null,
             "modifiers": {
                 "local": {
-                    "hyperspace": 1,
-                    "speed": 1.5,
-                    "weapons": -10
+                    "hyperspace": 1
                 }
             }
         },
         {
             "id": 15,
             "key": "starfighter",
-            "name": "Corsair",
-            "description": "Increases carrier speed by 50% and the carrier does not participate in carrier-to-carrier combat. Deducts -1 Weapons to your side in combat and -2 Hyperspace Range from the carrier.",
+            "name": "Marauder",
+            "description": "Increases carrier speed by x1.5 and the carrier does not participate in carrier-to-carrier combat. Deducts -1 Weapons to your side in combat and -2 Hyperspace Range from the carrier.",
             "active": {
                 "official": true,
                 "custom": true
@@ -324,15 +323,15 @@
         },
         {
             "id": 16,
-            "key": "polar-star",
-            "name": "Protostar Generator",
-            "description": "Reignites a dead star with 25 Natural Resources (x2 for Binary Stars), the Protostar Generator will be destroyed but the carrier will survive. Decreases carrier speed to 50%.",
+            "key": "rocket",
+            "name": "Stellar Bomb",
+            "description": "Reignites a dead star with 25 Natural Resources (x2 for Binary Stars), the Stellar Bomb will be destroyed but the carrier will survive. Decreases carrier speed to x0.5.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 100,
-            "baseCostCreditsSpecialists": 1,
+            "baseCostCredits": 300,
+            "baseCostCreditsSpecialists": 3,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -351,15 +350,15 @@
         },
         {
             "id": 17,
-            "key": "spider-bot",
+            "key": "ray-gun",
             "name": "Saboteur",
             "description": "When participating in combat, deducts -3 Weapons from the opposing side. Deducts -2 Hyperspace Range from the carrier and decreases carrier speed to x0.75.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 500,
-            "baseCostCreditsSpecialists": 5,
+            "baseCostCredits": 1000,
+            "baseCostCreditsSpecialists": 10,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -374,15 +373,15 @@
         },
         {
             "id": 18,
-            "key": "space-capsule",
-            "name": "Reality Disrupter",
-            "description": "When attacking a star or in carrier-to-carrier combat, the calculated weapons technology levels are swapped between the two sides unless both sides have a Reality Disruptor.",
+            "key": "vintage-robot",
+            "name": "Joker",
+            "description": "When attacking a star or in carrier-to-carrier combat, the calculated weapons technology levels are swapped between the two sides unless both sides have a Joker.",
             "active": {
                 "official": false,
                 "custom": false
             },
-            "baseCostCredits": 500,
-            "baseCostCreditsSpecialists": 5,
+            "baseCostCredits": 1000,
+            "baseCostCreditsSpecialists": 10,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -393,23 +392,27 @@
         },
         {
             "id": 19,
-            "key": "pirate-destroyer",
-            "name": "Mothership",
-            "description": "When defending a star, adds +4 Weapons for each ally on your side in combat. Decreases carrier speed to 50%.",
+            "key": "megabot",
+            "name": "War Hero",
+            "description": "When attacking a star, adds +2 Weapons for each player on your side in combat. Decreases carrier speed to x0.75.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 300,
-            "baseCostCreditsSpecialists": 3,
+            "baseCostCredits": 400,
+            "baseCostCreditsSpecialists": 4,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
                 "local": {
-                    "speed": 0.5,
+                    "speed": 0.75,
                     "carrierToStarCombat": {
-                        "defender": {
-                            "weaponsPerAlly": 4
+                        "captureTargetedPlayers": true,
+                        "attacker": {
+                            "perAlly": {
+                                "weapons": 2,
+                                "maxAllies": 3
+                            }
                         }
                     }
                 }
@@ -417,37 +420,36 @@
         },
         {
             "id": 20,
-            "key": "metroid",
-            "name": "Experimental Lifeform",
-            "description": "When attacking a star, adds +10 Weapons to your side in star combat. When attacking in hyperspace, -2 Weapons to your side in hyperspace combat. Dies after 30 ticks. Gains no rewards from invading.",
+            "key": "forward-field",
+            "name": "Siege Breaker",
+            "description": "When attacking a star, adds +4 Weapons to your side in combat. The carrier does not participate in carrier-to-carrier combat.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 600,
-            "baseCostCreditsSpecialists": 6,
-            "oneShot": true,
-            "//comment": "Set to -1 if you want it to be random or a specific key for life duration, code needs to be implemented first",
-            "expireTicks": 30,
+            "baseCostCredits": 300,
+            "baseCostCreditsSpecialists": 3,
+            "oneShot": false,
+            "expireTicks": 15,
             "modifiers": {
                 "local": {
                     "carrierToStarCombat": {
+                        "captureTargetedPlayers": true,
                         "attacker": {
-                            "weapons": 10,
-                            "starCaptureRewardMultiplier": 0
+                            "weapons": 4
                         }
-                    },
-                    "carrierToCarrierCombat": {
-                        "weapons": -2
                     }
+                },
+                "special": {
+                    "avoidCombatCarrierToCarrier": true
                 }
             }
         },
         {
             "id": 21,
-            "key": "interceptor-ship",
-            "name": "Assault Lander",
-            "description": "Grants twice the star capture rewards for destroying infrastructure in combat.",
+            "key": "bolter-gun",
+            "name": "Plunderer",
+            "description": "Grants x1.5 star capture rewards for destroying infrastructure in combat.",
             "active": {
                 "official": true,
                 "custom": true
@@ -458,26 +460,7 @@
             "expireTicks": null,
             "modifiers": {
                 "special": {
-                    "starCaptureRewardMultiplier": 2
-                }
-            }
-        },
-        {
-            "id": 22,
-            "key": "afterburn",
-            "name": "Warp Space Stabilizer",
-            "description": "Shielding the carrier from Warp Space Manipulator effects, maintaining stable warp speeds between two warp gate connection points.",
-            "active": {
-                "official": true,
-                "custom": true
-            },
-            "baseCostCredits": 100,
-            "baseCostCreditsSpecialists": 1,
-            "oneShot": false,
-            "expireTicks": null,
-            "modifiers": {
-                "special": {
-                    "unlockWarpGates": true
+                    "starCaptureRewardMultiplier": 1.5
                 }
             }
         }
@@ -485,9 +468,9 @@
     "star": [
         {
             "id": 1,
-            "key": "satellite",
-            "name": "Cosmic Sensor Array",
-            "description": "Orbital network that expands the star's scanning range by +1.",
+            "key": "sattelite",
+            "name": "Orbital Array",
+            "description": "Adds +1 Scanning Range to the star.",
             "active": {
                 "official": true,
                 "custom": true
@@ -504,35 +487,35 @@
         },
         {
             "id": 2,
-            "key": "snowflake-1",
-            "name": "Fleet Space Dock",
-            "description": "Boosts star manufacturing by +2 but reduces terraforming by -1 due to energy harnessing.",
+            "key": "airtight-hatch",
+            "name": "Space Dock",
+            "description": "Adds +2 Manufacturing to the star. Deducts -1 Terraforming from the star.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 100,
-            "baseCostCreditsSpecialists": 1,
+            "baseCostCredits": 200,
+            "baseCostCreditsSpecialists": 2,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
                 "local": {
                     "manufacturing": 2,
-                    "terraforming": -2
+                    "terraforming": -1
                 }
             }
         },
         {
             "id": 3,
             "key": "cannister",
-            "name": "Atmospheric Processor",
+            "name": "Atmosphere Processor",
             "description": "Adds +3 Terraforming to the star. Deducts -1 Scanning from the star.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 100,
-            "baseCostCreditsSpecialists": 1,
+            "baseCostCredits": 200,
+            "baseCostCreditsSpecialists": 2,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -544,15 +527,15 @@
         },
         {
             "id": 4,
-            "key": "anti-aircraft-gun",
-            "name": "Laser Defense Grid",
-            "description": "With amplifiying emitters, this grid casts a potent laser defenses, giving the star a +1 Defender Bonus against interstellar threats.",
+            "key": "defense-satellite",
+            "name": "Orbital Cannon",
+            "description": "Adds +1 Defender Bonus to the star.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 100,
-            "baseCostCreditsSpecialists": 1,
+            "baseCostCredits": 200,
+            "baseCostCreditsSpecialists": 2,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -563,15 +546,15 @@
         },
         {
             "id": 5,
-            "key": "infuse",
-            "name": "Warp Space Manipulator",
+            "key": "habitat-dome",
+            "name": "Warp Scrambler",
             "description": "Locks the Warp Gate at the star to prevent non-allied players from using it. Deducts -1 Weapons from your side in combat.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 100,
-            "baseCostCreditsSpecialists": 1,
+            "baseCostCredits": 300,
+            "baseCostCreditsSpecialists": 3,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -585,15 +568,15 @@
         },
         {
             "id": 6,
-            "key": "triple-yin",
-            "name": "Atomic Reassemblers",
-            "description": "Nanobots automatically convert waste to +1 total natural resources per tick but reduce weapons by -5 and scanning by -3.",
+            "key": "techno-heart",
+            "name": "World Builder",
+            "description": "Adds +1 to the star's natural resources every tick. Deducts -5 Weapons from your side in combat and -3 Scanning from the star.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 2000,
-            "baseCostCreditsSpecialists": 20,
+            "baseCostCredits": 1000,
+            "baseCostCreditsSpecialists": 10,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -608,9 +591,9 @@
         },
         {
             "id": 7,
-            "key": "omega",
-            "name": "Omega Forge",
-            "description": "Uses star energy for +3 weapons and +10 manufacturing. Drains -1 resource per tick. Star implodes if resources hit zero, destroying all planetary infrastructure.",
+            "key": "missile-pod",
+            "name": "War Machine",
+            "description": "Adds +5 Weapons to your side in combat and +5 Manufacturing to the star. Deducts -1 from the star's natural resources every tick, when the star reaches 0 natural resources, the star dies and the specialist retires.",
             "active": {
                 "official": true,
                 "custom": true
@@ -624,22 +607,22 @@
                     "addNaturalResourcesOnTick": -1
                 },
                 "local": {
-                    "manufacturing": 10,
-                    "weapons": 4
+                    "manufacturing": 5,
+                    "weapons": 5
                 }
             }
         },
         {
             "id": 8,
             "key": "power-generator",
-            "name": "Scanning Jammer",
-            "description": "A megastructure that transmits a scanner disruption frequency concealing the number of ships in a star systemfrom people other than you, preventing them from scoping out your fleet.",
+            "name": "Scrambler",
+            "description": "Prevents other players from seeing how many ships are garrisoned at the star.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 100,
-            "baseCostCreditsSpecialists": 1,
+            "baseCostCredits": 300,
+            "baseCostCreditsSpecialists": 3,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -650,15 +633,15 @@
         },
         {
             "id": 9,
-            "key": "damage-kinetic",
-            "name": "Infrastructur Obliterator",
-            "description": "Should the star system fall into enemy grasp, entire stellar infrastructure will be annihilated.",
+            "key": "space-suit",
+            "name": "Demolition Controller",
+            "description": "If the star is captured, all infrastructure is destroyed.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 100,
-            "baseCostCreditsSpecialists": 1,
+            "baseCostCredits": 300,
+            "baseCostCreditsSpecialists": 3,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
@@ -669,56 +652,33 @@
         },
         {
             "id": 10,
-            "key": "habitat-dome",
-            "name": "Interstellar Trade Port",
-            "description": "This megastructure amplifies its star's economy fourfold and enhances scanning by one unit. However, its weaponry and terraformation capabilities decline by five units each.",
+            "key": "ringed-planet",
+            "name": "Trade Port",
+            "description": "The star's economic infrastructure contributes x2 to economy production and adds +1 Scanning to the star. Deducts -3 Weapons from your side in combat and -5 Terraforming from the star. This star becomes visible to all players in the galaxy.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 400,
-            "baseCostCreditsSpecialists": 4,
+            "baseCostCredits": 1000,
+            "baseCostCreditsSpecialists": 10,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
                 "local": {
                     "terraforming": -5,
-                    "weapons": -5,
+                    "weapons": -3,
                     "scanning": 1
                 },
                 "special": {
-                    "economyInfrastructureMultiplier": 4
+                    "economyInfrastructureMultiplier": 2
                 }
             }
         },
         {
             "id": 11,
-            "key": "processor",
-            "name": "Qantum Computing Gigacomplex",
-            "description": "Tripling the star's research output. However, it diminishes weapon strength by -3 in battles and reduces the star's terraforming by -3.",
-            "active": {
-                "official": true,
-                "custom": true
-            },
-            "baseCostCredits": 400,
-            "baseCostCreditsSpecialists": 4,
-            "oneShot": false,
-            "expireTicks": null,
-            "modifiers": {
-                "local": {
-                    "terraforming": -3,
-                    "weapons": -3
-                },
-                "special": {
-                    "scienceInfrastructureMultiplier": 3
-                }
-            }
-        },
-        {
-            "id": 12,
-            "key": "vibrating-ball",
-            "name": "Research Network Transmitter",
-            "description": "Amplified by the star's scientific knowledge, it adds +5 credits per tick for each science point it holds.",
+            "key": "observatory",
+            "name": "Research Station",
+            "description": "The star's scientific infrastructure contributes x2 to research and adds +1 Scanning to the star. Deducts -3 Weapons from your side in combat and -3 Terraforming from the star.",
             "active": {
                 "official": true,
                 "custom": true
@@ -728,55 +688,79 @@
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
+                "local": {
+                    "terraforming": -3,
+                    "weapons": -3,
+                    "scanning": 1
+                },
                 "special": {
-                    "creditsPerTickByScience": 5
+                    "scienceInfrastructureMultiplier": 2
+                }
+            }
+        },
+        {
+            "id": 12,
+            "key": "double-ringed-orb",
+            "name": "Financial Analyst",
+            "description": "The star produces +2 credits per tick for each point of science on the star.",
+            "active": {
+                "official": true,
+                "custom": true
+            },
+            "baseCostCredits": 1000,
+            "baseCostCreditsSpecialists": 10,
+            "oneShot": false,
+            "expireTicks": null,
+            "modifiers": {
+                "special": {
+                    "creditsPerTickByScience": 2
                 }
             }
         },
         {
             "id": 13,
             "key": "radar-dish",
-            "name": "Telescopic Vision Array",
-            "description": "Boosts star's scanning range by +3. Yet, its intricate design results in a -1 Weapons reduction during battles.",
+            "name": "Telescope Array",
+            "description": "Adds +3 Scanning Range to the star. Deducts -3 Weapons from your side in combat.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 300,
-            "baseCostCreditsSpecialists": 3,
+            "baseCostCredits": 600,
+            "baseCostCreditsSpecialists": 6,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
                 "local": {
                     "scanning": 3,
-                    "weapons": -1
+                    "weapons": -3
                 }
             }
         },
         {
             "id": 14,
             "key": "energy-tank",
-            "name": "Genesis Terraformer",
-            "description": "Harnesses star energy to boost the terraforming capability by +5, speeding up the process of improving planetary biomes.",
+            "name": "Mineral Extractor",
+            "description": "Adds +2 Terraforming to the star.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 200,
-            "baseCostCreditsSpecialists": 2,
+            "baseCostCredits": 100,
+            "baseCostCreditsSpecialists": 1,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
                 "local": {
-                    "terraforming": 5
+                    "terraforming": 2
                 }
             }
         },
         {
             "id": 15,
-            "key": "star-altar",
-            "name": "Galactic Command Academy",
-            "description": "Every carrier crafted at this star is automatically captained by a trained Galactic Command officer from the academy.",
+            "key": "cryo-chamber",
+            "name": "Cryo Chamber",
+            "description": "When a carrier is built at this star, a General carrier specialist is automatically assigned to the carrier.",
             "active": {
                 "official": true,
                 "custom": true
@@ -787,8 +771,7 @@
             "expireTicks": null,
             "modifiers": {
                 "special": {
-                    "//comment": "Set to -1 if you want it to be random or a specific key for a specific carrier specialists",
-                    "autoCarrierSpecialistAssign": -1
+                    "autoCarrierSpecialistAssign": 4
                 }
             }
         },
@@ -796,19 +779,19 @@
             "id": 16,
             "key": "rocket-thruster",
             "name": "Stellar Engine",
-            "description": "When the Stellar Engine is activated, the star slowly moves towards the nearest Stellar Beacon at 20% of carrier speed.",
+            "description": "When the Stellar Engine is activated, the star slowly moves towards the nearest Stellar Beacon at x0.25 carrier speed.",
             "active": {
-                "official": false,
+                "official": true,
                 "custom": true
             },
-            "baseCostCredits": 600,
-            "baseCostCreditsSpecialists": 6,
+            "baseCostCredits": 500,
+            "baseCostCreditsSpecialists": 5,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
                 "special": {
                     "moveStar": true,
-                    "starMovementPerTick": 0.20
+                    "starMovementPerTick": 0.25
                 }
             }
         },
@@ -817,120 +800,6 @@
             "key": "targeting",
             "name": "Stellar Beacon",
             "description": "The Stellar Beacon helps nearby Stellar Engines navigate, a Stellar Engine moves towards the nearest Stellar Beacon.",
-            "active": {
-                "official": false,
-                "custom": true
-            },
-            "baseCostCredits": 900,
-            "baseCostCreditsSpecialists": 9,
-            "oneShot": false,
-            "expireTicks": null,
-            "modifiers": {
-                "special": {
-                    "attractStar": true
-                }
-            }
-        },
-        {
-            "id": 18,
-            "key": "james-bond-aperture",
-            "name": "Stargate",
-            "description": "Forms a wormhole to any star with a similar gate. Upon connection, the megastructures are permenantly linked until one stargate is destroyed.",
-            "active": {
-                "official": true,
-                "custom": true
-            },
-            "baseCostCredits": 1000,
-            "baseCostCreditsSpecialists": 10,
-            "oneShot": false,
-            "expireTicks": null,
-            "modifiers": {
-                "special": {
-                    "wormHoleConstructor": true
-                }
-            }
-        },
-        {
-            "id": 19,
-            "key": "valve",
-            "name": "Geosculpting Manipulator",
-            "description": "Taps into planetary cores to boost the star's terraforming capability by +10, reshaping worlds.",
-            "active": {
-                "official": true,
-                "custom": true
-            },
-            "baseCostCredits": 500,
-            "baseCostCreditsSpecialists": 5,
-            "oneShot": false,
-            "expireTicks": null,
-            "modifiers": {
-                "local": {
-                    "terraforming": 10
-                }
-            }
-        },
-        {
-            "id": 20,
-            "key": "moon-orbit",
-            "name": "Planetary Orbital Forge",
-            "description": "An orbiting megastructure amplify the star's terraforming ability by +15.",
-            "active": {
-                "official": true,
-                "custom": true
-            },
-            "baseCostCredits": 1000,
-            "baseCostCreditsSpecialists": 10,
-            "oneShot": false,
-            "expireTicks": null,
-            "modifiers": {
-                "local": {
-                    "terraforming": 15
-                }
-            }
-        },
-        {
-            "id": 21,
-            "key": "observatory",
-            "name": "Deep-space Vision Interface",
-            "description": "Enhances star's scanning by +5 with advanced sensors.",
-            "active": {
-                "official": true,
-                "custom": true
-            },
-            "baseCostCredits": 500,
-            "baseCostCreditsSpecialists": 5,
-            "oneShot": false,
-            "expireTicks": null,
-            "modifiers": {
-                "local": {
-                    "scanning": 5
-                }
-            }
-        },
-        {
-            "id": 22,
-            "key": "radar-dish",
-            "name": "Neutrino Optics Matrix",
-            "description": "Expands star's scanning reach by +7 through advanced optics.",
-            "active": {
-                "official": true,
-                "custom": true
-            },
-            "baseCostCredits": 700,
-            "baseCostCreditsSpecialists": 7,
-            "oneShot": false,
-            "expireTicks": null,
-            "modifiers": {
-                "local": {
-                    "scanning": 7
-                }
-            }
-        },
-        {
-            "id": 23,
-            "key": "beam-satellite",
-            "name": "Void Force Channeler",
-            "description": "Channels dark energy to bestow the star with a powerful +2 Defender Bonus against adversaries.",
             "active": {
                 "official": true,
                 "custom": true
@@ -941,45 +810,26 @@
             "expireTicks": null,
             "modifiers": {
                 "special": {
-                    "defenderBonus": 3
+                    "attractStar": true
                 }
             }
         },
         {
-            "id": 24,
-            "key": "ringed-beam",
-            "name": "Supernova Megalaser",
-            "description": "Uses a controlled micro supernova reaction within the star to grant a formidable +3 Defender Bonus against foes",
+            "id": 18,
+            "key": "star-gate",
+            "name": "Stargate",
+            "description": "This star will form a wormhole with the next star where a Stargate is hired and the specialist will retire.",
             "active": {
                 "official": true,
                 "custom": true
             },
-            "baseCostCredits": 500,
-            "baseCostCreditsSpecialists": 5,
+            "baseCostCredits": 2500,
+            "baseCostCreditsSpecialists": 25,
             "oneShot": false,
             "expireTicks": null,
             "modifiers": {
                 "special": {
-                    "defenderBonus": 5
-                }
-            }
-        },
-        {
-            "id": 25,
-            "key": "caged-ball",
-            "name": "Dyson Sphere",
-            "description": "A star-encircling megastructure boosts starship manufacturing by +10.",
-            "active": {
-                "official": true,
-                "custom": true
-            },
-            "baseCostCredits": 500,
-            "baseCostCreditsSpecialists": 5,
-            "oneShot": false,
-            "expireTicks": null,
-            "modifiers": {
-                "local": {
-                    "manufacturing": 10
+                    "wormHoleConstructor": true
                 }
             }
         }

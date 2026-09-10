@@ -1,51 +1,60 @@
 <template>
-<div v-if="debtor && creditor">
-  <p v-if="isCreditor">
-    <a href="javascript:;" @click="onOpenPlayerDetailRequested(debtor)">{{debtor.alias}}</a> has paid off
-    <span class="text-warning">{{getFormattedDebtValue()}}</span> of debt owed to you.
-  </p>
-  <p v-if="!isCreditor">
-      You have paid off <span class="text-warning">{{getFormattedDebtValue()}}</span> of debt owed to
-      <a href="javascript:;" @click="onOpenPlayerDetailRequested(creditor)">{{creditor.alias}}</a>.
-  </p>
-</div>
+  <div v-if="summary.debtor && summary.creditor">
+    <p v-if="summary.isCreditor">
+      <a
+        href="javascript:;"
+        @click="onOpenPlayerDetailRequested(summary.debtor)"
+        >{{ summary.debtor.alias }}</a
+      >
+      has paid off
+      <span class="text-warning">{{ getFormattedDebtValue() }}</span> of debt
+      owed to you.
+    </p>
+    <p v-else>
+      You have paid off
+      <span class="text-warning">{{ getFormattedDebtValue() }}</span> of debt
+      owed to
+      <a
+        href="javascript:;"
+        @click="onOpenPlayerDetailRequested(summary.creditor)"
+        >{{ summary.creditor.alias }}</a
+      >.
+    </p>
+  </div>
 </template>
 
-<script>
-import GameHelper from '../../../../../services/gameHelper'
+<script setup lang="ts">
+import { useGameStore } from "@/stores/game";
+import { computed } from "vue";
+import GameHelper from "../../../../../services/gameHelper";
+import type { PlayerDebtSettledEvent } from "@solaris/common";
+import type { Game, Player } from "@/types/game";
 
-export default {
-  props: {
-    event: Object
-  },
-  data () {
-    return {
-      debtor: null,
-      creditor: null,
-      isCreditor: false
-    }
-  },
-  mounted () {
-    const summary = GameHelper.getLedgerGameEventPlayerSummary(this.$store.state.game, this.event)
+const props = defineProps<{
+  event: PlayerDebtSettledEvent<string>;
+}>();
 
-    this.debtor = summary.debtor
-    this.creditor = summary.creditor
-    this.isCreditor = summary.isCreditor
-  },
-  methods: {
-    onOpenPlayerDetailRequested (player) {
-      this.$emit('onOpenPlayerDetailRequested', player._id)
-    },
-    getFormattedDebtValue() {
-      if (this.event.data.ledgerType === 'credits') {
-        return `$${this.event.data.amount} credits`
-      }
+const emit = defineEmits<{
+  onOpenPlayerDetailRequested: [playerId: string];
+}>();
 
-      return `${this.event.data.amount} specialist token(s)`
-    }
+const store = useGameStore();
+const game = computed<Game>(() => store.game!);
+
+const summary = computed(() =>
+  GameHelper.getLedgerGameEventPlayerSummary(game.value, props.event),
+);
+
+const onOpenPlayerDetailRequested = (player: Player) =>
+  emit("onOpenPlayerDetailRequested", player._id);
+
+const getFormattedDebtValue = (withText = false) => {
+  if (props.event.data.ledgerType === "credits") {
+    return `$${props.event.data.amount} credits`;
   }
-}
+
+  return `${props.event.data.amount} specialist token(s)`;
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -1,84 +1,103 @@
 <template>
-    <div>
-        <button class="btn btn-primary mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePanel" aria-expanded="false" aria-controls="collapsePanel">
-            Toggle Ban List
-        </button>
+  <div>
+    <button
+      class="btn btn-primary mb-2"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#collapsePanel"
+      aria-expanded="false"
+      aria-controls="collapsePanel"
+    >
+      Toggle Ban List
+    </button>
 
-        <div id="collapsePanel" class="collapse mt-2">
-            <h5>Star Specialists</h5>
+    <div id="collapsePanel" class="collapse mt-2">
+      <h5>Star Specialists</h5>
 
-            <loading-spinner :loading="isLoading"/>
+      <loading-spinner :loading="isLoading" />
 
-            <specialist-ban-list-table v-if="!isLoading"
-                :specialists="starSpecialists" 
-                :specialistType="'star'" 
-                :specialistDefaultIcon="'star'"
-                @onSpecialistBanSelectionChanged="onSpecialistBanSelectionChanged"/>
+      <specialist-ban-list-table
+        v-if="!isLoading"
+        :specialists="starSpecialists"
+        :specialistType="'star'"
+        :specialistDefaultIcon="'star'"
+        :readonly="false"
+        :bans="specialistBans.star"
+        @onBansChanged="updateStarBans"
+      />
 
-            <h5>Carrier Specialists</h5>
+      <h5>Carrier Specialists</h5>
 
-            <loading-spinner :loading="isLoading"/>
+      <loading-spinner :loading="isLoading" />
 
-            <specialist-ban-list-table v-if="!isLoading"
-                :specialists="carrierSpecialists" 
-                :specialistType="'carrier'" 
-                :specialistDefaultIcon="'shuttle-space'"
-                @onSpecialistBanSelectionChanged="onSpecialistBanSelectionChanged"/>
-        </div>
+      <specialist-ban-list-table
+        v-if="!isLoading"
+        :specialists="carrierSpecialists"
+        :specialistType="'carrier'"
+        :specialistDefaultIcon="'rocket'"
+        :readonly="false"
+        :bans="specialistBans.carrier"
+        @onBansChanged="updateCarrierBans"
+      />
     </div>
+  </div>
 </template>
 
-<script>
-import LoadingSpinner from '../../../components/LoadingSpinner'
-import SpecialistService from '../../../../services/api/specialist'
-import SpecialistIconVue from '../specialist/SpecialistIcon'
-import SpecialistBanListTable from './SpecialistBanListTable'
+<script setup lang="ts">
+import LoadingSpinner from "../../../components/LoadingSpinner.vue";
+import SpecialistBanListTable from "./SpecialistBanListTable.vue";
+import { ref, inject, onMounted } from "vue";
+import type { Specialist, SpecialistBans } from "@solaris/common";
+import { listCarrier, listStar } from "@/services/typedapi/specialist";
+import { formatError, httpInjectionKey, isOk } from "@/services/typedapi";
 
-export default {
-    components: {
-        'loading-spinner': LoadingSpinner,
-        'specialist-icon': SpecialistIconVue,
-        'specialist-ban-list-table': SpecialistBanListTable
-    },
-    data () {
-        return {
-            isLoading: false,
-            starSpecialists: [],
-            carrierSpecialists: []
-        }
-    },
-    async mounted () {
-        await this.loadSpecialists()
-    },
-    methods: {
-        onSpecialistBanSelectionChanged () {
-            let bannedStarSpecs = this.starSpecialists.filter(x => x.banned).map(x => x.id)
-            let bannedCarrierSpecs = this.carrierSpecialists.filter(x => x.banned).map(x => x.id)
+const props = defineProps<{
+  specialistBans: SpecialistBans;
+}>();
 
-            this.$emit('onSpecialistBanSelectionChanged', {
-                star: bannedStarSpecs,
-                carrier: bannedCarrierSpecs
-            })
-        },
-        async loadSpecialists () {
-            this.isLoading = true
+const emit = defineEmits<{
+  updateSpecialistBans: [bans: SpecialistBans];
+}>();
 
-            let requests = [
-                SpecialistService.getCarrierSpecialists(),
-                SpecialistService.getStarSpecialists()
-            ]
+const httpClient = inject(httpInjectionKey)!;
 
-            const responses = await Promise.all(requests)
-            
-            this.carrierSpecialists = responses[0].data
-            this.starSpecialists = responses[1].data
+const isLoading = ref(false);
+const starSpecialists = ref<Specialist[]>([]);
+const carrierSpecialists = ref<Specialist[]>([]);
 
-            this.isLoading = false
-        }
-    }
-}
+const updateStarBans = (bans: number[]) => {
+  emit("updateSpecialistBans", { ...props.specialistBans, star: bans });
+};
+
+const updateCarrierBans = (bans: number[]) => {
+  emit("updateSpecialistBans", { ...props.specialistBans, carrier: bans });
+};
+
+const loadSpecialists = async () => {
+  isLoading.value = true;
+
+  const requests = [listCarrier(httpClient)(), listStar(httpClient)()];
+
+  const [carrierResponse, starResponse] = await Promise.all(requests);
+
+  if (isOk(carrierResponse)) {
+    carrierSpecialists.value = carrierResponse.data;
+  } else {
+    console.error(formatError(carrierResponse));
+  }
+
+  if (isOk(starResponse)) {
+    starSpecialists.value = starResponse.data;
+  } else {
+    console.error(formatError(starResponse));
+  }
+
+  isLoading.value = false;
+};
+
+onMounted(async () => {
+  await loadSpecialists();
+});
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

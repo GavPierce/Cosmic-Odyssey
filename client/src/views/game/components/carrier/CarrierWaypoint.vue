@@ -1,287 +1,324 @@
 <template>
-	<div class="menu-page container" v-if="carrier">
-    	<menu-title title="Edit Fleet Order" @onCloseRequested="onCloseRequested"/>
+  <div class="menu-page container" v-if="carrier">
+    <menu-title title="Edit Fleet Order" @onCloseRequested="onCloseRequested" />
 
-        <div class="row g-0 mb-1">
-            <div class="col-2 text-center">
-                <span>Delay</span>
-            </div>
-            <div class="col-3 text-center">
-                <span>Destination</span>
-            </div>
-            <div class="col-5 text-center">
-                <span>Action</span>
-            </div>
-            <div class="col-2 text-center">
-                <span v-if="!currentWaypoint || !currentWaypoint.action || !isActionRequiresPercentage(currentWaypoint.action)">Ships</span>
-                <span v-if="currentWaypoint && currentWaypoint.action && isActionRequiresPercentage(currentWaypoint.action)">%</span>
-            </div>
-        </div>
-        
-        <div class="row g-0 mb-2" v-if="currentWaypoint">
-            <div class="col-2 text-center">
-              <input type="number" class="form-control input-sm" v-if="!(isFirstWaypoint(currentWaypoint) && isInTransit)" v-model="currentWaypoint.delayTicks" @change="recalculateWaypointDuration">
-            </div>
-            <div class="col-3 text-center pt-1">
-                <!-- <a href="javascript:;" @click="onOpenStarDetailRequested">{{getStarName(currentWaypoint.destination)}}</a> -->
-                <span>{{getStarName(currentWaypoint.destination)}}</span>
-            </div>
-            <div class="col-5 text-center">
-                <select class="form-control input-sm" id="waypointAction" v-model="currentWaypoint.action">
-                    <option key="nothing" value="nothing">{{getWaypointActionFriendlyText(currentWaypoint, 'nothing')}}</option>
-                    <option key="collectAll" value="collectAll">{{getWaypointActionFriendlyText(currentWaypoint, 'collectAll')}}</option>
-                    <option key="dropAll" value="dropAll">{{getWaypointActionFriendlyText(currentWaypoint, 'dropAll')}}</option>
-                    <option key="collect" value="collect">{{getWaypointActionFriendlyText(currentWaypoint, 'collect')}}</option>
-                    <option key="drop" value="drop">{{getWaypointActionFriendlyText(currentWaypoint, 'drop')}}</option>
-                    <option key="collectAllBut" value="collectAllBut">{{getWaypointActionFriendlyText(currentWaypoint, 'collectAllBut')}}</option>
-                    <option key="dropAllBut" value="dropAllBut">{{getWaypointActionFriendlyText(currentWaypoint, 'dropAllBut')}}</option>
-                    <option key="garrison" value="garrison">{{getWaypointActionFriendlyText(currentWaypoint, 'garrison')}}</option>
-                    <option key="collectPercentage" value="collectPercentage">{{getWaypointActionFriendlyText(currentWaypoint, 'collectPercentage')}}</option>
-                    <option key="dropPercentage" value="dropPercentage">{{getWaypointActionFriendlyText(currentWaypoint, 'dropPercentage')}}</option>
-                </select>
-            </div>
-            <div class="col-2 text-center">
-                <input v-if="isActionRequiresShips(currentWaypoint.action)" class="form-control input-sm" type="number" v-model="currentWaypoint.actionShips"/>
-            </div>
-        </div>
+    <div class="row g-0">
+      <table class="table table-borderless">
+        <thead>
+          <tr>
+            <th scope="col" class="waypoint-table-head col-2">Delay</th>
+            <th scope="col" class="waypoint-table-head col-2">Destination</th>
+            <th scope="col" class="waypoint-table-head col-6">Action</th>
+            <th scope="col" class="waypoint-table-head col-2">
+              <span
+                v-if="
+                  !currentWaypoint ||
+                  !currentWaypoint.action ||
+                  !isActionRequiresPercentage(currentWaypoint.action)
+                "
+                >Ships</span
+              >
+              <span
+                v-if="
+                  currentWaypoint &&
+                  currentWaypoint.action &&
+                  isActionRequiresPercentage(currentWaypoint.action)
+                "
+                >%</span
+              >
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <waypoint-edit-row
+            :isInTransit="isInTransit"
+            :waypoint="currentWaypoint"
+            :allWaypoints="waypoints"
+            @change="recalculateWaypointDuration"
+          />
+        </tbody>
+      </table>
+    </div>
 
-        <div class="row pt-2 pb-0 mb-0">
-          <div class="col">
-            <p class="mb-2">ETA<orbital-mechanics-eta-warning />: {{waypointEta}}</p>
-          </div>
-          <div class="col-auto" v-if="isRealTimeGame">
-            <p class="mb-2">Duration<orbital-mechanics-eta-warning />: {{waypointDuration}}</p>
-          </div>
-        </div>
+    <div class="row pt-1 pb-0 mb-0">
+      <div class="col">
+        <p class="mb-2">
+          ETA
+          <orbital-mechanics-e-t-a-warning />
+          : {{ waypointEta }}
+        </p>
+      </div>
+      <div class="col-auto" v-if="isRealTimeGame">
+        <p class="mb-2">
+          Duration
+          <orbital-mechanics-e-t-a-warning />
+          : {{ waypointDuration }}
+        </p>
+      </div>
+    </div>
 
-		<div class="row bg-dark pt-2 pb-2">
-			<div class="col pe-0">
-				<button class="btn btn-sm btn-primary" @click="previousWaypoint()" :disabled="isSavingWaypoints">
+    <div class="row bg-dark pt-2 pb-2">
+      <div class="col pe-0">
+        <button
+          class="btn btn-sm btn-primary"
+          @click="previousWaypoint()"
+          :disabled="isSavingWaypoints"
+        >
           <i class="fas fa-chevron-left"></i>
           <span class="ms-1">Prev</span>
         </button>
-				<button class="btn btn-sm btn-primary ms-1" @click="nextWaypoint()" :disabled="isSavingWaypoints">
+        <button
+          class="btn btn-sm btn-primary ms-1"
+          @click="nextWaypoint()"
+          :disabled="isSavingWaypoints"
+        >
           <span class="me-1">Next</span>
           <i class="fas fa-chevron-right"></i>
         </button>
-				<button class="btn btn-sm ms-1" :class="{'btn-success':carrier.waypointsLooped,'btn-outline-primary':!carrier.waypointsLooped}" @click="toggleLooped()" :disabled="$isHistoricalMode() || !canLoop" title="Loop/Unloop the carrier's waypoints">
+        <button
+          class="btn btn-sm ms-1"
+          :class="{
+            'btn-success': carrier.waypointsLooped,
+            'btn-outline-primary': !carrier.waypointsLooped,
+          }"
+          @click="toggleLooped()"
+          :disabled="isHistoricalMode || !canLoop"
+          title="Loop/Unloop the carrier's waypoints"
+        >
           <i class="fas fa-sync"></i>
         </button>
-			</div>
-			<div class="col-auto" v-if="!$isHistoricalMode()">
-				<button class="btn btn-sm btn-outline-success" @click="saveWaypoints()" :disabled="isSavingWaypoints">
+      </div>
+      <div class="col-auto" v-if="!isHistoricalMode">
+        <button
+          class="btn btn-sm btn-outline-success"
+          @click="doSaveWaypoints()"
+          :disabled="isSavingWaypoints"
+        >
           <i class="fas fa-save"></i>
           <span class="ms-1">Save</span>
         </button>
-				<button class="btn btn-sm btn-success ms-1" @click="saveWaypoints(true)" :disabled="isSavingWaypoints">
+        <button
+          class="btn btn-sm btn-success ms-1"
+          @click="doSaveWaypoints(true)"
+          :disabled="isSavingWaypoints"
+        >
           <i class="fas fa-check"></i>
           <span class="ms-1 d-none d-sm-inline-block">Save &amp; Edit</span>
         </button>
-			</div>
-		</div>
-	</div>
+      </div>
+    </div>
+  </div>
 </template>
 
-<script>
-import MenuTitle from '../MenuTitle'
-import GameHelper from '../../../../services/gameHelper'
-import GameContainer from '../../../../game/container'
-import CarrierApiService from '../../../../services/api/carrier'
-import OrbitalMechanicsETAWarningVue from '../shared/OrbitalMechanicsETAWarning'
+<script setup lang="ts">
+import { useGameStore } from "@/stores/game";
+import { MapCommandEventBusEventNames } from "@solaris/map-rendering";
+import { computed, inject, onMounted, onUnmounted, ref, watch } from "vue";
+import MenuTitle from "../MenuTitle.vue";
+import GameHelper from "../../../../services/gameHelper";
+import gameHelper from "../../../../services/gameHelper";
+import OrbitalMechanicsETAWarning from "../shared/OrbitalMechanicsETAWarning.vue";
+import { eventBusInjectionKey } from "@/eventBus";
+import type {
+  CarrierWaypoint,
+  CarrierWaypointActionType,
+  MapObject,
+  UserGameSettings,
+} from "@solaris/common";
+import { httpInjectionKey } from "@/services/typedapi";
+import { useIsHistoricalMode } from "@/util/reactiveHooks";
+import type { Game } from "@/types/game";
+import { getCountdownTimeStringByTicks, ticksToDuration } from "@/util/time";
+import { formatDuration } from "@/util/duration";
+import { isActionRequiresShips } from "@/util/waypoint";
+import WaypointEditRow from "@/views/game/components/carrier/WaypointEditRow.vue";
+import { saveWaypoints } from "@/views/game/components/carrier/action";
 
-export default {
-  components: {
-    'menu-title': MenuTitle,
-    'orbital-mechanics-eta-warning': OrbitalMechanicsETAWarningVue
-  },
-  props: {
-    carrierId: String,
-    waypoint: Object
-  },
-  data () {
-    return {
-      userPlayer: null,
-      carrier: null,
-      isSavingWaypoints: false,
-      currentWaypoint: null,
-      waypoints: [],
-      waypointDuration: null,
-      waypointEta: null
-    }
-  },
-  mounted () {
-    this.userPlayer = GameHelper.getUserPlayer(this.$store.state.game)
-    this.carrier = GameHelper.getCarrierById(this.$store.state.game, this.carrierId)
+const props = defineProps<{
+  carrierId: string;
+  waypoint: CarrierWaypoint<string>;
+}>();
 
-    // Make a copy of the carriers waypoints.
-    this.waypoints = JSON.parse(JSON.stringify(this.carrier.waypoints))
-    this.currentWaypoint = this.waypoints.find(x => x._id === this.waypoint._id)
-    this.recalculateWaypointDuration()
-    this.recalculateWaypointEta()
-    this.panToWaypoint()
+const emit = defineEmits<{
+  onCloseRequested: [];
+  onOpenCarrierDetailRequested: [carrierId: string];
+}>();
 
-    if (GameHelper.isGameInProgress(this.$store.state.game) || GameHelper.isGamePendingStart(this.$store.state.game)) {
-      this.intervalFunction = setInterval(this.recalculateWaypointEta, 250)
-      this.recalculateWaypointEta()
-    }
-  },
-  destroyed () {
-    GameContainer.map.clearHighlightedLocations()
-  },
-  methods: {
-    onCloseRequested (e) {
-      this.$emit('onCloseRequested', e)
-    },
-    onOpenStarDetailRequested (e) {
-      this.$emit('onOpenStarDetailRequested', this.currentWaypoint.destination)
-    },
-    getStarName (starId) {
-      return this.$store.state.game.galaxy.stars.find(s => s._id === starId).name
-    },
-    getWaypointActionFriendlyText (waypoint, action) {
-      action = action || waypoint.action
+const eventBus = inject(eventBusInjectionKey)!;
+const httpClient = inject(httpInjectionKey)!;
 
-      switch (action) {
-        case 'nothing':
-          return 'Do Nothing'
-        case 'collectAll':
-          return 'Collect All'
-        case 'dropAll':
-          return 'Drop All'
-        case 'collect':
-          return `Collect ${waypoint.actionShips}`
-        case 'drop':
-          return `Drop ${waypoint.actionShips}`
-        case 'collectAllBut':
-          return `Collect All But ${waypoint.actionShips}`
-        case 'dropAllBut':
-          return `Drop All But ${waypoint.actionShips}`
-        case 'garrison':
-          return `Garrison ${waypoint.actionShips}`
-        case 'dropPercentage':
-          return `Drop ${waypoint.actionShips}%`
-        case 'collectPercentage':
-          return `Collect ${waypoint.actionShips}%`
-      }
-    },
-    isActionRequiresShips (action) {
-      switch (action) {
-        case 'collect':
-        case 'drop':
-        case 'collectAllBut':
-        case 'dropAllBut':
-        case 'collectPercentage':
-        case 'dropPercentage':
-        case 'garrison':
-          return true
-      }
+const store = useGameStore();
+const isHistoricalMode = useIsHistoricalMode(store);
 
-      return false
-    },
-    isActionRequiresPercentage (action) {
-      return action === 'dropPercentage' || action === 'collectPercentage';
-    },
-    previousWaypoint () {
-      let index = this.waypoints.indexOf(this.currentWaypoint)
+const settings = computed<UserGameSettings>(() => store.settings!);
+const game = computed<Game>(() => store.game!);
+const carrier = computed(() =>
+  GameHelper.getCarrierById(game.value, props.carrierId)!,
+);
+const userPlayer = computed(() => GameHelper.getUserPlayer(game.value));
+const isInTransit = computed(() => !carrier.value.orbiting);
+const canLoop = computed(() =>
+  GameHelper.canLoop(game.value, userPlayer.value, carrier.value),
+);
+const isRealTimeGame = computed(() => GameHelper.isRealTimeGame(game.value));
 
-      index--
+const waypoints = ref<CarrierWaypoint<string>[]>(
+  JSON.parse(JSON.stringify(carrier.value.waypoints)),
+);
+const currentWaypoint = ref<CarrierWaypoint<string>>(
+  waypoints.value.find((x) => x._id === props.waypoint._id)!,
+);
 
-      if (index < 0) {
-        index = this.waypoints.length - 1
-      }
+const isSavingWaypoints = ref(false);
+const waypointDuration = ref<string | null>(null);
+const waypointEta = ref<string | null>(null);
+const intervalFunction = ref<number | null>(null);
 
-      this.currentWaypoint = this.waypoints[index]
-      this.recalculateWaypointDuration()
-      this.panToWaypoint()
-    },
-    nextWaypoint () {
-      let index = this.waypoints.indexOf(this.currentWaypoint)
+const onCloseRequested = () => {
+  emit("onCloseRequested");
+};
 
-      index++
+const panToWaypoint = () => {
+  eventBus.emit(
+    MapCommandEventBusEventNames.MapCommandClearHighlightedLocations,
+    {},
+  );
 
-      if (index > this.waypoints.length - 1) {
-        index = 0
-      }
+  if (!currentWaypoint.value) {
+    return;
+  }
 
-      this.currentWaypoint = this.waypoints[index]
-      this.recalculateWaypointDuration()
-      this.panToWaypoint()
-    },
-    panToWaypoint () {
-      GameContainer.map.clearHighlightedLocations()
-      
-      let star = this.$store.state.game.galaxy.stars.find(x => x._id === this.currentWaypoint.destination)
+  const star = gameHelper.getStarById(
+    game.value,
+    currentWaypoint.value!.destination,
+  );
 
-      GameContainer.map.panToStar(star)
-      GameContainer.map.highlightLocation(star.location)
-    },
-    toggleLooped () {
-      this.carrier.waypointsLooped = !this.carrier.waypointsLooped
-    },
-    async saveWaypoints (saveAndEdit = false) {
-      // Push the waypoints to the API.
-      try {
-        this.isSavingWaypoints = true
-        let response = await CarrierApiService.saveWaypoints(this.$store.state.game._id, this.carrier._id, this.waypoints, this.carrier.waypointsLooped)
+  eventBus.emit(MapCommandEventBusEventNames.MapCommandPanToObject, {
+    object: star as MapObject<string>,
+  });
+  eventBus.emit(MapCommandEventBusEventNames.MapCommandHighlightLocation, {
+    location: star!.location,
+  });
+};
 
-        if (response.status === 200) {
-          this.carrier.ticksEta = response.data.ticksEta
-          this.carrier.ticksEtaTotal = response.data.ticksEtaTotal
-          this.carrier.waypoints = response.data.waypoints
+const isActionRequiresPercentage = (action: CarrierWaypointActionType) => {
+  return action === "dropPercentage" || action === "collectPercentage";
+};
 
-          this.$toasted.show(`${this.carrier.name} waypoints updated.`)
+const recalculateWaypointEta = () => {
+  // Calculate the ticks + delay up to and including the current waypoint.
+  let index = waypoints.value.indexOf(currentWaypoint.value);
+  let totalTicks = 0;
 
-          if (saveAndEdit) {
-            this.$emit('onOpenCarrierDetailRequested', this.carrier._id)
-          } else {
-            this.onCloseRequested()
-          }
-        }
-      } catch (e) {
-        console.error(e)
-      }
+  for (let i = 0; i <= index; i++) {
+    const wp = waypoints.value[i];
 
-      this.isSavingWaypoints = false
-    },
-    recalculateWaypointDuration () {
-      if (this.currentWaypoint) {
-        let timeRemainingEtaDate = GameHelper.calculateTimeByTicks(this.currentWaypoint.ticks + +this.currentWaypoint.delayTicks, this.$store.state.game.settings.gameTime.speed, null)
-        this.waypointDuration = GameHelper.getCountdownTimeString(this.$store.state.game, timeRemainingEtaDate, true)
-      }
-      
-      this.recalculateWaypointEta()
-    },
-    recalculateWaypointEta () {
-      // Calculate the ticks + delay up to and including the current waypoint.
-      let index = this.waypoints.indexOf(this.currentWaypoint)
-      let totalTicks = 0;
+    // wp.ticks includes delayTicks
+    totalTicks += wp.ticks!;
+  }
 
-      for (let i = 0; i <= index; i++) {
-        let wp = this.waypoints[i]
+  waypointEta.value = getCountdownTimeStringByTicks(game.value, totalTicks);
+};
 
-        // wp.ticks includes delayTicks
-        totalTicks += wp.ticks
-      }
+const recalculateWaypointDuration = () => {
+  if (currentWaypoint.value) {
+    waypointDuration.value = formatDuration(
+      ticksToDuration(
+        game.value,
+        (currentWaypoint.value.ticks || 0) + currentWaypoint.value.delayTicks,
+      ),
+    );
+  }
 
-      this.waypointEta = GameHelper.getCountdownTimeStringByTicks(this.$store.state.game, totalTicks)
-    },
-    isFirstWaypoint (waypoint) {
-      return this.waypoints.indexOf(waypoint) === 0
-    }
-  },
-  computed: {
-    canLoop () {
-      return GameHelper.canLoop(this.$store.state.game, this.userPlayer, this.carrier)
-    },
-    isInTransit () {
-      return !this.carrier.orbiting
-    },
-    isRealTimeGame () {
-      return GameHelper.isRealTimeGame(this.$store.state.game)
+  recalculateWaypointEta();
+};
+
+const nextWaypoint = () => {
+  let index = waypoints.value.indexOf(currentWaypoint.value);
+
+  index++;
+
+  if (index > waypoints.value.length - 1) {
+    index = 0;
+  }
+
+  currentWaypoint.value = waypoints.value[index];
+  recalculateWaypointDuration();
+  panToWaypoint();
+};
+
+const previousWaypoint = () => {
+  let index = waypoints.value.indexOf(currentWaypoint.value);
+
+  index--;
+
+  if (index < 0) {
+    index = waypoints.value.length - 1;
+  }
+
+  currentWaypoint.value = waypoints.value[index];
+  recalculateWaypointDuration();
+  panToWaypoint();
+};
+
+const toggleLooped = () => {
+  carrier.value.waypointsLooped = !carrier.value.waypointsLooped;
+};
+
+const waypointsSaveAction = saveWaypoints(game, isSavingWaypoints);
+
+const doSaveWaypoints = async (saveAndEdit = false) => {
+  const res = await waypointsSaveAction(carrier.value, waypoints.value);
+
+  if (res) {
+    if (saveAndEdit) {
+      emit("onOpenCarrierDetailRequested", carrier.value._id);
+    } else {
+      onCloseRequested();
     }
   }
-}
+};
+
+watch(
+  () => currentWaypoint.value.action,
+  (newV, oldV) => {
+    if (!isActionRequiresShips(oldV) && isActionRequiresShips(newV)) {
+      currentWaypoint.value.actionShips = settings.value.carrier.defaultAmount;
+    } else if (!isActionRequiresShips(newV)) {
+      currentWaypoint.value.actionShips = 0;
+    }
+  },
+);
+
+onMounted(() => {
+  recalculateWaypointDuration();
+  recalculateWaypointEta();
+  panToWaypoint();
+
+  if (
+    GameHelper.isGameInProgress(game.value) ||
+    GameHelper.isGamePendingStart(game.value)
+  ) {
+    intervalFunction.value = setInterval(recalculateWaypointEta, 250);
+    recalculateWaypointEta();
+  }
+
+  onUnmounted(() => {
+    if (intervalFunction.value) {
+      clearInterval(intervalFunction.value);
+    }
+
+    eventBus.emit(
+      MapCommandEventBusEventNames.MapCommandClearHighlightedLocations,
+      {},
+    );
+  });
+});
 </script>
 
 <style scoped>
+.waypoint-table-head {
+  padding: 1px;
+  text-align: center;
+}
 </style>

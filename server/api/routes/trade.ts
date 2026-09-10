@@ -1,111 +1,136 @@
-import { Router } from "express";
-import { ExpressJoiInstance } from "express-joi-validation";
 import { DependencyContainer } from "../../services/types/DependencyContainer";
-import TradeController from '../controllers/trade';
+import TradeController from "../controllers/trade";
 import { MiddlewareContainer } from "../middleware";
+import { SingleRouter } from "../singleRoute";
+import { createTradeRoutes } from "@solaris/common";
+import { createRoutes } from "../typedapi/routes";
 
-export default (router: Router, mw: MiddlewareContainer, validator: ExpressJoiInstance, container: DependencyContainer) => {
+export default (
+    router: SingleRouter,
+    mw: MiddlewareContainer,
+    container: DependencyContainer,
+) => {
     const controller = TradeController(container);
+    const routes = createTradeRoutes();
+    const answer = createRoutes(router, mw);
 
-    router.put('/api/game/:gameId/trade/credits',
+    answer(
+        routes.sendCredits,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             settings: true,
             state: true,
             galaxy: true,
-            constants: true
+            constants: true,
         }),
         mw.game.validateGameState({
             isUnlocked: true,
-            isInProgress: true
+            isInProgress: true,
         }),
         mw.player.loadPlayer,
         mw.player.validatePlayerState({ isPlayerUndefeated: true }),
         controller.sendCredits,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
-    router.put('/api/game/:gameId/trade/creditsSpecialists',
+    answer(
+        routes.sendCreditsSpecialists,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             settings: true,
             state: true,
             galaxy: true,
-            constants: true
+            constants: true,
         }),
         mw.game.validateGameState({
             isUnlocked: true,
-            isInProgress: true
+            isInProgress: true,
         }),
         mw.player.loadPlayer,
         mw.player.validatePlayerState({ isPlayerUndefeated: true }),
         controller.sendCreditsSpecialists,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
-    router.put('/api/game/:gameId/trade/renown',
+    answer(
+        routes.sendRenown,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             settings: true,
             state: true,
             galaxy: true,
-            constants: true
+            constants: true,
         }),
         mw.game.validateGameState({
             isUnlocked: true,
-            isStarted: true
+            isStarted: true,
         }),
         mw.player.loadPlayer,
         controller.sendRenown,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
-    router.put('/api/game/:gameId/trade/tech',
+    answer(
+        routes.sendTechnology,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             settings: true,
             state: true,
             galaxy: true,
-            constants: true
+            constants: true,
         }),
         mw.game.validateGameState({
             isUnlocked: true,
-            isInProgress: true
+            isInProgress: true,
         }),
         mw.player.loadPlayer,
         mw.player.validatePlayerState({ isPlayerUndefeated: true }),
         controller.sendTechnology,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
-    router.get('/api/game/:gameId/trade/tech/:toPlayerId',
+    answer(
+        routes.listTradeableTechnologies,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             settings: true,
             state: true,
             galaxy: true,
-            constants: true
+            constants: true,
         }),
         mw.game.validateGameState({
             isUnlocked: true,
-            isInProgress: true
+            isInProgress: true,
         }),
         mw.player.loadPlayer,
         mw.player.validatePlayerState({ isPlayerUndefeated: true }),
         controller.listTradeableTechnologies,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
-    router.get('/api/game/:gameId/trade/:toPlayerId/events',
+    answer(
+        routes.listTradeEvents,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             state: true,
-            'galaxy.players': true
+            "galaxy.players": true,
         }),
         mw.player.loadPlayer,
         controller.listTradeEvents,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
     return router;
-}
+};

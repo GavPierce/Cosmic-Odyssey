@@ -1,21 +1,19 @@
 <template>
-<div>
-  <p>
-      You created the conversation <span class="text-success">{{event.data.name}}</span>.
-  </p>
-</div>
+  <div>
+    <p>
+      You created the conversation
+      <span class="text-success">{{ event.data.name }}</span
+      >.
+    </p>
+  </div>
 </template>
 
-<script>
-export default {
-  components: {
+<script setup lang="ts">
+import type { PlayerConversationCreatedEvent } from "@solaris/common";
 
-  },
-  props: {
-    event: Object
-  }
-}
+const props = defineProps<{
+  event: PlayerConversationCreatedEvent<string>;
+}>();
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

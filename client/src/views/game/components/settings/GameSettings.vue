@@ -15,7 +15,7 @@
           <tbody>
             <game-setting-value
               title="Mode"
-              tooltip="The game mode Conquest is victory by stars, Battle Royale is last man standing in a constantly shrinking galaxy and King of the Hill is a fight for a key star"
+              tooltip="The game mode Conquest is victory by stars, Battle Royale is last man standing in a constantly shrinking galaxy, King of the Hill is a fight for a key star, Team conquest is Conquest, but with teams"
               :valueText="getFriendlyText(game.settings.general.mode)"
               :value="game.settings.general.mode"
               :compareValue="compareSettings.general.mode"
@@ -28,7 +28,10 @@
               "
               :value="game.settings.conquest.victoryCondition"
               :compareValue="compareSettings.conquest.victoryCondition"
-              v-if="game.settings.general.mode === 'conquest'"
+              v-if="
+                game.settings.general.mode === 'conquest' ||
+                game.settings.general.mode === 'teamConquest'
+              "
             />
             <game-setting-value
               title="Stars For Victory"
@@ -36,7 +39,10 @@
               :valueText="game.settings.conquest.victoryPercentage + '%'"
               :value="game.settings.conquest.victoryPercentage"
               :compareValue="compareSettings.conquest.victoryPercentage"
-              v-if="game.settings.general.mode === 'conquest'"
+              v-if="
+                game.settings.general.mode === 'conquest' ||
+                game.settings.general.mode === 'teamConquest'
+              "
             />
             <game-setting-value
               title="Capital Star Elimination"
@@ -46,15 +52,32 @@
               "
               :value="game.settings.conquest.capitalStarElimination"
               :compareValue="compareSettings.conquest.capitalStarElimination"
-              v-if="game.settings.general.mode === 'conquest'"
+              v-if="
+                game.settings.general.mode === 'conquest' ||
+                game.settings.general.mode === 'teamConquest'
+              "
+            />
+            <game-setting-value
+              title="Number of teams"
+              tooltip="The number of teams in the game"
+              :valueText="game.settings.conquest.teamsCount"
+              :value="game.settings.conquest.teamsCount"
+              :compare-value="0"
+              v-if="
+                game.settings.general.mode === 'teamConquest' &&
+                game.settings.conquest.teamsCount
+              "
             />
             <game-setting-value
               title="Countdown Cycles"
               tooltip="How long the countdown is to the end of the game in production cycles when the center star is captured"
               :valueText="game.settings.kingOfTheHill.productionCycles"
               :value="game.settings.kingOfTheHill.productionCycles"
-              :compareValue="compareSettings.kingOfTheHill.productionCycles"
-              v-if="game.settings.general.mode === 'kingOfTheHill'"
+              :compareValue="10"
+              v-if="
+                game.settings.general.mode === 'kingOfTheHill' &&
+                game.settings.kingOfTheHill
+              "
             />
             <game-setting-value
               title="Flux"
@@ -69,13 +92,6 @@
               :valueText="game.settings.general.playerLimit"
               :value="game.settings.general.playerLimit"
               :compareValue="compareSettings.general.playerLimit"
-            />
-            <game-setting-value
-              title="Team Mode"
-              tooltip="Determines if players start off in teams. Teammembers can see eachother's stars and carriers. A team shares victory."
-              :valueText="getFriendlyText(game.settings.general.teamGame)"
-              :value="game.settings.general.teamGame"
-              :compareValue="compareSettings.general.teamGame"
             />
             <game-setting-value
               title="Player Type"
@@ -121,6 +137,63 @@
               :value="game.settings.general.readyToQuit"
               :compareValue="compareSettings.general.readyToQuit"
             />
+            <game-setting-value
+              title="Fraction of stars for RTQ"
+              v-if="
+                game.settings.general.readyToQuit === 'enabled' &&
+                game.settings.general.readyToQuitFraction !== undefined
+              "
+              tooltip="Fraction of stars for triggering RTQ condition"
+              :valueText="game.settings.general.readyToQuitFraction"
+              :value="game.settings.general.readyToQuitFraction"
+              :compareValue="compareSettings.general.readyToQuitFraction"
+            />
+            <game-setting-value
+              title="Timer for RTQ"
+              v-if="
+                game.settings.general.readyToQuit === 'enabled' &&
+                game.settings.general.readyToQuitTimerCycles !== undefined
+              "
+              tooltip="Time until game finishes after RTQ"
+              :valueText="game.settings.general.readyToQuitTimerCycles"
+              :value="game.settings.general.readyToQuitTimerCycles"
+              :compareValue="compareSettings.general.readyToQuitTimerCycles"
+            />
+            <game-setting-value
+              title="RTQ Visibility"
+              v-if="game.settings.general.readyToQuit === 'enabled'"
+              tooltip="Visibility of RTQ votes"
+              :valueText="game.settings.general.readyToQuitVisibility"
+              :value="game.settings.general.readyToQuitVisibility"
+              :compareValue="compareSettings.general.readyToQuitVisibility"
+            />
+            <game-setting-value
+              title="Players that will receive rank"
+              tooltip="Players that will receive rank"
+              :valueText="getFriendlyText(game.settings.general.awardRankTo)"
+              :value="game.settings.general.awardRankTo"
+              :compareValue="compareSettings.general.awardRankTo"
+            />
+            <game-setting-value
+              v-if="
+                game.settings.general.awardRankTo === 'top_n' &&
+                game.settings.general.awardRankToTopN !== undefined
+              "
+              title="Number of top/bottom players for rank distribution"
+              tooltip="Top N players will receive rank, and bottom N players will lose rank"
+              :valueText="game.settings.general.awardRankToTopN"
+              :value="game.settings.general.awardRankToTopN"
+              :compareValue="compareSettings.general.awardRankToTopN"
+            />
+            <game-setting-value
+              title="Allow Abandon Stars"
+              tooltip="Allow players to abandon their stars"
+              :valueText="
+                getFriendlyText(game.settings.player.allowAbandonStars)
+              "
+              :value="game.settings.player.allowAbandonStars"
+              :compareValue="compareSettings.player.allowAbandonStars"
+            />
           </tbody>
         </table>
       </div>
@@ -157,11 +230,14 @@
             />
             <game-setting-value
               title="Tick Limit"
+              v-if="
+                game.settings.gameTime.isTickLimited === 'enabled' &&
+                game.settings.gameTime.tickLimit
+              "
               tooltip="Determines the maximum number of ticks before the game is automatically concluded"
               :valueText="game.settings.gameTime.tickLimit + ' ticks'"
               :value="game.settings.gameTime.tickLimit"
               :compareValue="compareSettings.gameTime.tickLimit"
-              v-if="game.settings.gameTime.isTickLimited === 'enabled'"
             />
             <game-setting-value
               title="Start Delay"
@@ -304,10 +380,7 @@
             <game-setting-value
               title="Random Warp Gates"
               tooltip="The percentage of random warp gates are seeded at the start of the game - Warp gates increase carrier movement speed"
-              :valueText="
-                getFriendlyText(game.settings.specialGalaxy.randomWarpGates) +
-                  '%'
-              "
+              :valueText="game.settings.specialGalaxy.randomWarpGates + '%'"
               :value="game.settings.specialGalaxy.randomWarpGates"
               :compareValue="compareSettings.specialGalaxy.randomWarpGates"
               v-if="game.settings.galaxy.galaxyType !== 'custom'"
@@ -315,10 +388,7 @@
             <game-setting-value
               title="Random Worm Holes"
               tooltip="The percentage of random worm holes are generated in the galaxy - Worm holes provide instant travel between paired worm hole stars"
-              :valueText="
-                getFriendlyText(game.settings.specialGalaxy.randomWormHoles) +
-                  '%'
-              "
+              :valueText="game.settings.specialGalaxy.randomWormHoles + '%'"
               :value="game.settings.specialGalaxy.randomWormHoles"
               :compareValue="compareSettings.specialGalaxy.randomWormHoles"
               v-if="game.settings.galaxy.galaxyType !== 'custom'"
@@ -326,9 +396,7 @@
             <game-setting-value
               title="Random Nebulas"
               tooltip="The percentage of random nebulas are generated in the galaxy - Nebulas hide ships at stars"
-              :valueText="
-                getFriendlyText(game.settings.specialGalaxy.randomNebulas) + '%'
-              "
+              :valueText="game.settings.specialGalaxy.randomNebulas + '%'"
               :value="game.settings.specialGalaxy.randomNebulas"
               :compareValue="compareSettings.specialGalaxy.randomNebulas"
               v-if="game.settings.galaxy.galaxyType !== 'custom'"
@@ -337,9 +405,7 @@
               title="Random Asteroid Fields"
               tooltip="The percentage of random asteroid fields are generated in the galaxy - Asteroid fields have +1 defender bonus (net +2 weapons) in combat"
               :valueText="
-                getFriendlyText(
-                  game.settings.specialGalaxy.randomAsteroidFields
-                ) + '%'
+                game.settings.specialGalaxy.randomAsteroidFields + '%'
               "
               :value="game.settings.specialGalaxy.randomAsteroidFields"
               :compareValue="compareSettings.specialGalaxy.randomAsteroidFields"
@@ -348,10 +414,7 @@
             <game-setting-value
               title="Random Binary Stars"
               tooltip="The percentage of random binary stars are generated in the galaxy - Binary stars start with additional natural resources"
-              :valueText="
-                getFriendlyText(game.settings.specialGalaxy.randomBinaryStars) +
-                  '%'
-              "
+              :valueText="game.settings.specialGalaxy.randomBinaryStars + '%'"
               :value="game.settings.specialGalaxy.randomBinaryStars"
               :compareValue="compareSettings.specialGalaxy.randomBinaryStars"
               v-if="game.settings.galaxy.galaxyType !== 'custom'"
@@ -359,10 +422,7 @@
             <game-setting-value
               title="Random Black Holes"
               tooltip="The percentage of random black holes are generated in the galaxy - Black holes cannot have infrastructure but have +3 scanning range"
-              :valueText="
-                getFriendlyText(game.settings.specialGalaxy.randomBlackHoles) +
-                  '%'
-              "
+              :valueText="game.settings.specialGalaxy.randomBlackHoles + '%'"
               :value="game.settings.specialGalaxy.randomBlackHoles"
               :compareValue="compareSettings.specialGalaxy.randomBlackHoles"
               v-if="game.settings.galaxy.galaxyType !== 'custom'"
@@ -370,9 +430,7 @@
             <game-setting-value
               title="Random Pulsars"
               tooltip="The percentage of random pulsars are generated in the galaxy - Pulsars are always visible to all players in the game"
-              :valueText="
-                getFriendlyText(game.settings.specialGalaxy.randomPulsars) + '%'
-              "
+              :valueText="game.settings.specialGalaxy.randomPulsars + '%'"
               :value="game.settings.specialGalaxy.randomPulsars"
               :compareValue="compareSettings.specialGalaxy.randomPulsars"
               v-if="game.settings.galaxy.galaxyType !== 'custom'"
@@ -409,7 +467,7 @@
               tooltip="Determines whether carrier-to-carrier combat is enabled. If disabled, carriers will not fight eachother in space"
               :valueText="
                 getFriendlyText(
-                  game.settings.specialGalaxy.carrierToCarrierCombat
+                  game.settings.specialGalaxy.carrierToCarrierCombat,
                 )
               "
               :value="game.settings.specialGalaxy.carrierToCarrierCombat"
@@ -432,7 +490,7 @@
               tooltip="Determines the shape of distributed natural resources in the galaxy"
               :valueText="
                 getFriendlyText(
-                  game.settings.specialGalaxy.resourceDistribution
+                  game.settings.specialGalaxy.resourceDistribution,
                 )
               "
               :value="game.settings.specialGalaxy.resourceDistribution"
@@ -455,7 +513,7 @@
               :valueText="
                 game.settings.specialGalaxy.carrierSpeed /
                   game.constants.distances.lightYear +
-                  '/ly tick'
+                ' ly/tick'
               "
               :value="game.settings.specialGalaxy.carrierSpeed"
               :compareValue="compareSettings.specialGalaxy.carrierSpeed"
@@ -524,7 +582,7 @@
               :compareValue="compareSettings.player.startingCreditsSpecialists"
               v-if="
                 game.settings.specialGalaxy.specialistsCurrency ===
-                  'creditsSpecialists'
+                'creditsSpecialists'
               "
             />
             <game-setting-value
@@ -610,7 +668,7 @@
               v-if="
                 game.settings.specialGalaxy.specialistsCurrency ===
                   'creditsSpecialists' &&
-                  game.settings.player.tradeCreditsSpecialists != null
+                game.settings.player.tradeCreditsSpecialists != null
               "
             />
             <game-setting-value
@@ -618,7 +676,7 @@
               tooltip="Determines how expensive the technology trade fee costs"
               :valueText="
                 game.settings.player.tradeCost > 0
-                  ? getFriendlyText(game.settings.player.tradeCost) +
+                  ? getFriendlyText(game.settings.player.tradeCost.toString()) +
                     ' credits/level'
                   : 'Disabled'
               "
@@ -674,9 +732,21 @@
               :compareValue="compareSettings.diplomacy.enabled"
             />
             <game-setting-value
+              title="Locked Alliances"
+              tooltip="If enabled, alliances cannot be canceled."
+              :valueText="
+                getFriendlyText(game.settings.diplomacy.lockedAlliances)
+              "
+              :value="game.settings.diplomacy.lockedAlliances"
+              :compareValue="compareSettings.diplomacy.lockedAlliances"
+              v-if="game.settings.diplomacy.enabled === 'enabled'"
+            />
+            <game-setting-value
               title="Max Number of Alliances"
               tooltip="Determines how many formal alliance each player may have at once"
-              :valueText="getFriendlyText(game.settings.diplomacy.maxAlliances)"
+              :valueText="
+                getFriendlyText(game.settings.diplomacy.maxAlliances.toString())
+              "
               :value="game.settings.diplomacy.maxAlliances"
               :compareValue="compareSettings.diplomacy.maxAlliances"
               v-if="game.settings.diplomacy.enabled === 'enabled'"
@@ -815,7 +885,7 @@
               "
               v-if="
                 game.settings.specialGalaxy.specialistsCurrency ===
-                  'creditsSpecialists'
+                'creditsSpecialists'
               "
             />
             <game-setting-value
@@ -823,7 +893,7 @@
               tooltip="Determines how many research points it takes to level up the technology"
               :valueText="
                 getFriendlyText(
-                  game.settings.technology.researchCosts.terraforming
+                  game.settings.technology.researchCosts.terraforming,
                 )
               "
               :value="game.settings.technology.researchCosts.terraforming"
@@ -836,7 +906,7 @@
               tooltip="Determines how many research points it takes to level up the technology"
               :valueText="
                 getFriendlyText(
-                  game.settings.technology.researchCosts.experimentation
+                  game.settings.technology.researchCosts.experimentation,
                 )
               "
               :value="game.settings.technology.researchCosts.experimentation"
@@ -858,7 +928,7 @@
               tooltip="Determines how many research points it takes to level up the technology"
               :valueText="
                 getFriendlyText(
-                  game.settings.technology.researchCosts.hyperspace
+                  game.settings.technology.researchCosts.hyperspace,
                 )
               "
               :value="game.settings.technology.researchCosts.hyperspace"
@@ -871,7 +941,7 @@
               tooltip="Determines how many research points it takes to level up the technology"
               :valueText="
                 getFriendlyText(
-                  game.settings.technology.researchCosts.manufacturing
+                  game.settings.technology.researchCosts.manufacturing,
                 )
               "
               :value="game.settings.technology.researchCosts.manufacturing"
@@ -902,7 +972,7 @@
               tooltip="Determines how many research points it takes to level up the technology"
               :valueText="
                 getFriendlyText(
-                  game.settings.technology.researchCosts.specialists
+                  game.settings.technology.researchCosts.specialists,
                 )
               "
               :value="game.settings.technology.researchCosts.specialists"
@@ -920,6 +990,74 @@
               :compareValue="compareSettings.technology.bankingReward"
             />
             <game-setting-value
+              v-if="
+                game.settings.technology.startingTechnologyLevel
+                  .experimentation > 0
+              "
+              title="Experimentation Distribution"
+              tooltip="Determines to what technologies the experimentation reward gets distributed"
+              :valueText="
+                getFriendlyText(
+                  game.settings.technology.experimentationDistribution,
+                )
+              "
+              :value="game.settings.technology.experimentationDistribution"
+              :compareValue="
+                compareSettings.technology.experimentationDistribution
+              "
+            />
+
+            <research-cost-progression-setting
+              :progression="
+                game.settings.technology.researchCostProgressions.terraforming
+              "
+              name="Terraforming"
+            />
+            <research-cost-progression-setting
+              :progression="
+                game.settings.technology.researchCostProgressions.banking
+              "
+              name="Banking"
+            />
+            <research-cost-progression-setting
+              :progression="
+                game.settings.technology.researchCostProgressions
+                  .experimentation
+              "
+              name="Experimentation"
+            />
+            <research-cost-progression-setting
+              :progression="
+                game.settings.technology.researchCostProgressions.hyperspace
+              "
+              name="Hyperspace Range"
+            />
+            <research-cost-progression-setting
+              :progression="
+                game.settings.technology.researchCostProgressions.manufacturing
+              "
+              name="Manufacturing"
+            />
+            <research-cost-progression-setting
+              :progression="
+                game.settings.technology.researchCostProgressions.scanning
+              "
+              name="Scanning"
+            />
+            <research-cost-progression-setting
+              :progression="
+                game.settings.technology.researchCostProgressions.weapons
+              "
+              name="Weapons"
+            />
+            <research-cost-progression-setting
+              :progression="
+                game.settings.technology.researchCostProgressions.specialists
+              "
+              name="Specialists"
+            />
+
+            <game-setting-value
               title="Experimentation Reward"
               tooltip="Determines the amount of research points awarded for the experimentation technology at the end of a galactic cycle"
               :valueText="
@@ -930,7 +1068,7 @@
             />
             <game-setting-value
               title="Specialist Token Reward"
-              tooltip="Determines the amount of specialist tokens awarded for the banking technology at the end of a galactic cycle"
+              tooltip="Determines the amount of specialist tokens awarded for the specialist technology at the end of a galactic cycle"
               :valueText="
                 getFriendlyText(game.settings.technology.specialistTokenReward)
               "
@@ -949,91 +1087,99 @@
   </div>
 </template>
 
-<script>
-import ViewSubtitle from "../../../components/ViewSubtitle";
-import SpecialistBanList from "../specialist/SpecialistBanList";
-import GameApiService from "../../../../services/api/game";
-import GameSettingValue from "./GameSettingValue";
-import LoadingSpinner from "../../../components/LoadingSpinner";
+<script setup lang="ts">
+import ViewSubtitle from "../../../components/ViewSubtitle.vue";
+import SpecialistBanList from "../specialist/SpecialistBanList.vue";
+import GameSettingValue from "./GameSettingValue.vue";
+import LoadingSpinner from "../../../components/LoadingSpinner.vue";
+import type { GameInfoDetail, GameSettingsSpec } from "@solaris/common";
+import { ref, inject, type Ref, onMounted } from "vue";
+import { getDefaultSettings } from "@/services/typedapi/game";
+import { formatError, httpInjectionKey, isOk } from "@/services/typedapi";
+import ResearchCostProgressionSetting from "@/views/game/components/settings/ResearchCostProgressionSetting.vue";
 
-export default {
-  components: {
-    "view-subtitle": ViewSubtitle,
-    "specialist-ban-list": SpecialistBanList,
-    "game-setting-value": GameSettingValue,
-    "loading-spinner": LoadingSpinner
-  },
-  props: {
-    game: Object
-  },
-  data() {
-    return {
-      compareSettings: null
-    };
-  },
-  async mounted() {
-    try {
-      let response = await GameApiService.getDefaultGameSettings();
+const props = defineProps<{
+  game: GameInfoDetail<string>;
+}>();
 
-      this.compareSettings = response.data.settings;
-      console.log("game settings:", this.game);
-    } catch (err) {
-      console.error(err);
-    }
-  },
-  methods: {
-    getFriendlyText(option) {
-      let text = {
-        all: "All",
-        premium: "Premium",
-        cheap: "Cheap",
-        standard: "Standard",
-        expensive: "Expensive",
-        veryExpensive: "Very Expensive",
-        crazyExpensive: "Crazy Expensive",
-        none: "None",
-        rare: "Rare",
-        common: "Common",
-        disabled: "Disabled",
-        enabled: "Enabled",
-        start: "Start Only",
-        scanned: "Scanned Only",
-        realTime: "Real Time",
-        turnBased: "Turn Based",
-        random: "Random",
-        weightedCenter: "Weighted (Center)",
-        irregular: "Irregular",
-        circular: "Circular",
-        spiral: "Spiral",
-        doughnut: "Doughnut",
-        "circular-balanced": "Circular Balanced",
-        normal: "Normal",
-        extra: "Extra",
-        hidden: "Hidden",
-        visible: "Visible",
-        experimental: "Experimental",
-        credits: "Credits",
-        creditsSpecialists: "Specialist Tokens",
-        conquest: "Conquest",
-        battleRoyale: "Battle Royale",
-        establishedPlayers: "Established Players Only",
-        galacticCenter: "Galactic Center",
-        galacticCenterOfMass: "Galactic Center of Mass",
-        starPercentage: "Star Percentage",
-        homeStarPercentage: "Capital Star Percentage",
-        kingOfTheHill: "King Of The Hill",
-        low: "Low",
-        medium: "Medium",
-        high: "High",
-        fog: "Fogged"
-      }[option];
+const httpClient = inject(httpInjectionKey)!;
 
-      return text || option;
-    },
-    compareValue(fromValue, toValue) {
-      return fromValue !== toValue;
-    }
+const compareSettings: Ref<GameSettingsSpec | null> = ref(null);
+
+onMounted(async () => {
+  const response = await getDefaultSettings(httpClient)();
+
+  if (isOk(response)) {
+    compareSettings.value = response.data;
+  } else {
+    console.error(formatError(response));
   }
+});
+
+const getFriendlyText = (option: string) => {
+  const text = {
+    all: "All",
+    premium: "Premium",
+    cheap: "Cheap",
+    standard: "Standard",
+    expensive: "Expensive",
+    veryExpensive: "Very Expensive",
+    crazyExpensive: "Crazy Expensive",
+    none: "None",
+    rare: "Rare",
+    common: "Common",
+    disabled: "Disabled",
+    enabled: "Enabled",
+    start: "Start Only",
+    scanned: "Scanned Only",
+    realTime: "Real Time",
+    turnBased: "Turn Based",
+    random: "Random",
+    weightedCenter: "Weighted (Center)",
+    irregular: "Irregular",
+    circular: "Circular",
+    circularSequential: "Circular (Sequential)",
+    spiral: "Spiral",
+    doughnut: "Doughnut",
+    "circular-balanced": "Circular Balanced",
+    normal: "Normal",
+    extra: "Extra",
+    hidden: "Hidden",
+    visible: "Visible",
+    experimental: "Experimental",
+    credits: "Credits",
+    creditsSpecialists: "Specialist Tokens",
+    conquest: "Conquest",
+    battleRoyale: "Battle Royale",
+    teamConquest: "Team Conquest",
+    establishedPlayers: "Established Players Only",
+    galacticCenter: "Galactic Center",
+    galacticCenterOfMass: "Galactic Center of Mass",
+    starPercentage: "Star Percentage",
+    homeStarPercentage: "Capital Star Percentage",
+    kingOfTheHill: "King Of The Hill",
+    low: "Low",
+    medium: "Medium",
+    high: "High",
+    fog: "Fogged",
+    soft: "Soft",
+    hard: "Hard",
+    exponential: "Exponential",
+    cumulative: "Cumulative",
+    winner: "Winner",
+    top_n: "Top N",
+    current_research: "Current Research",
+    largestCarrier: "Largest carrier",
+    anyCarrier: "Any carrier",
+    revealAtEnd: "Anonymous, revealed at end",
+    noRankLoss: "All players, no rank loss",
+  }[option];
+
+  return text || option;
+};
+
+const compareValue = <A,>(fromValue: A, toValue: A) => {
+  return fromValue !== toValue;
 };
 </script>
 

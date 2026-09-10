@@ -1,13 +1,17 @@
-import { LedgerType } from '../../services/ledger';
-import { DependencyContainer } from '../../services/types/DependencyContainer';
+import { LedgerType } from "@solaris/common";
+import { DependencyContainer } from "../../services/types/DependencyContainer";
 
 export default (container: DependencyContainer) => {
     return {
         detailCredits: async (req, res, next) => {
             try {
-                let ledger = await container.ledgerService.getLedger(req.player, LedgerType.Credits);
-    
-                return res.status(200).json(ledger);
+                let ledger = await container.ledgerService.getLedger(
+                    req.player,
+                    LedgerType.Credits,
+                );
+
+                res.status(200).json(ledger);
+                return next();
             } catch (err) {
                 return next(err);
             }
@@ -18,9 +22,12 @@ export default (container: DependencyContainer) => {
                     req.game,
                     req.player,
                     req.params.playerId,
-                    LedgerType.Credits);
-    
-                return res.status(200).json(newLedger);
+                    LedgerType.Credits,
+                    container.eventService,
+                );
+
+                res.status(200).json(newLedger);
+                return next();
             } catch (err) {
                 return next(err);
             }
@@ -31,18 +38,25 @@ export default (container: DependencyContainer) => {
                     req.game,
                     req.player,
                     req.params.playerId,
-                    LedgerType.Credits);
-    
-                return res.status(200).json(newLedger);
+                    LedgerType.Credits,
+                    container.eventService,
+                );
+
+                res.status(200).json(newLedger);
+                return next();
             } catch (err) {
                 return next(err);
             }
         },
         detailCreditsSpecialists: async (req, res, next) => {
             try {
-                let ledger = await container.ledgerService.getLedger(req.player, LedgerType.CreditsSpecialists);
-    
-                return res.status(200).json(ledger);
+                let ledger = await container.ledgerService.getLedger(
+                    req.player,
+                    LedgerType.CreditsSpecialists,
+                );
+
+                res.status(200).json(ledger);
+                return next();
             } catch (err) {
                 return next(err);
             }
@@ -53,9 +67,12 @@ export default (container: DependencyContainer) => {
                     req.game,
                     req.player,
                     req.params.playerId,
-                    LedgerType.CreditsSpecialists);
-    
-                return res.status(200).json(newLedger);
+                    LedgerType.CreditsSpecialists,
+                    container.eventService,
+                );
+
+                res.status(200).json(newLedger);
+                return next();
             } catch (err) {
                 return next(err);
             }
@@ -66,12 +83,15 @@ export default (container: DependencyContainer) => {
                     req.game,
                     req.player,
                     req.params.playerId,
-                    LedgerType.CreditsSpecialists);
-    
-                return res.status(200).json(newLedger);
+                    LedgerType.CreditsSpecialists,
+                    container.eventService,
+                );
+
+                res.status(200).json(newLedger);
+                return next();
             } catch (err) {
                 return next(err);
             }
-        }
-    }
+        },
+    };
 };

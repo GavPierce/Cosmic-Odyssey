@@ -1,143 +1,115 @@
-const Agenda = require("agenda");
+import { logger, setupLogging } from "../utils/logging";
+
 import config from "../config";
 import mongooseLoader from "../db";
 import containerLoader from "../services";
 
-import GameTickJob from "./gameTick";
-import OfficialGamesCheckJob from "./officialGamesCheck";
-import CleanupGamesTimedOutJob from "./cleanupGamesTimedOut";
-import CleanupOldGameHistoryJob from "./cleanupOldGameHistory";
-import CleanupOldTutorialsJob from "./cleanupOldTutorials";
-import SendReviewRemindersJob from "./sendReviewReminders";
+import { gameTickJob } from "./jobs/gameTick";
+import { officialGamesCheckJob } from "./jobs/officialGamesCheck";
+import { cleanupGamesTimedOutJob } from "./jobs/cleanupGamesTimedOut";
+import { cleanupOldGameHistoryJob } from "./jobs/cleanupOldGameHistory";
+import { cleanupOldTutorialsJob } from "./jobs/cleanupOldTutorials";
+import { serverStub } from "../sockets/serverStub";
+import { Scheduler, SchedulerOptions } from "./scheduler/scheduler";
+import events from "node:events";
+import { sumGameStatisticsJob } from "./jobs/sumGameStatistics";
 
 let mongo;
+Error.stackTraceLimit = 1000;
+
+events.setMaxListeners(20);
+
+setupLogging();
+
+const TEN_SECONDS = 10000;
+
+const ONE_MINUTE = 60000;
+
+const ONE_HOUR = ONE_MINUTE * 60;
+
+const ONE_DAY = 3600000 * 24;
+
+const log = logger();
 
 async function startup() {
-  console.log("STARTING JOBS", config);
-  const container = containerLoader(config, null);
+    const container = containerLoader(config, serverStub, log);
 
-  mongo = await mongooseLoader(config, {
-    unlockJobs: true,
-    poolSize: 1,
-  });
+    mongo = await mongooseLoader(config, {
+        unlockJobs: true,
+        poolSize: 1,
+    });
 
-  // await container.discordService.initialize();
-  // container.notificationService.initialize();
+    await container.discordService.initialize();
 
-  // ------------------------------
-  // Jobs that run every time the server restarts.
+    // ------------------------------
+    // Jobs that run every time the server restarts.
 
-  console.log("Unlock all games...");
-  await container.gameService.lockAll(false);
-  console.log("All games unlocked");
+    log.info("Unlock all games...");
+    await container.gameLockService.lockAll(false);
+    log.info("All games unlocked");
 
-  // ------------------------------
+    const schedulerOptions: SchedulerOptions = {
+        checkInterval: 5000,
+    };
 
-  const gameTickJob = GameTickJob(container);
-  const officialGamesCheckJob = OfficialGamesCheckJob(container);
-  const cleanupGamesTimedOutJob = CleanupGamesTimedOutJob(container);
-  const cleanupOldGameHistory = CleanupOldGameHistoryJob(container);
-  const cleanupOldTutorials = CleanupOldTutorialsJob(container);
-  const sendReviewReminders = SendReviewRemindersJob(container);
+    const scheduler = new Scheduler(
+        [
+            {
+                name: "game-tick",
+                job: gameTickJob(container),
+                interval: TEN_SECONDS,
+            },
+            {
+                name: "new-player-game-check",
+                job: officialGamesCheckJob(container),
+                interval: ONE_MINUTE,
+            },
+            {
+                name: "cleanup-games-timed-out",
+                job: cleanupGamesTimedOutJob(container),
+                interval: ONE_HOUR,
+            },
+            {
+                name: "cleanup-old-game-history",
+                job: cleanupOldGameHistoryJob(container),
+                interval: ONE_DAY,
+            },
+            {
+                name: "cleanup-old-tutorials",
+                job: cleanupOldTutorialsJob(container),
+                interval: ONE_DAY,
+            },
+            {
+                name: "sum-game-statistics",
+                job: sumGameStatisticsJob(container),
+                interval: ONE_HOUR,
+            },
+        ],
+        schedulerOptions,
+    );
 
-  // Set up the agenda instance.
-  const agendajs = new Agenda()
-    .database(config.connectionString)
-    .processEvery("10 seconds")
-    .maxConcurrency(20);
+    await scheduler.startup();
 
-  await agendajs._ready;
+    const schedulerFinished = scheduler.run();
 
-  // ------------------------------
-  // Register jobs
+    await new Promise<void>((resolve, _) => {
+        process.on("SIGINT", async () => {
+            log.info("Shutting down...");
 
-  // Game tick
-  agendajs.define(
-    "game-tick",
-    {
-      priority: "high",
-      concurrency: 10,
-    },
-    gameTickJob.handler
-  ); // reference to the handler, but not executing it!
+            await schedulerFinished;
 
-  // New player game check
-  agendajs.define(
-    "new-player-game-check",
-    {
-      priority: "high",
-      concurrency: 1,
-    },
-    officialGamesCheckJob.handler
-  );
+            await mongo.disconnect();
 
-  // Cleanup old games that reached timeout
-  agendajs.define(
-    "cleanup-games-timed-out",
-    {
-      priority: "high",
-      concurrency: 1,
-    },
-    cleanupGamesTimedOutJob.handler
-  );
+            log.info("Shutdown complete.");
+            resolve();
 
-  // Cleanup old game history
-  agendajs.define(
-    "cleanup-old-game-history",
-    {
-      priority: "high",
-      concurrency: 1,
-    },
-    cleanupOldGameHistory.handler
-  );
-
-  // Cleanup old tutorials
-  agendajs.define(
-    "cleanup-old-tutorials",
-    {
-      priority: "high",
-      concurrency: 1,
-    },
-    cleanupOldTutorials.handler
-  );
-
-  // Send review reminders
-  agendajs.define(
-    "send-review-reminders",
-    {
-      priority: "high",
-      concurrency: 1,
-    },
-    sendReviewReminders.handler
-  );
-
-  // ...
-
-  // ------------------------------
-
-  agendajs.start();
-
-  // Start server jobs
-  agendajs.every("10 seconds", "game-tick");
-  agendajs.every("1 minute", "new-player-game-check");
-  agendajs.every("1 hour", "cleanup-games-timed-out");
-  agendajs.every("1 day", "cleanup-old-game-history");
-  agendajs.every("1 day", "cleanup-old-tutorials");
-  agendajs.every("10 seconds", "send-review-reminders"); // TODO: Every 10 seconds until we've gone through all backlogged users.
+            process.exit(0);
+        });
+    });
 }
 
-process.on("SIGINT", async () => {
-  console.log("Shutting down...");
-
-  await mongo.disconnect();
-
-  console.log("Shutdown complete.");
-
-  process.exit();
-});
-
 startup().then(() => {
-  console.log("Jobs started.");
+    log.info("Jobs started.");
 });
 
 export {};

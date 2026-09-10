@@ -1,134 +1,130 @@
 <template>
-<div class="menu-page container">
-
-  <menu-title title="Ruler" @onCloseRequested="onCloseRequested">
-       <button class="btn btn-sm btn-outline-primary" @click="resetRulerPoints"><i class="fas fa-undo"></i> Reset</button>
-        <button class="btn btn-sm btn-outline-warning ms-1" @click="popRulerPoint" :disabled="points.length === 0"><i class="fas fa-undo"></i> Last</button>
+  <div class="menu-page container">
+    <menu-title title="Ruler" @onCloseRequested="onCloseRequested">
+      <button class="btn btn-sm btn-outline-primary" @click="resetRulerPoints">
+        <i class="fas fa-undo"></i> Reset
+      </button>
+      <button
+        class="btn btn-sm btn-outline-warning ms-1"
+        @click="popRulerPoint"
+        :disabled="points.length === 0"
+      >
+        <i class="fas fa-undo"></i> Last
+      </button>
     </menu-title>
     <div v-if="isCompactUIStyle">
-    <div class="row pt-2 pb-2 bg-dark">
-      <div class="col-3 text-left">
-          <span title="Total Number of Waypoints Plotted">
-           <i class="fas fa-map-marker-alt"></i> {{points.length}}
+      <div class="row pt-2 pb-2 bg-dark">
+        <div class="col-3 text-left">
+          <span title="Total number of waypoints plotted">
+            <i class="fas fa-map-marker-alt"></i>
+            {{ points.length }}
           </span>
-      </div>
-      <div class="col-3 text-center">
-          <span title="Total Distance (ly)">
-            <i class="fas fa-ruler"></i> {{distanceLightYears}}
-          </span>
-      </div>
-      <div class="col-3 text-center">
-          <span title="Required Scanning Level">
-            <i class="fas fa-satellite"></i> {{scanningLevel}}
-          </span>
-      </div>
-      <div class="col-3 text-end">
-          <span title="Required Hyperspace Level">
-            <i class="fas fa-forward"></i> {{hyperspaceLevel}}
-          </span>
-      </div>
-    </div>
-
-    <div class="row bg-dark pt-2 pb-2 mt-1">
-      <div class="col-2">
-          ETA<orbital-mechanics-eta-warning />
-      </div>
-      <div class="col-5 text-end">
-          <span title="ETA Base Speed">
-            Base {{totalEta || 'N/A'}}
-          </span>
-      </div>
-      <div class="col-5 text-end">
-          <span title="ETA Warp Speed">
-            Warp {{totalEtaWarp || 'N/A'}}
-          </span>
-      </div>
-    </div>
-  </div>
-
-  <div class="row pt-2 pb-2 bg-dark mt-1">
-    <div class="col-6">
-    Speed Modifier
-    </div>
-    <div class="col-6 text-end">
-      <select class="form-control form-control-sm" v-model="speedModifier" @change="onSpeedModifierChanged">
-        <option value="1">1.0x (Normal)</option>
-        <option v-for="speed in speeds" v-bind:key="speed" :value="speed">{{speed}}x</option>
-      </select>
-    </div>
-  </div>
-
-<div v-if="isStandardUIStyle">
-  <div class="row bg-dark pt-2 pb-2">
-          <div class="col-6">
-              Waypoints
-          </div>
-          <div class="col-6 text-end">
-              <span title="Total Number of Waypoints Plotted">
-                <i class="fas fa-map-marker-alt"></i> {{points.length}}
-              </span>
-          </div>
-      </div>
-
-      <div class="row pt-2 pb-2">
-          <div class="col-6">
-             Distance (ly)
-          </div>
-          <div class="col-6 text-end">
-              <span title="Total Distance (ly)">
-                <i class="fas fa-ruler"></i> {{distanceLightYears}}
-              </span>
-          </div>
-      </div>
-
-      <div class="row bg-dark pt-2 pb-2">
-          <div class="col-8">
-              Required Scanning Level
-          </div>
-          <div class="col-4 text-end">
-              <span title="Required Scanning Level">
-                <i class="fas fa-satellite-dish"></i> {{scanningLevel}}
-              </span>
-          </div>
-      </div>
-
-      <div class="row pt-2 pb-2">
-          <div class="col-8">
-              Required Hyperspace Level
-          </div>
-          <div class="col-4 text-end">
-              <span title="Required Hyperspace Level">
-                <i class="fas fa-forward"></i> {{hyperspaceLevel}}
-              </span>
-          </div>
-      </div>
-
-      <div class="row bg-dark pt-2 pb-2">
-          <div class="col-6">
-              ETA Base Speed
-          </div>
-          <div class="col-6 text-end">
-              <span title="ETA Base Speed">
-                <i class="fas fa-gauge"></i> 
-                {{totalEta || 'N/A'}}
-              </span>
-          </div>
-      </div>
-
-      <div class="row pt-2 pb-2">
-          <div class="col-6">
-              ETA Warp Speed
-          </div>
-          <div class="col-6 text-end">
-              <span title="ETA Warp Speed">
-                <i class="fa-brands fa-opera"></i> 
-                {{totalEtaWarp || 'N/A'}}
-              </span>
-          </div>
         </div>
+        <div class="col-3 text-center">
+          <span title="Total distance (ly)">
+            <i class="fas fa-ruler"></i> {{ distanceLightYears }}
+          </span>
+        </div>
+        <div class="col-3 text-center">
+          <span title="Required scanning evel">
+            <i class="fas fa-binoculars"></i> {{ scanningLevel }}
+          </span>
+        </div>
+        <div class="col-3 text-end">
+          <span title="Required hyperspace level">
+            <i class="fas fa-gas-pump"></i> {{ hyperspaceLevel }}
+          </span>
+        </div>
+      </div>
+
+      <div class="row bg-dark pt-2 pb-2 mt-1">
+        <div class="col-2">ETA<orbital-mechanics-e-t-a-warning /></div>
+        <div class="col-5 text-end">
+          <span title="ETA base speed"> Base {{ totalEta || "N/A" }} </span>
+        </div>
+        <div class="col-5 text-end">
+          <span title="ETA warp speed"> Warp {{ totalEtaWarp || "N/A" }} </span>
+        </div>
+      </div>
     </div>
 
-    <table class="table table-sm table-striped mb-2 mt-2" v-if="points.length > 1">
+    <div class="row pt-2 pb-2 bg-dark mt-1">
+      <div class="col-6">Speed Modifier</div>
+      <div class="col-6 text-end">
+        <select
+          class="form-select form-select-sm"
+          v-model="speedModifier"
+          @change="onSpeedModifierChanged"
+        >
+          <option value="1">1.0x (Normal)</option>
+          <option v-for="speed in speeds" v-bind:key="speed" :value="speed">
+            {{ speed }}x
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div v-if="isStandardUIStyle">
+      <div class="row bg-dark pt-2 pb-2">
+        <div class="col-6">Waypoints</div>
+        <div class="col-6 text-end">
+          <span title="Total number of waypoints plotted">
+            <i class="fas fa-map-marker-alt"></i>
+            {{ points.length }}
+          </span>
+        </div>
+      </div>
+
+      <div class="row pt-2 pb-2">
+        <div class="col-6">Distance (ly)</div>
+        <div class="col-6 text-end">
+          <span title="Total distance (ly)">
+            <i class="fas fa-ruler"></i> {{ distanceLightYears }}
+          </span>
+        </div>
+      </div>
+
+      <div class="row bg-dark pt-2 pb-2">
+        <div class="col-8">Required Scanning Level</div>
+        <div class="col-4 text-end">
+          <span title="Required scanning level">
+            <i class="fas fa-binoculars"></i> {{ scanningLevel }}
+          </span>
+        </div>
+      </div>
+
+      <div class="row pt-2 pb-2">
+        <div class="col-8">Required Hyperspace Level</div>
+        <div class="col-4 text-end">
+          <span title="Required hyperspace level">
+            <i class="fas fa-gas-pump"></i> {{ hyperspaceLevel }}
+          </span>
+        </div>
+      </div>
+
+      <div class="row bg-dark pt-2 pb-2">
+        <div class="col-6">ETA Base Speed</div>
+        <div class="col-6 text-end">
+          <span title="ETA base speed">
+            {{ totalEta || "N/A" }}
+          </span>
+        </div>
+      </div>
+
+      <div class="row pt-2 pb-2">
+        <div class="col-6">ETA Warp Speed</div>
+        <div class="col-6 text-end">
+          <span title="ETA warp speed">
+            {{ totalEtaWarp || "N/A" }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <table
+      class="table table-sm table-striped mb-2 mt-2"
+      v-if="points.length > 1"
+    >
       <thead>
         <tr>
           <td>Start</td>
@@ -143,24 +139,41 @@
           <template v-if="getNextPoint(point)">
             <td>
               <span>
-                <i class="fas" :class="{'fa-star':point.type=='star','fa-shuttle-space':point.type=='carrier'}"></i>
-                {{point.object.name}}
+                <i
+                  class="fas"
+                  :class="{
+                    'fa-star': point.type == 'star',
+                    'fa-rocket': point.type == 'carrier',
+                  }"
+                ></i>
+                {{ (point.object as Star).name }}
               </span>
             </td>
             <td>
-              <i v-if="getNextPoint(point)" class="fas fa-arrow-right ms-2 me-2"></i>
+              <i
+                v-if="getNextPoint(point)"
+                class="fas fa-arrow-right ms-2 me-2"
+              ></i>
             </td>
             <td>
               <span v-if="getNextPoint(point)">
-                <i class="fas" :class="{'fa-star':getNextPoint(point).type=='star','fa-shuttle-space':getNextPoint(point).type=='carrier'}"></i>
-                {{getNextPoint(point).object.name}}
+                <i
+                  class="fas"
+                  :class="{
+                    'fa-star': getNextPoint(point).type == 'star',
+                    'fa-rocket': getNextPoint(point).type == 'carrier',
+                  }"
+                ></i>
+                {{ (getNextPoint(point).object as Star).name }}
               </span>
             </td>
             <td>
-              <span v-if="getNextPoint(point)">{{getNextPointDistance(point)}}</span>
+              <span v-if="getNextPoint(point)">{{
+                getNextPointDistance(point)
+              }}</span>
             </td>
             <td>
-              <span>{{getDistanceRunningTotal(point)}}</span>
+              <span>{{ getDistanceRunningTotal(point) }}</span>
             </td>
           </template>
         </tr>
@@ -169,200 +182,332 @@
 
     <div class="row bg-dark" v-if="warpGateCost">
       <div class="col">
-        <p class="mt-2 mb-2"><small>To build Warp Gates on the selected route will cost <span class="text-warning">${{warpGateCost}}</span>.</small></p>
+        <p class="mt-2 mb-2">
+          <small
+            >To build Warp Gates on the selected route will cost
+            <span class="text-warning">${{ warpGateCost }}</span
+            >.</small
+          >
+        </p>
       </div>
     </div>
-</div>
+  </div>
 </template>
 
-<script>
-import MenuTitleVue from '../MenuTitle'
-import GameContainer from '../../../../game/container'
-import GameHelper from '../../../../services/gameHelper'
-import OrbitalMechanicsETAWarningVue from '../shared/OrbitalMechanicsETAWarning'
+<script setup lang="ts">
+import { useGameStore } from "@/stores/game";
+import { ref, computed, inject, onMounted, onUnmounted } from "vue";
+import MenuTitle from "../MenuTitle.vue";
+import GameHelper from "../../../../services/gameHelper";
+import OrbitalMechanicsETAWarning from "../shared/OrbitalMechanicsETAWarning.vue";
+import { eventBusInjectionKey } from "../../../../eventBus";
+import {
+  ModeKind,
+  MapEventBusEventNames,
+  MapCommandEventBusEventNames,
+} from "@solaris/map-rendering";
+import type { Carrier, Game, Star } from "@/types/game";
+import type { RulerPoint } from "@/types/ruler";
+import { getCountdownTimeStringByTicks } from "@/util/time";
+import type { Specialist } from "@solaris/common";
+import { useGameServices } from "@/util/gameServices";
 
-export default {
-  components: {
-    'menu-title': MenuTitleVue,
-    'orbital-mechanics-eta-warning': OrbitalMechanicsETAWarningVue
-  },
-  data () {
-    return {
-      points: [],
-      etaTicks: 0,
-      distanceLightYears: 0,
-      hyperspaceLevel: 0,
-      scanningLevel: 0,
-      totalEta: '',
-      totalEtaWarp: '',
-      isStandardUIStyle: false,
-      isCompactUIStyle: false,
-      speedModifier: 1
+const emit = defineEmits<{
+  onCloseRequested: [];
+}>();
+
+const eventBus = inject(eventBusInjectionKey)!;
+
+const store = useGameStore();
+const game = computed<Game>(() => store.game!);
+const serviceProvider = useGameServices();
+
+const points = ref<RulerPoint[]>([]);
+const distanceLightYears = ref(0);
+const hyperspaceLevel = ref(0);
+const scanningLevel = ref(0);
+const totalEta = ref("");
+const totalEtaWarp = ref("");
+const speedModifier = ref(1);
+
+const isCompactUIStyle = computed(
+  () => store.settings!.interface.uiStyle === "compact",
+);
+const isStandardUIStyle = computed(() => !isCompactUIStyle.value);
+
+const warpGateCost = computed(() => {
+  const starPoints = points.value.filter(
+    (p) =>
+      p.type === "star" &&
+      !(p.object as Star).warpGate &&
+      (p.object as Star).upgradeCosts,
+  );
+  const starIds = [...new Set(starPoints.map((p) => p.object._id))];
+
+  let sum = 0;
+
+  for (let starId of starIds) {
+    const star = starPoints.find((p) => p.object._id === starId)!
+      .object as Star;
+    sum += star.upgradeCosts?.warpGate || 0;
+  }
+
+  return sum;
+});
+
+const carrierSpecialists = computed<readonly Specialist[]>(
+  () => store.carrierSpecialists!,
+);
+
+const speeds = computed(() => {
+  if (!carrierSpecialists.value) {
+    return [];
+  }
+
+  const speedSpecialists = carrierSpecialists.value.filter(
+    (i) => i.modifiers && i.modifiers.local && i.modifiers.local.speed,
+  );
+
+  return [
+    ...new Set(speedSpecialists.map((s) => s.modifiers!.local!.speed)),
+  ].sort();
+});
+
+const onCloseRequested = () => {
+  emit("onCloseRequested");
+};
+
+const recalculateETAs = () => {
+  const locations = points.value.map((p) => p.location);
+
+  const tickDistance = serviceProvider.carrierTravelService.getDistancePerTick(
+    game.value,
+    speedModifier.value,
+    false,
+  );
+  const tickDistanceWarp =
+    serviceProvider.carrierTravelService.getDistancePerTick(
+      game.value,
+      speedModifier.value,
+      true,
+    );
+
+  const totalTicks =
+    serviceProvider.carrierTravelService.getTicksToTravel(
+      locations,
+      tickDistance,
+    ) || 0;
+  const totalTicksWarp =
+    serviceProvider.carrierTravelService.getTicksToTravel(
+      locations,
+      tickDistanceWarp,
+    ) || 0;
+
+  totalEta.value = getCountdownTimeStringByTicks(game.value, totalTicks);
+  totalEtaWarp.value = getCountdownTimeStringByTicks(
+    game.value,
+    totalTicksWarp,
+  );
+};
+
+const recalculateHyperspaceScanningLevel = () => {
+  if (points.value.length < 2) {
+    hyperspaceLevel.value = 0;
+    scanningLevel.value = 0;
+    return;
+  }
+
+  // Get the waypoint that has the largest distance between the source and destination.
+  const distances: number[] = [];
+
+  for (let i = 0; i < points.value.length - 1; i++) {
+    const point = points.value[i];
+    const nextPoint = points.value[i + 1];
+
+    if (!nextPoint) {
+      continue;
     }
-  },
-  mounted () {
-    this.isStandardUIStyle = this.$store.state.settings.interface.uiStyle === 'standard'
-    this.isCompactUIStyle = this.$store.state.settings.interface.uiStyle === 'compact'
 
-    // Set map to ruler mode
-    GameContainer.setMode('ruler')
-    GameContainer.map.on('onRulerPointCreated', this.onRulerPointCreated.bind(this))
-    GameContainer.map.on('onRulerPointRemoved', this.onRulerPointRemoved.bind(this))
-    GameContainer.map.on('onRulerPointsCleared', this.onRulerPointsCleared.bind(this))
-  },
-  destroyed () {
-    // Set map to galaxy mode
-    GameContainer.resetMode()
-  },
-  methods: {
-    onCloseRequested (e) {
-      this.$emit('onCloseRequested', e)
-    },
-    popRulerPoint () {
-      GameContainer.map.removeLastRulerPoint()
-    },
-    resetRulerPoints () {
-      // Bit hacky but it works.
-      GameContainer.resetMode()
-      GameContainer.setMode('ruler')
-    },
-    onRulerPointCreated (e) {
-      this.points.push(e)
-      if (e.type == 'carrier' && this.points.length == 1) {
-        this.speedModifier = 1;
-        if (e.object.specialistId && e.object.specialist.modifiers && e.object.specialist.modifiers.local && e.object.specialist.modifiers.local.speed  ) {
-          this.speedModifier = e.object.specialist.modifiers.local.speed
-        }
-      }
-      this.recalculateAll()
-    },
-    onRulerPointRemoved (e) {
-      this.points.splice(this.points.indexOf(e), 1)
+    distances.push(
+      GameHelper.getDistanceBetweenLocations(
+        point.location,
+        nextPoint.location,
+      ),
+    );
+  }
 
-      this.recalculateAll()
-    },
-    onRulerPointsCleared (e) {
-      this.points = []
+  const longestWaypoint = Math.max(...distances);
 
-      this.recalculateAll()
-    },
-    onSpeedModifierChanged (e) {
-      if (this.points.length > 1) {
-        this.recalculateETAs()
-      }
-    },
-    recalculateAll () {
-      this.recalculateETAs()
-      this.recalculateHyperspaceScanningLevel()
-      this.recalculateDistanceLightYears()
-    },
-    recalculateETAs () {
-      let game = this.$store.state.game
+  // Calculate the hyperspace range required for it.
+  hyperspaceLevel.value = Math.max(
+    GameHelper.getHyperspaceLevelByDistance(game.value, longestWaypoint),
+    1,
+  );
+  scanningLevel.value = GameHelper.getScanningLevelByDistance(
+    game.value,
+    longestWaypoint,
+  );
+};
 
-      let totalTicks = GameHelper.getTicksBetweenLocations(game, null, this.points, this.speedModifier)
-      let totalTicksWarp = GameHelper.getTicksBetweenLocations(game, null, this.points, game.constants.distances.warpSpeedMultiplier * this.speedModifier)
+const recalculateDistanceLightYears = () => {
+  distanceLightYears.value = 0;
 
-      let totalTimeString = GameHelper.getCountdownTimeStringByTicks(game, totalTicks, true)
-      let totalTimeWarpString = GameHelper.getCountdownTimeStringByTicks(game, totalTicksWarp, true)
+  if (points.value.length < 2) {
+    return;
+  }
 
-      this.totalEta = totalTimeString
-      this.totalEtaWarp = totalTimeWarpString
-    },
-    recalculateHyperspaceScanningLevel () {
-      if (this.points.length < 2) {
-        this.hyperspaceLevel = 0
-        this.scanningLevel = 0
-        return
-      }
+  let dist = 0;
 
-      let game = this.$store.state.game
+  for (let i = 0; i < points.value.length - 1; i++) {
+    dist += GameHelper.getDistanceBetweenLocations(
+      points.value[i].location,
+      points.value[i + 1].location,
+    );
+  }
 
-      // Get the waypoint that has the largest distance between the source and destination.
-      let distances = []
+  distanceLightYears.value =
+    Math.round((dist / game.value.constants.distances.lightYear) * 100.0) /
+    100.0;
+};
 
-      for (let i = 0; i < this.points.length - 1; i++) {
-        const point = this.points[i]
-        const nextPoint = this.points[i + 1]
+const recalculateAll = () => {
+  recalculateETAs();
+  recalculateHyperspaceScanningLevel();
+  recalculateDistanceLightYears();
+};
 
-        if (!nextPoint) {
-          continue
-        }
+const onRulerPointCreated = ({ rulerPoint: e }: { rulerPoint: RulerPoint }) => {
+  points.value.push(e);
 
-        distances.push(GameHelper.getDistanceBetweenLocations(point.location, nextPoint.location))
-      }
+  if (e.type == "carrier" && points.value.length == 1) {
+    speedModifier.value = 1;
 
-      let longestWaypoint = Math.max(...distances)
+    const carrier = e.object as Carrier;
 
-      // Calculate the hyperspace range required for it.
-      this.hyperspaceLevel = Math.max(GameHelper.getHyperspaceLevelByDistance(game, longestWaypoint), 1)
-      this.scanningLevel = GameHelper.getScanningLevelByDistance(game, longestWaypoint)
-    },
-    recalculateDistanceLightYears () {
-      this.distanceLightYears = 0
-
-      if (this.points.length < 2) {
-        return
-      }
-
-      let game = this.$store.state.game
-
-      for (let i = 0; i < this.points.length - 1; i++) {
-        this.distanceLightYears += GameHelper.getDistanceBetweenLocations(this.points[i].location, this.points[i + 1].location)
-      }
-
-      this.distanceLightYears = (Math.round(this.distanceLightYears / game.constants.distances.lightYear * 100.0) / 100.0).toFixed(2)
-    },
-    getNextPoint (point) {
-      let i = this.points.indexOf(point)
-
-      return this.points[i+1] || null
-    },
-    getNextPointDistance (point) {
-      let i = this.points.indexOf(point)
-
-      let distance = GameHelper.getDistanceBetweenLocations(this.points[i].location, this.points[i + 1].location)
-
-      distance = Math.round(distance / this.$store.state.game.constants.distances.lightYear * 100.0) / 100.0
-
-      return distance.toFixed(2)
-    },
-    getDistanceRunningTotal (point) {
-      let index = this.points.indexOf(point)
-
-      let distance = 0
-      
-      for (let i = 0; i < index + 1; i++) {
-        if (this.points[i + 1]) {
-          distance += GameHelper.getDistanceBetweenLocations(this.points[i].location, this.points[i + 1].location)
-        }
-      }
-
-      distance = Math.round(distance / this.$store.state.game.constants.distances.lightYear * 100.0) / 100.0
-
-      return distance.toFixed(2)
-    }
-  },
-  computed: {
-    warpGateCost () {
-      let starPoints = this.points.filter(p => p.type === 'star' && !p.object.warpGate && p.object.upgradeCosts)
-      let starIds = [...new Set(starPoints.map(p => p.object._id))]
-
-      let sum = 0
-
-      for (let starId of starIds) {
-        sum += starPoints.find(p => p.object._id === starId).object.upgradeCosts.warpGate
-      }
-
-      return sum
-    },
-    speeds: function () {
-      let speedSpecialists = this.$store.state.carrierSpecialists.filter(i => i.modifiers && i.modifiers.local && i.modifiers.local.speed)
-
-      return [...new Set(speedSpecialists.map(s => s.modifiers.local.speed))].sort()
+    if (
+      carrier.specialistId &&
+      carrier.specialist!.modifiers &&
+      carrier.specialist!.modifiers.local &&
+      carrier.specialist!.modifiers.local.speed
+    ) {
+      speedModifier.value = carrier.specialist!.modifiers.local.speed;
     }
   }
-}
+
+  recalculateAll();
+};
+
+const onRulerPointRemoved = ({ rulerPoint: e }: { rulerPoint: RulerPoint }) => {
+  points.value.splice(points.value.indexOf(e), 1);
+
+  recalculateAll();
+};
+
+const onRulerPointsCleared = () => {
+  points.value = [];
+
+  recalculateAll();
+};
+
+const resetRulerPoints = () => {
+  // Bit hacky but it works.
+  eventBus.emit(MapCommandEventBusEventNames.MapCommandResetMode, {});
+  eventBus.emit(MapCommandEventBusEventNames.MapCommandSetMode, {
+    mode: ModeKind.Ruler,
+  });
+};
+
+const popRulerPoint = () => {
+  eventBus.emit(
+    MapCommandEventBusEventNames.MapCommandRemoveLastRulerPoint,
+    {},
+  );
+};
+
+const getNextPoint = (point: RulerPoint) => {
+  const i = points.value.indexOf(point);
+
+  return points.value[i + 1] || null;
+};
+
+const getNextPointDistance = (point: RulerPoint) => {
+  const i = points.value.indexOf(point);
+
+  let distance = GameHelper.getDistanceBetweenLocations(
+    points.value[i].location,
+    points.value[i + 1].location,
+  );
+
+  distance =
+    Math.round((distance / game.value.constants.distances.lightYear) * 100.0) /
+    100.0;
+
+  return distance.toFixed(2);
+};
+
+const getDistanceRunningTotal = (point: RulerPoint) => {
+  let index = points.value.indexOf(point);
+
+  let distance = 0;
+
+  for (let i = 0; i < index + 1; i++) {
+    if (points.value[i + 1]) {
+      distance += GameHelper.getDistanceBetweenLocations(
+        points.value[i].location,
+        points.value[i + 1].location,
+      );
+    }
+  }
+
+  distance =
+    Math.round((distance / game.value.constants.distances.lightYear) * 100.0) /
+    100.0;
+
+  return distance.toFixed(2);
+};
+
+const onSpeedModifierChanged = () => {
+  if (points.value.length > 1) {
+    recalculateAll();
+  }
+};
+
+onMounted(() => {
+  eventBus.on(
+    MapEventBusEventNames.MapOnRulerPointCreated,
+    onRulerPointCreated,
+  );
+  eventBus.on(
+    MapEventBusEventNames.MapOnRulerPointRemoved,
+    onRulerPointRemoved,
+  );
+  eventBus.on(
+    MapEventBusEventNames.MapOnRulerPointsCleared,
+    onRulerPointsCleared,
+  );
+
+  eventBus.emit(MapCommandEventBusEventNames.MapCommandSetMode, {
+    mode: ModeKind.Ruler,
+  });
+
+  onUnmounted(() => {
+    eventBus.off(
+      MapEventBusEventNames.MapOnRulerPointCreated,
+      onRulerPointCreated,
+    );
+    eventBus.off(
+      MapEventBusEventNames.MapOnRulerPointRemoved,
+      onRulerPointRemoved,
+    );
+    eventBus.off(
+      MapEventBusEventNames.MapOnRulerPointsCleared,
+      onRulerPointsCleared,
+    );
+
+    // Set map to galaxy mode
+    eventBus.emit(MapCommandEventBusEventNames.MapCommandResetMode, {});
+  });
+});
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

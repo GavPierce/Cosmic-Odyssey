@@ -20,7 +20,7 @@
           <tbody>
             <diplomacy-row
               v-for="diplomaticStatus in diplomaticStatuses"
-              :key="diplomaticStatus.playerId"
+              :key="diplomaticStatus.playerIdTo"
               :diplomaticStatus="diplomaticStatus"
               @onOpenPlayerDetailRequested="onOpenPlayerDetailRequested"
               @onApiRequestError="onApiRequestError"
@@ -69,8 +69,8 @@
         <li v-if="isAllianceUpkeepEnabled">
           <small
             >Establishing an alliance will incur an
-            <span class="text-warning">upfront upkeep fee</span> based on your
-            cycle income.</small
+            <span class="text-warning">upfront upkeep fee</span>
+            based on your cycle income.</small
           >
         </li>
       </ul>
@@ -78,7 +78,7 @@
       <p class="pb-2">
         See the
         <a
-          href="https://Cosmic Odyssey-games.github.io/Cosmic Odyssey-docs/diplomacy#diplomatic-statuses"
+          href="https://solaris-games.github.io/solaris-docs/diplomacy#diplomatic-statuses"
           target="_blank"
           >wiki</a
         >
@@ -88,105 +88,113 @@
   </div>
 </template>
 
-<script>
-import MenuTitle from "../MenuTitle";
-import LoadingSpinner from "../../../components/LoadingSpinner";
-import DiplomacyApiService from "../../../../services/api/diplomacy";
-import DiplomacyRowVue from "./DiplomacyRow";
+<script setup lang="ts">
+import { useGameStore } from "@/stores/game";
+import MenuTitle from "../MenuTitle.vue";
+import LoadingSpinner from "../../../components/LoadingSpinner.vue";
+import DiplomacyRow from "./DiplomacyRow.vue";
 import DiplomacyHelper from "../../../../services/diplomacyHelper";
-import FormErrorList from "../../../components/FormErrorList";
+import FormErrorList from "../../../components/FormErrorList.vue";
+import { inject, ref, computed, onMounted, onUnmounted } from "vue";
+import { eventBusInjectionKey } from "../../../../eventBus";
+import DiplomacyEventBusEventNames from "../../../../eventBusEventNames/diplomacy";
+import { type DiplomaticStatus, sorterByProperty } from "@solaris/common";
+import type { Game } from "@/types/game";
+import { listDiplomacy } from "@/services/typedapi/diplomacy";
+import {
+  extractErrors,
+  formatError,
+  httpInjectionKey,
+  isOk,
+} from "@/services/typedapi";
 
-export default {
-  components: {
-    "menu-title": MenuTitle,
-    "loading-spinner": LoadingSpinner,
-    "diplomacy-row": DiplomacyRowVue,
-    "form-error-list": FormErrorList
-  },
-  data() {
-    return {
-      isLoading: false,
-      errors: [],
-      diplomaticStatuses: []
-    };
-  },
-  mounted() {
-    this.loadDiplomaticStatus();
-  },
-  created() {
-    this.sockets.subscribe(
-      "playerDiplomaticStatusChanged",
-      this.onPlayerDiplomaticStatusChanged
+const emit = defineEmits<{
+  onOpenPlayerDetailRequested: [playerId: string];
+  onCloseRequested: [];
+}>();
+
+const eventBus = inject(eventBusInjectionKey)!;
+const httpClient = inject(httpInjectionKey)!;
+
+const store = useGameStore();
+const game = computed<Game>(() => store.game!);
+
+const isFormalAlliancesEnabled = computed(() =>
+  DiplomacyHelper.isFormalAlliancesEnabled(game.value),
+);
+const isTradeRestricted = computed(() =>
+  DiplomacyHelper.isTradeRestricted(game.value),
+);
+const isMaxAlliancesEnabled = computed(() =>
+  DiplomacyHelper.isMaxAlliancesEnabled(game.value),
+);
+const maxAlliances = computed(() => DiplomacyHelper.maxAlliances(game.value));
+const isAllianceUpkeepEnabled = computed(() =>
+  DiplomacyHelper.isAllianceUpkeepEnabled(game.value),
+);
+
+const isLoading = ref(false);
+const errors = ref<string[]>([]);
+const diplomaticStatuses = ref<DiplomaticStatus<string>[]>([]);
+
+const onOpenPlayerDetailRequested = (playerId: string) =>
+  emit("onOpenPlayerDetailRequested", playerId);
+
+const onCloseRequested = () => emit("onCloseRequested");
+
+const onApiRequestSuccess = () => (errors.value = []);
+
+const onApiRequestError = (e: string[]) => (errors.value = e);
+
+const loadDiplomaticStatus = async () => {
+  if (!isFormalAlliancesEnabled.value) {
+    return;
+  }
+
+  isLoading.value = true;
+
+  const response = await listDiplomacy(httpClient)(game.value._id);
+  if (isOk(response)) {
+    diplomaticStatuses.value = response.data.toSorted(
+      sorterByProperty("playerToAlias"),
     );
-  },
-  destroyed() {
-    this.sockets.unsubscribe("playerDiplomaticStatusChanged");
-  },
-  methods: {
-    onOpenPlayerDetailRequested(playerId) {
-      this.$emit("onOpenPlayerDetailRequested", playerId);
-    },
-    onCloseRequested(e) {
-      this.$emit("onCloseRequested", e);
-    },
-    // TODO: This is super lazy
-    onApiRequestSuccess(e) {
-      this.errors = [];
-    },
-    onApiRequestError(e) {
-      this.errors = e.errors;
-    },
-    async loadDiplomaticStatus() {
-      if (!this.isFormalAlliancesEnabled) {
-        return;
-      }
+  } else {
+    console.error(formatError(response));
+    errors.value = extractErrors(response);
+  }
 
-      try {
-        this.isLoading = true;
+  isLoading.value = false;
+};
 
-        let response = await DiplomacyApiService.getDiplomaticStatus(
-          this.$store.state.game._id
-        );
+const onPlayerDiplomaticStatusChanged = (ev: {
+  diplomaticStatus: DiplomaticStatus<string>;
+}) => {
+  const diplomaticStatus = diplomaticStatuses.value.find(
+    (d) => d.playerIdTo === ev.diplomaticStatus.playerIdFrom,
+  );
 
-        if (response.status === 200) {
-          this.diplomaticStatuses = response.data;
-        }
-      } catch (err) {
-        console.error(err);
-      }
-
-      this.isLoading = false;
-    },
-    onPlayerDiplomaticStatusChanged(e) {
-      let diplomaticStatus = this.diplomaticStatuses.find(
-        d => d.playerIdTo === e.diplomaticStatus.playerIdFrom
-      );
-
-      if (diplomaticStatus) {
-        diplomaticStatus.statusTo = e.diplomaticStatus.statusFrom;
-        diplomaticStatus.statusFrom = e.diplomaticStatus.statusTo;
-        diplomaticStatus.actualStatus = e.diplomaticStatus.actualStatus;
-      }
-    }
-  },
-  computed: {
-    isFormalAlliancesEnabled() {
-      return DiplomacyHelper.isFormalAlliancesEnabled(this.$store.state.game);
-    },
-    isTradeRestricted() {
-      return DiplomacyHelper.isTradeRestricted(this.$store.state.game);
-    },
-    isMaxAlliancesEnabled() {
-      return DiplomacyHelper.isMaxAlliancesEnabled(this.$store.state.game);
-    },
-    maxAlliances() {
-      return DiplomacyHelper.maxAlliances(this.$store.state.game);
-    },
-    isAllianceUpkeepEnabled() {
-      return DiplomacyHelper.isAllianceUpkeepEnabled(this.$store.state.game);
-    }
+  if (diplomaticStatus) {
+    diplomaticStatus.statusTo = ev.diplomaticStatus.statusFrom;
+    diplomaticStatus.statusFrom = ev.diplomaticStatus.statusTo;
+    diplomaticStatus.actualStatus = ev.diplomaticStatus.actualStatus;
   }
 };
+
+onMounted(() => {
+  eventBus.on(
+    DiplomacyEventBusEventNames.PlayerDiplomaticStatusChanged,
+    onPlayerDiplomaticStatusChanged,
+  );
+
+  loadDiplomaticStatus();
+
+  onUnmounted(() => {
+    eventBus.off(
+      DiplomacyEventBusEventNames.PlayerDiplomaticStatusChanged,
+      onPlayerDiplomaticStatusChanged,
+    );
+  });
+});
 </script>
 
 <style scoped>

@@ -1,124 +1,145 @@
-import { Router } from "express";
-import { ExpressJoiInstance } from "express-joi-validation";
 import { DependencyContainer } from "../../services/types/DependencyContainer";
-import CarrierController from '../controllers/carrier';
+import CarrierController from "../controllers/carrier";
 import { MiddlewareContainer } from "../middleware";
+import { SingleRouter } from "../singleRoute";
+import { createCarrierRoutes } from "@solaris/common";
+import { DBObjectId } from "../../services/types/DBObjectId";
+import { createRoutes } from "../typedapi/routes";
 
-export default (router: Router, mw: MiddlewareContainer, validator: ExpressJoiInstance, container: DependencyContainer) => {
+export default (
+    router: SingleRouter,
+    mw: MiddlewareContainer,
+    container: DependencyContainer,
+) => {
     const controller = CarrierController(container);
+    const routes = createCarrierRoutes<DBObjectId>();
+    const answer = createRoutes(router, mw);
 
-    router.put('/api/game/:gameId/carrier/:carrierId/waypoints',
+    answer(
+        routes.saveWaypoints,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             settings: true,
             state: true,
             galaxy: true,
-            constants: true
+            constants: true,
         }),
         mw.game.validateGameState({
             isUnlocked: true,
-            isNotFinished: true
+            isNotFinished: true,
         }),
         mw.player.loadPlayer,
         mw.player.validatePlayerState({ isPlayerUndefeated: true }),
         controller.saveWaypoints,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
-    router.put('/api/game/:gameId/carrier/:carrierId/waypoints/loop',
+    answer(
+        routes.loop,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             settings: true,
             state: true,
             galaxy: true,
-            constants: true
+            constants: true,
         }),
         mw.game.validateGameState({
             isUnlocked: true,
-            isNotFinished: true
+            isNotFinished: true,
         }),
         mw.player.loadPlayer,
         mw.player.validatePlayerState({ isPlayerUndefeated: true }),
         controller.loopWaypoints,
-        mw.core.handleError);
-    
-    router.put('/api/game/:gameId/carrier/:carrierId/transfer',
+        mw.playerMutex.release(),
+    );
+
+    answer(
+        routes.transferShips,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             settings: true,
             state: true,
             galaxy: true,
-            constants: true
+            constants: true,
         }),
         mw.game.validateGameState({
             isUnlocked: true,
-            isNotFinished: true
+            isNotFinished: true,
         }),
         mw.player.loadPlayer,
         mw.player.validatePlayerState({ isPlayerUndefeated: true }),
         controller.transferShips,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
-    router.put('/api/game/:gameId/carrier/:carrierId/gift',
+    answer(
+        routes.gift,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             settings: true,
             state: true,
             galaxy: true,
-            constants: true
+            constants: true,
         }),
         mw.game.validateGameState({
             isUnlocked: true,
-            isNotFinished: true
+            isNotFinished: true,
         }),
         mw.player.loadPlayer,
         mw.player.validatePlayerState({ isPlayerUndefeated: true }),
         controller.gift,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
-    router.patch('/api/game/:gameId/carrier/:carrierId/rename',
+    answer(
+        routes.rename,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             settings: true,
             state: true,
             galaxy: true,
-            constants: true
+            constants: true,
         }),
         mw.game.validateGameState({
             isUnlocked: true,
-            isNotFinished: true
+            isNotFinished: true,
         }),
         mw.player.loadPlayer,
         mw.player.validatePlayerState({ isPlayerUndefeated: true }),
         controller.rename,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
-    router.delete('/api/game/:gameId/carrier/:carrierId/scuttle',
+    answer(
+        routes.scuttle,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             settings: true,
             state: true,
             galaxy: true,
-            constants: true
+            constants: true,
         }),
         mw.game.validateGameState({
             isUnlocked: true,
-            isNotFinished: true
+            isNotFinished: true,
         }),
         mw.player.loadPlayer,
         mw.player.validatePlayerState({ isPlayerUndefeated: true }),
         controller.scuttle,
-        mw.core.handleError);
-
-    router.post('/api/game/:gameId/carrier/calculateCombat',
-        mw.auth.authenticate(),
-        controller.calculateCombat,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
     return router;
-}
+};

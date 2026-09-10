@@ -1,4 +1,4 @@
-use Cosmic Odyssey;
+use solaris;
 
 // Remove identifiable user info.
 db.users.updateMany({}, {
@@ -111,7 +111,7 @@ let index = 0;
 
 db.users.find({}).forEach(function(user) {
     user.username = 'test' + index.toString();
-    user.email = 'test' + index.toString() + '@Cosmic Odyssey.games';
+    user.email = 'test' + index.toString() + '@solaris.games';
 
     index++;
 
@@ -157,7 +157,6 @@ db.games.updateMany({}, {
 });
 
 // Remove all other unnecessary data.
-db.agendaJobs.deleteMany({});
 db.guilds.deleteMany({});
 db.payments.deleteMany({});
 db.reports.deleteMany({});

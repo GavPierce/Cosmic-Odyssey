@@ -1,225 +1,230 @@
 <template>
-<div v-if="player">
-  <player-title :player="player"/>
+  <div v-if="player">
+    <player-title :player="player" />
 
-  <div class="row pt-0">
+    <div class="row pt-0">
       <div class="col-auto text-center ps-0 pe-0">
-        <img v-if="player.avatar" :src="getAvatarImage()">
-        <i v-if="!player.avatar" class="far fa-user me-2 mt-2 ms-2 mb-2" style="font-size:100px;"></i>
+        <picture style="display: contents" v-if="player.avatar">
+          <source :srcset="getAvatarWebpImage()" type="image/webp" />
+          <img :src="getAvatarImage()" :alt="player.alias" />
+        </picture>
+        <i
+          v-if="!player.avatar"
+          class="far fa-user me-2 mt-2 ms-2 mb-2"
+          style="font-size: 100px"
+        ></i>
       </div>
-      <div class="col  bg-dark">
-          <statistics :playerId="playerId"/>
+      <div class="col bg-dark">
+        <statistics :playerId="playerId" />
       </div>
-  </div>
+    </div>
 
-  <div class="row pt-2 pb-2 bg-dark" v-if="!(!userPlayer || !gameHasStarted || player.userId)">
-    <div class="col">
-      <button class="btn btn-info me-1" @click="onOpenDiplomacyRequested" title="Open Diplomacy" v-if="isFormalAlliancesEnabled">
-        <i class="fas fa-flag"></i> Diplomacy
-      </button>
-      <button class="btn btn-info me-1" @click="onOpenLedgerRequested" title="Open Ledger" v-if="isTradeEnabled">
-        <i class="fas fa-file-invoice-dollar"></i> 
-      </button>
-      <button class="btn btn-info" @click="onViewCompareIntelRequested" title="Compare Intel" v-if="!isDarkModeExtra">
-        <i class="fas fa-chart-line"></i>
-      </button>
+    <div
+      class="row pt-2 pb-2 bg-dark"
+      v-if="userPlayer && (!gameHasStarted || player.userId)"
+    >
+      <div class="col-auto">
+        <button
+          class="btn btn-primary me-1"
+          @click="onViewColourOverrideRequested"
+        >
+          <i class="fas fa-paint-brush" />
+          <span v-if="!isCompactUIStyle" class="d-none d-md-inline-block ms-1"
+            >Customise colour</span
+          >
+        </button>
+      </div>
     </div>
-    <div class="col-auto">
-      <button class="btn btn-success me-1" @click="onViewConversationRequested"
-        :class="{'btn-warning': conversation && conversation.unreadCount}"
-        v-if="canCreateConversation" title="Message Player">
-        <i class="fas fa-envelope"></i>
-        <span v-if="conversation && conversation.unreadCount" class="ms-1">{{conversation.unreadCount}}</span> Message
-      </button>
-      <button class="btn btn-info" v-if="!gameHasFinished && isTradeEnabled" @click="onOpenTradeRequested" title="Trade Resources with Other Players">
-        <i class="fas fa-handshake"></i>
-        Trade
-      </button>
+
+    <div
+      class="row pt-2 pb-2 bg-dark"
+      v-if="gameHasStarted && !player.userId && userPlayer"
+    >
+      <div class="col">
+        <button
+          class="btn btn-outline-secondary me-1"
+          @click="onOpenDiplomacyRequested"
+          title="Open Diplomacy"
+          v-if="isFormalAlliancesEnabled"
+        >
+          <i class="fas fa-globe-americas"></i>
+        </button>
+        <button
+          class="btn btn-outline-secondary me-1"
+          @click="onOpenLedgerRequested"
+          title="Open Ledger"
+          v-if="isTradeEnabled"
+        >
+          <i class="fas fa-file-invoice-dollar"></i>
+        </button>
+        <button
+          class="btn btn-outline-secondary"
+          @click="onViewCompareIntelRequested"
+          title="Compare Intel"
+          v-if="!isDarkModeExtra"
+        >
+          <i class="fas fa-chart-line"></i>
+        </button>
+      </div>
+      <div class="col-auto">
+        <button
+          class="btn btn-primary me-1"
+          @click="onViewColourOverrideRequested"
+        >
+          <i class="fas fa-paint-brush" />
+          <span v-if="!isCompactUIStyle" class="d-none d-md-inline-block ms-1"
+            >Customise colour</span
+          >
+        </button>
+        <button
+          class="btn btn-success me-1"
+          @click="onViewConversationRequested"
+          :class="{
+            'btn-warning': conversation && conversation.unreadCount,
+          }"
+          v-if="canCreateConversation"
+        >
+          <i class="fas fa-envelope"></i>
+          <span v-if="conversation && conversation.unreadCount" class="ms-1">{{
+            conversation.unreadCount
+          }}</span>
+        </button>
+        <button
+          class="btn btn-info"
+          v-if="!gameHasFinished && isTradeEnabled"
+          @click="onOpenTradeRequested"
+        >
+          <i class="fas fa-handshake" />
+          <span v-if="!isCompactUIStyle" class="d-none d-md-inline-block ms-1"
+            >Trade</span
+          >
+        </button>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
-<script>
-import eventBus from '../../../../eventBus'
-import MENU_STATES from '../../../../services/data/menuStates'
-import Statistics from './Statistics'
-import PlayerTitleVue from './PlayerTitle'
-import gameHelper from '../../../../services/gameHelper'
-import ConversationApiService from '../../../../services/api/conversation'
-import DiplomacyHelper from '../../../../services/diplomacyHelper'
+<script setup lang="ts">
+import { useGameStore } from "@/stores/game";
+import { eventBusInjectionKey } from "../../../../eventBus";
+import Statistics from "./Statistics.vue";
+import PlayerTitle from "./PlayerTitle.vue";
+import DiplomacyHelper from "../../../../services/diplomacyHelper";
+import { ref, inject, computed, onMounted } from "vue";
+import type { Game } from "@/types/game";
+import { formatError, httpInjectionKey, isOk } from "@/services/typedapi";
+import type { ConversationOverview } from "@solaris/common";
+import GameHelper from "../../../../services/gameHelper";
+import { listPrivate } from "@/services/typedapi/conversation";
 
-export default {
-  components: {
-    'statistics': Statistics,
-    'player-title': PlayerTitleVue
-  },
-  props: {
-    playerId: String
-  },
-  data () {
-    return {
-      userPlayer: null,
-      player: null,
-      gameHasStarted: null,
-      gameHasFinished: null,
-      conversation: null
+const props = defineProps<{
+  playerId: string;
+}>();
+
+const emit = defineEmits<{
+  onViewColourOverrideRequested: [playerId: string];
+  onViewCompareIntelRequested: [playerId: string];
+  onOpenTradeRequested: [playerId: string];
+}>();
+
+const httpClient = inject(httpInjectionKey)!;
+const eventBus = inject(eventBusInjectionKey)!;
+
+const store = useGameStore();
+const game = computed<Game>(() => store.game!);
+
+const gameHasStarted = computed(() => GameHelper.isGameStarted(game.value));
+const gameHasFinished = computed(() => GameHelper.isGameFinished(game.value));
+const isDarkModeExtra = computed(() => GameHelper.isDarkModeExtra(game.value));
+const isTradeEnabled = computed(() => GameHelper.isTradeEnabled(game.value));
+const isFormalAlliancesEnabled = computed(() =>
+  DiplomacyHelper.isFormalAlliancesEnabled(game.value),
+);
+const isCompactUIStyle = computed(
+  () => store.settings!.interface.uiStyle !== "standard",
+);
+const canCreateConversation = computed(
+  () =>
+    game.value.settings.general.playerLimit > 2 &&
+    !GameHelper.isTutorialGame(game.value),
+);
+
+const player = computed(() =>
+  GameHelper.getPlayerById(game.value, props.playerId)!,
+);
+const userPlayer = computed(() => GameHelper.getUserPlayer(game.value));
+
+const conversation = ref<ConversationOverview<string> | null>(null);
+
+const getAvatarImage = () => {
+  return new URL(
+    `../../../../assets/avatars/${player.value.avatar}`,
+    import.meta.url,
+  ).href;
+};
+
+const getAvatarWebpImage = () => {
+  const base = player.value.avatar!.replace(/\.[^.]+$/, "");
+  return new URL(`../../../../assets/avatars/${base}.webp`, import.meta.url)
+    .href;
+};
+
+const loadConversation = async () => {
+  if (userPlayer.value && userPlayer.value._id !== player.value._id) {
+    const response = await listPrivate(httpClient)(
+      game.value._id,
+      player.value._id,
+    );
+    if (isOk(response)) {
+      conversation.value = response.data;
+    } else {
+      console.error(formatError(response));
     }
-  },
-  async mounted () {
-    this.userPlayer = gameHelper.getUserPlayer(this.$store.state.game)
-    this.player = gameHelper.getPlayerById(this.$store.state.game, this.playerId)
-
-    this.gameHasStarted = this.$store.state.game.state.startDate != null
-    this.gameHasFinished = this.$store.state.game.state.endDate != null
-
-    await this.loadConversation()
-  },
-  methods: {
-    onViewConversationRequested (e) {
-      if (this.conversation) {
-        eventBus.$emit('onViewConversationRequested', {
-          conversationId: this.conversation._id
-        })
-      } else {
-        eventBus.$emit('onViewConversationRequested', {
-          participantIds: [
-            this.userPlayer._id,
-            this.player._id
-          ]
-        })
-      }
-    },
-    onViewCompareIntelRequested (e) {
-      this.$emit('onViewCompareIntelRequested', this.player._id)
-    },
-    onOpenTradeRequested (e) {
-      this.$emit('onOpenTradeRequested', this.playerId)
-    },
-    onOpenDiplomacyRequested (e) {
-      this.$store.commit('setMenuState', {
-        state: MENU_STATES.DIPLOMACY
-      })
-    },
-    onOpenLedgerRequested (e) {
-      this.$store.commit('setMenuState', {
-        state: MENU_STATES.LEDGER
-      })
-    },
-    getAvatarImage () {
-      try {
-        return require(`../../../../assets/avatars/${this.player.avatar}`)
-      } catch (err) {
-        console.error(err)
-        
-        return null
-      }
-    },
-    async loadConversation () {
-      if (this.userPlayer && this.userPlayer._id !== this.player._id) {
-        try {
-          let response = await ConversationApiService.privateChatSummary(this.$store.state.game._id, this.player._id)
-
-          if (response.status === 200) {
-            this.conversation = response.data
-          }
-        } catch (err) {
-          console.error(err)
-        }
-      }
-    },
-    async loadDiplomaticStatus () {
-      if (!DiplomacyHelper.isFormalAlliancesEnabled(this.$store.state.game) || !DiplomacyHelper.isTradeRestricted(this.$store.state.game)) {
-        return
-      }
-
-      try {
-        const response = await DiplomacyApiService.getDiplomaticStatusToPlayer(this.$store.state.game._id, this.player._id)
-
-        if (response.status === 200) {
-          this.diplomaticStatus = response.data
-        }
-      } catch (err) {
-        console.error(err)
-        this.diplomaticStatus = null
-      }
-    },
-    onViewCompareIntelRequested (e) {
-      this.$emit('onViewCompareIntelRequested', this.player._id)
-    },
-    onOpenTradeRequested (e) {
-      this.$emit('onOpenTradeRequested', this.playerId)
-    },
-    onOpenDiplomacyRequested (e) {
-      this.$store.commit('setMenuState', {
-        state: MENU_STATES.DIPLOMACY
-      })
-    },
-  },
-  computed: {
-    isDarkModeExtra () {
-      return gameHelper.isDarkModeExtra(this.$store.state.game)
-    },
-    isTradeEnabled () {
-      return gameHelper.isTradeEnabled(this.$store.state.game)
-    },
-    canCreateConversation: function () {
-      return this.$store.state.game.settings.general.playerLimit > 2
-        && !gameHelper.isTutorialGame(this.$store.state.game)
-    },
-    isFormalAlliancesEnabled () {
-      return DiplomacyHelper.isFormalAlliancesEnabled(this.$store.state.game)
-    },
-        game () {
-      return this.$store.state.game
-    },
-    isTradeAllowed () {
-      return this.game.state.startDate 
-        && this.userPlayer 
-        && this.player != this.userPlayer 
-        && !this.userPlayer.defeated 
-        && !this.isGameFinished 
-        && (this.tradeTechnologyIsEnabled || this.tradeCreditsIsEnabled || this.tradeCreditsSpecialistsIsEnabled)
-    },
-    isTradePossibleByScanning: function () {
-      return this.player.stats.totalStars > 0 
-        && (this.$store.state.game.settings.player.tradeScanning === 'all' || (this.player && this.player.isInScanningRange))
-    },
-    isTradePossibleByDiplomacy: function () {
-      return !DiplomacyHelper.isFormalAlliancesEnabled(this.$store.state.game) || 
-        !DiplomacyHelper.isTradeRestricted(this.$store.state.game) || 
-        (this.diplomaticStatus && this.diplomaticStatus.actualStatus == 'allies')
-    },
-    isGameFinished: function () {
-      return GameHelper.isGameFinished(this.$store.state.game)
-    },
-    tradeCreditsIsEnabled () {
-      return this.game.settings.player.tradeCredits
-    },
-    tradeCreditsSpecialistsIsEnabled () {
-      return this.game.settings.player.tradeCreditsSpecialists
-        && this.game.settings.specialGalaxy.specialistsCurrency === 'creditsSpecialists'
-    },
-    tradeTechnologyIsEnabled () {
-      return this.game.settings.player.tradeCost > 0
-    },
-    isDarkModeExtra () {
-      return gameHelper.isDarkModeExtra(this.$store.state.game)
-    },
-    isTradeEnabled () {
-      return gameHelper.isTradeEnabled(this.$store.state.game)
-    },
-    canCreateConversation: function () {
-      return this.$store.state.game.settings.general.playerLimit > 2
-        && !gameHelper.isTutorialGame(this.$store.state.game)
-    },
-    isFormalAlliancesEnabled () {
-      return DiplomacyHelper.isFormalAlliancesEnabled(this.$store.state.game)
-    
   }
+};
+
+const onViewColourOverrideRequested = () =>
+  emit("onViewColourOverrideRequested", player.value._id);
+
+const onViewCompareIntelRequested = () =>
+  emit("onViewCompareIntelRequested", player.value._id);
+
+const onOpenTradeRequested = () =>
+  emit("onOpenTradeRequested", player.value._id);
+
+const onOpenDiplomacyRequested = () => {
+  store.setMenuState({
+    state: "diplomacy",
+  });
+};
+
+const onOpenLedgerRequested = () => {
+  store.setMenuState({
+    state: "ledger",
+  });
+};
+
+const onViewConversationRequested = () => {
+  if (!userPlayer.value) {
+    return;
   }
-}
+
+  if (conversation.value) {
+    store.setMenuStateChat({
+      state: "conversation",
+      conversationId: conversation.value._id,
+    });
+  } else {
+    store.setMenuStateChat({
+      state: "createConversation",
+      participantIds: [userPlayer.value!._id, player.value._id],
+    });
+  }
+};
+
+onMounted(async () => {
+  await loadConversation();
+});
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

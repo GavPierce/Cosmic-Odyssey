@@ -1,234 +1,417 @@
 <template>
-<div class="menu-page container">
-    <menu-title title="Ship Transfer" @onCloseRequested="onCloseRequested"/>
+  <div class="menu-page container">
+    <menu-title title="Ship Transfer" @onCloseRequested="onCloseRequested" />
 
     <div class="row mb-0">
       <div class="col text-center pt-2 pb-2">
-        <p class="mb-0"><small>While in <strong>orbit</strong> of a star you may transfer ships.</small></p>
+        <p class="mb-0">
+          <small
+            >While in <strong>orbit</strong> of a star you may transfer
+            ships.</small
+          >
+        </p>
       </div>
     </div>
 
-    <div class="row mb-0 pt-2 pb-2 bg-dark" v-if="carrier && carrier.waypoints && carrier.waypoints.length">
+    <div
+      class="row mb-0 pt-2 pb-2 bg-dark"
+      v-if="carrier?.waypoints?.length && carrierWaypointDestination"
+    >
       <div class="col">
-        <p class="mb-0"><i class="fas fa-map-marker-alt me-2"></i><strong>{{carrier.name}}</strong>'s next waypoint is to <star-label :starId="carrierWaypointDestination"/>.</p>
+        <p class="mb-0">
+          <i class="fas fa-map-marker-alt me-2"></i
+          ><strong>{{ carrier.name }}</strong
+          >'s next waypoint is to
+          <star-label :starId="carrierWaypointDestination" />.
+        </p>
       </div>
     </div>
 
     <div class="row mt-2">
-        <div class="col" v-if="star">
-            <p class="mb-0"><i class="fas fa-star me-1"></i>{{star.name}}</p>
-        </div>
-        <div class="col" v-if="carrier">
-            <p class="mb-0"><i class="fas fa-shuttle-space me-1"></i>{{carrier.name}}</p>
-        </div>
+      <div class="col" v-if="star">
+        <p class="mb-0"><i class="fas fa-star me-1"></i>{{ star.name }}</p>
+      </div>
+      <div class="col" v-if="carrier">
+        <p class="mb-0"><i class="fas fa-rocket me-1"></i>{{ carrier.name }}</p>
+      </div>
     </div>
 
     <div class="row mb-1">
-        <div class="col">
-            <input v-model.lazy="starShips" type="number" class="form-control" @change="onStarShipsChanged">
-        </div>
-        <div class="col">
-            <input v-model.lazy="carrierShips" type="number" class="form-control" @change="onCarrierShipsChanged">
-        </div>
+      <div class="col">
+        <input
+          v-model="starShips"
+          type="number"
+          class="form-control"
+          @input="onStarShipsChanged"
+          @blur="onStarShipsBlur"
+        />
+      </div>
+      <div class="col">
+        <input
+          v-model="carrierShips"
+          type="number"
+          class="form-control"
+          @input="onCarrierShipsChanged"
+          @blur="onCarrierShipsBlur"
+        />
+      </div>
     </div>
 
     <div class="row mb-2">
-        <div class="col-6">
-            <div class="row g-0">
-                <div class="col-4">
-                  <div class="d-grid gap-2">
-                    <button type="button" title="Transfer all ships to the star" class="btn btn-danger" @click="onMinShipsClicked">Min</button>
-                  </div>
-                </div>
-                <div class="col">
-                    <button type="button" title="Transfer 1 ship to the star" class="btn btn-outline-primary float-end ms-1" @click="onTransferLeftClicked(1)" :disabled="carrierShips <= 1"><i class="fas fa-angle-left"></i></button>
-                    <button type="button" title="Transfer 10 ships to the star"  class="btn btn-outline-primary ms-1 float-end" @click="onTransferLeftClicked(10)" :disabled="carrierShips <= 10"><i class="fas fa-angle-double-left"></i></button>
-                    <button type="button" title="Transfer 100 ships to the star"  class="btn btn-outline-primary float-end" @click="onTransferLeftClicked(100)" :disabled="carrierShips <= 100"><i class="fas fa-angle-left"></i><i class="fas fa-angle-double-left"></i></button>
-                </div>
+      <div class="col-6">
+        <div class="row g-0">
+          <div class="col-4">
+            <div class="d-grid gap-2">
+              <button
+                type="button"
+                title="Transfer all ships to the star"
+                class="btn btn-danger"
+                @click="onMinShipsClicked"
+              >
+                Min
+              </button>
             </div>
-        </div>
-
-        <div class="col-6">
-            <div class="row g-0">
-                <div class="col">
-                    <button type="button" title="Transfer 1 ship to the carrier" class="btn btn-outline-primary" @click="onTransferRightClicked(1)" :disabled="starShips <= 0"><i class="fas fa-angle-right"></i></button>
-                    <button type="button" title="Transfer 10 ships to the carrier"  class="btn btn-outline-primary ms-1" @click="onTransferRightClicked(10)" :disabled="starShips < 10"><i class="fas fa-angle-double-right"></i></button>
-                    <button type="button" title="Transfer 100 ships to the carrier"  class="btn btn-outline-primary ms-1 " @click="onTransferRightClicked(100)" :disabled="starShips < 100"><i class="fas fa-angle-double-right"></i><i class="fas fa-angle-right"></i></button>
-                </div>
-                <div class="col-4">
-                  <div class="d-grid gap-2">
-                    <button type="button" title="Transfer all ships to the carrier" class="btn btn-success" @click="onMaxShipsClicked">Max</button>
-                  </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row pb-2 pt-2 bg-dark">
-        <div class="col-6"></div>
-        <div class="col pe-0">
-          <div class="d-grid gap-2">
-            <button type="button" class="btn btn-success me-1" :disabled="$isHistoricalMode() || isTransferringShips || starShips < 0 || carrierShips < 0" @click="saveTransfer">
-              <i class="fas fa-check"></i>
-              Transfer
+          </div>
+          <div class="col">
+            <button
+              type="button"
+              title="Transfer 1 ship to the star"
+              class="btn btn-outline-primary float-end ms-1"
+              @click="onTransferLeftClicked(1)"
+              :disabled="carrierShips <= 1"
+            >
+              <i class="fas fa-angle-left"></i>
+            </button>
+            <button
+              type="button"
+              title="Transfer 10 ships to the star"
+              class="btn btn-outline-primary ms-1 float-end"
+              @click="onTransferLeftClicked(10)"
+              :disabled="carrierShips <= 10"
+            >
+              <i class="fas fa-angle-double-left"></i>
+            </button>
+            <button
+              type="button"
+              title="Transfer 100 ships to the star"
+              class="btn btn-outline-primary float-end"
+              @click="onTransferLeftClicked(100)"
+              :disabled="carrierShips <= 100"
+            >
+              <i class="fas fa-angle-left"></i
+              ><i class="fas fa-angle-double-left"></i>
             </button>
           </div>
         </div>
-        <div class="col-auto ps-0">
-            <button type="button" class="btn btn-outline-primary" @click="onEditWaypointsRequested"><i class="fas fa-map-marker-alt"></i></button>
+      </div>
+
+      <div class="col-6">
+        <div class="row g-0">
+          <div class="col">
+            <button
+              type="button"
+              title="Transfer 1 ship to the carrier"
+              class="btn btn-outline-primary"
+              @click="onTransferRightClicked(1)"
+              :disabled="starShips <= 0"
+            >
+              <i class="fas fa-angle-right"></i>
+            </button>
+            <button
+              type="button"
+              title="Transfer 10 ships to the carrier"
+              class="btn btn-outline-primary ms-1"
+              @click="onTransferRightClicked(10)"
+              :disabled="starShips < 10"
+            >
+              <i class="fas fa-angle-double-right"></i>
+            </button>
+            <button
+              type="button"
+              title="Transfer 100 ships to the carrier"
+              class="btn btn-outline-primary ms-1"
+              @click="onTransferRightClicked(100)"
+              :disabled="starShips < 100"
+            >
+              <i class="fas fa-angle-double-right"></i
+              ><i class="fas fa-angle-right"></i>
+            </button>
+          </div>
+          <div class="col-4">
+            <div class="d-grid gap-2">
+              <button
+                type="button"
+                title="Transfer all ships to the carrier"
+                class="btn btn-success"
+                @click="onMaxShipsClicked"
+              >
+                Max
+              </button>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
+
+    <div class="row pb-2 pt-2 bg-dark">
+      <div class="col-6"></div>
+      <div class="col pe-0">
+        <div class="d-grid gap-2">
+          <button
+            type="button"
+            class="btn btn-success me-1"
+            :disabled="
+              isHistoricalMode ||
+              isTransferringShips ||
+              starShips < 0 ||
+              carrierShips < 1
+            "
+            @click="saveTransfer"
+          >
+            <i class="fas fa-check"></i>
+            Transfer
+          </button>
+        </div>
+      </div>
+      <div class="col-auto ps-0" v-if="canEditWaypoints">
+        <button
+          type="button"
+          class="btn btn-outline-primary"
+          @click="onEditWaypointsRequested"
+        >
+          <i class="fas fa-map-marker-alt"></i>
+        </button>
+      </div>
+    </div>
+  </div>
 </template>
 
-<script>
-import { mapState } from 'vuex'
-import GameHelper from '../../../../services/gameHelper'
-import CarrierApiService from '../../../../services/api/carrier'
-import MenuTitle from '../MenuTitle'
-import StarLabelVue from '../star/StarLabel'
+<script setup lang="ts">
+import GameHelper from "../../../../services/gameHelper";
+import MenuTitle from "../MenuTitle.vue";
+import StarLabel from "../star/StarLabel.vue";
+import { ref, computed, inject, watch, onMounted } from "vue";
+import { formatError, httpInjectionKey, isOk } from "@/services/typedapi";
+import type { Game, Star, Carrier } from "@/types/game";
+import { transferShips } from "@/services/typedapi/carrier";
+import { useIsHistoricalMode } from "@/util/reactiveHooks";
+import { useGameStore } from "@/stores/game";
+import { eventBusInjectionKey } from "@/eventBus";
 
-export default {
-  components: {
-    'menu-title': MenuTitle,
-    'star-label': StarLabelVue
-  },
-  props: {
-    carrierId: String
-  },
-  data () {
-    return {
-      carrier: null,
-      star: null,
-      starShips: 0,
-      carrierShips: 0,
-      isTransferringShips: false,
-      carrierWaypointDestination: null
-    }
-  },
-  mounted () {
-    this.carrier = GameHelper.getCarrierById(this.$store.state.game, this.carrierId)
-    this.star = GameHelper.getStarById(this.$store.state.game, this.carrier.orbiting)
+import { useToast } from "vue-toast-notification";
+const props = defineProps<{
+  carrierId: string;
+}>();
 
-    this.starShips = this.star.ships
-    this.carrierShips = this.carrier.ships
+const emit = defineEmits<{
+  onCloseRequested: [e: Event];
+  onShipsTransferred: [carrierId: string];
+  onEditWaypointsRequested: [carrierId: string];
+}>();
 
-    if (this.carrier.waypoints && this.carrier.waypoints.length) {
-      this.carrierWaypointDestination = this.carrier.waypoints[0].destination
-    }
-  },
-  methods: {
-    onCloseRequested (e) {
-      this.$emit('onCloseRequested', e)
-    },
-    onGameReloaded (data) {
-      // When the game ticks there may have been ships built at the star.
-      // Find the star in the tick report and compare the ships, then add
-      // the difference to the star ships side on the transfer.
+const eventBus = inject(eventBusInjectionKey)!;
+const httpClient = inject(httpInjectionKey)!;
+const toast = useToast();
 
-      // NOTE: At this stage the star will have the latest data for its ships
-      // as the store deals with updating the star.
-      this.carrier = GameHelper.getCarrierById(this.$store.state.game, this.carrierId)
-      this.star = GameHelper.getStarById(this.$store.state.game, this.carrier.orbiting)
+const store = useGameStore();
+const isHistoricalMode = useIsHistoricalMode(store);
 
-      // If the game ticks then check to see if any ships have been built at the star.
-      let totalInTransfer = this.starShips + this.carrierShips
-      let totalOriginal = this.star.ships + this.carrier.ships
-      let difference = totalOriginal - totalInTransfer
+const game = computed<Game>(() => store.game!);
+const userPlayer = computed(() => GameHelper.getUserPlayer(game.value));
+const carrier = ref<Carrier | undefined>(
+  GameHelper.getCarrierById(game.value, props.carrierId),
+);
+const carrierOwningPlayer = computed(
+  () =>
+    carrier.value &&
+    GameHelper.getCarrierOwningPlayer(game.value, carrier.value),
+);
+const star = ref<Star | undefined>(
+  (carrier.value?.orbiting &&
+    GameHelper.getStarById(game.value, carrier.value.orbiting)) ||
+    undefined,
+);
+const canEditWaypoints = computed(() => {
+  return (
+    userPlayer.value &&
+    carrierOwningPlayer.value == userPlayer.value &&
+    carrier.value &&
+    !userPlayer.value.defeated &&
+    !carrier.value.isGift &&
+    !GameHelper.isGameFinished(game.value)
+  );
+});
+const carrierWaypointDestination = computed(
+  () =>
+    (carrier.value?.waypoints?.length &&
+      carrier.value.waypoints[0].destination) ||
+    undefined,
+);
 
-      // If there is a difference then this means that ship(s) have been built at the star
-      // while the user has been on this screen, in that case, add the new ships to the star total
-      if (difference) {
-        this.starShips += difference
-        this.onStarShipsChanged()
-      }
-    },
-    onStarShipsChanged (e) {
-      let difference = parseInt(this.starShips) - this.star.ships
-      this.carrierShips = this.carrier.ships - difference
-    },
-    onCarrierShipsChanged (e) {
-      let difference = parseInt(this.carrierShips) - this.carrier.ships
-      this.starShips = this.star.ships - difference
-    },
-    onMinShipsClicked (e) {
-      this.carrierShips = 1
-      this.starShips = this.carrier.ships + this.star.ships - 1
-    },
-    onMaxShipsClicked (e) {
-      this.starShips = 0
-      this.carrierShips = this.carrier.ships + this.star.ships
-    },
-    onTransferLeftClicked (e) {
-      this.starShips+=e
-      this.carrierShips-=e
-    },
-    onTransferRightClicked (e) {
-      this.carrierShips+=e
-      this.starShips-=e
-    },
-    async saveTransfer (e) {
-      let result = await this.performSaveTransfer()
+const isTransferringShips = ref(false);
+const starShips = ref(0);
+const carrierShips = ref(0);
 
-      if (result) {
-        this.$emit('onShipsTransferred', this.carrier._id)
-      }
-    },
-    async onEditWaypointsRequested (e) {
-      let result = await this.performSaveTransfer()
+const onCloseRequested = (e: Event) => emit("onCloseRequested", e);
 
-      if (result) {
-        this.$emit('onEditWaypointsRequested', this.carrier._id)
-      }
-    },
-    async performSaveTransfer() {
-      let transferred = false
+const ensureInt = (v: any): number => {
+  v = parseInt(v);
 
-      try {
-        this.isTransferringShips = true
-
-        let cShips = parseInt(this.carrierShips)
-        let sShips = parseInt(this.starShips)
-
-        let response = await CarrierApiService.transferShips(
-          this.$store.state.game._id,
-          this.carrier._id,
-          cShips,
-          this.star._id,
-          sShips)
-
-        if (response.status === 200) {
-          this.$toasted.show(`Ships transferred between ${this.star.name} and ${this.carrier.name}.`)
-
-          this.$store.commit('gameStarCarrierShipTransferred', {
-            starId: this.star._id,
-            carrierId: this.carrier._id,
-            starShips: sShips,
-            carrierShips: cShips
-          })
-
-          this.star.ships = sShips
-          this.carrier.ships = cShips
-
-          transferred = true
-        }
-      } catch (err) {
-        console.log(err)
-      }
-
-      this.isTransferringShips = false
-
-      return transferred
-    }
-  },
-  computed: mapState(['game']),
-  watch: {
-    game (newGame, oldGame) {
-      this.onGameReloaded(newGame)
-    }
+  if (isNaN(v)) {
+    v = 0;
   }
-}
+
+  return v;
+};
+
+const onMinShipsClicked = () => {
+  carrierShips.value = 1;
+  starShips.value = (carrier.value?.ships || 0) + (star.value?.ships || 0) - 1;
+};
+
+const onMaxShipsClicked = () => {
+  starShips.value = 0;
+  carrierShips.value = (carrier.value?.ships || 0) + (star.value?.ships || 0);
+};
+
+const onCarrierShipsChanged = () => {
+  const difference =
+    ensureInt(carrierShips.value) - (carrier.value?.ships || 0);
+  starShips.value = (star.value?.ships || 0) - difference;
+};
+
+const onStarShipsChanged = () => {
+  const difference = ensureInt(starShips.value) - (star.value?.ships || 0);
+  carrierShips.value = (carrier.value?.ships || 0) - difference;
+};
+
+const onStarShipsBlur = () => {
+  starShips.value = ensureInt(starShips.value);
+};
+
+const onCarrierShipsBlur = () => {
+  carrierShips.value = ensureInt(carrierShips.value);
+};
+
+const onTransferLeftClicked = (v: number) => {
+  starShips.value += v;
+  carrierShips.value -= v;
+};
+
+const onTransferRightClicked = (v: number) => {
+  carrierShips.value += v;
+  starShips.value -= v;
+};
+
+const onGameReloaded = (data) => {
+  // When the game ticks there may have been ships built at the star.
+  // Find the star in the tick report and compare the ships, then add
+  // the difference to the star ships side on the transfer.
+
+  // NOTE: At this stage the star will have the latest data for its ships
+  // as the store deals with updating the star.
+  carrier.value = GameHelper.getCarrierById(game.value, props.carrierId);
+  star.value =
+    (carrier.value?.orbiting &&
+      GameHelper.getStarById(game.value, carrier.value.orbiting)) ||
+    undefined;
+
+  // If the game ticks then check to see if any ships have been built at the star.
+  const totalInTransfer = starShips.value + carrierShips.value;
+  const totalOriginal = (star.value?.ships || 0) + (carrier.value?.ships || 0);
+  const difference = totalOriginal - totalInTransfer;
+
+  // If there is a difference then this means that ship(s) have been built at the star
+  // while the user has been on this screen, in that case, add the new ships to the star total
+  if (difference) {
+    starShips.value += difference;
+    onStarShipsChanged();
+  }
+};
+
+watch(game, (newGame, oldGame) => {
+  onGameReloaded(newGame);
+});
+
+const performSaveTransfer = async () => {
+  let transferred = false;
+
+  if (!star.value || !carrier.value) {
+    return transferred;
+  }
+
+  isTransferringShips.value = true;
+
+  const cShips = carrierShips.value;
+  const sShips = starShips.value;
+
+  const response = await transferShips(httpClient)(
+    game.value._id,
+    props.carrierId,
+    cShips,
+    star.value!._id,
+    sShips,
+  );
+  if (isOk(response)) {
+    toast.default(
+      `Ships transferred between ${star.value.name} and ${carrier.value.name}.`,
+    );
+
+    store.gameStarCarrierShipTransferred(eventBus, {
+      starId: star.value._id,
+      carrierId: carrier.value._id,
+      starShips: sShips,
+      carrierShips: cShips,
+    });
+
+    star.value.ships = sShips;
+    carrier.value.ships = cShips;
+
+    transferred = true;
+  } else {
+    toast.error("Failed to transfer ships.");
+    console.error(formatError(response));
+  }
+
+  isTransferringShips.value = false;
+
+  return transferred;
+};
+
+const saveTransfer = async () => {
+  const result = await performSaveTransfer();
+
+  if (result) {
+    emit("onShipsTransferred", carrier.value!._id);
+  }
+};
+
+const onEditWaypointsRequested = async () => {
+  const result = await performSaveTransfer();
+
+  if (result) {
+    emit("onEditWaypointsRequested", carrier.value!._id);
+  }
+};
+
+onMounted(() => {
+  if (carrier.value && star.value) {
+    let cShips = carrier.value.ships || 0;
+    let sShips = star.value.ships || 0;
+
+    if (sShips === 0 && cShips === 0) {
+      return;
+    }
+
+    if ((cShips || 0) < 1) {
+      cShips = 1;
+      sShips = sShips - 1;
+    }
+
+    starShips.value = sShips;
+    carrierShips.value = cShips;
+  }
+});
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

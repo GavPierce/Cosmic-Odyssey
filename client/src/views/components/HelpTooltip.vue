@@ -4,13 +4,10 @@
   </span>
 </template>
 
-<script>
-export default {
-  props: {
-    tooltip: String
-  }
-}
+<script setup lang="ts">
+const props = defineProps<{
+  tooltip: string;
+}>();
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

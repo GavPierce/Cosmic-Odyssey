@@ -1,23 +1,22 @@
 <template>
-<div>
-  <p>
-      You have reignited the star <star-label :starId="event.data.starId" :starName="event.data.starName"/>.
-  </p>
-</div>
+  <div>
+    <p>
+      You have reignited the star
+      <star-label
+        :starId="event.data.starId"
+        :starName="event.data.starName"
+      />.
+    </p>
+  </div>
 </template>
 
-<script>
-import StarLabelVue from '../../star/StarLabel'
+<script setup lang="ts">
+import StarLabel from "../../star/StarLabel.vue";
+import type { PlayerStarReignitedEvent } from "@solaris/common";
 
-export default {
-  components: {
-    'star-label': StarLabelVue
-  },
-  props: {
-    event: Object
-  }
-}
+const props = defineProps<{
+  event: PlayerStarReignitedEvent<string>;
+}>();
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

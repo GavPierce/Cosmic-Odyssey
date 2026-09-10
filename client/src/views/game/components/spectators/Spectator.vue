@@ -1,65 +1,78 @@
 <template>
   <div class="row">
     <div class="col">
-        <h5><i class="fas fa-user me-1"></i>{{spectator.username}}</h5>
-        <ul>
-            <li v-for="player in players" :key="player._id">
-                <span>{{player.alias}}</span>
-                <i class="fas fa-times text-danger ms-1 pointer" title="Remove spectator"
-                    v-if="!isLoading && userPlayer && userPlayer._id === player._id"
-                    @click="uninvite"></i>
-                <i class="fas fa-sync ms-1" v-if="isLoading"/>
-            </li>
-        </ul>
+      <h5><i class="fas fa-user me-1"></i>{{ spectator.username }}</h5>
+      <ul>
+        <li v-for="player in players" :key="player._id">
+          <span>{{ player.alias }}</span>
+          <i
+            class="fas fa-times text-danger ms-1 pointer"
+            title="Remove spectator"
+            v-if="!isLoading && userPlayer && userPlayer._id === player._id"
+            @click="uninvite"
+          ></i>
+          <i class="fas fa-sync ms-1" v-if="isLoading" />
+        </li>
+      </ul>
     </div>
   </div>
 </template>
 
-<script>
-import GameHelper from '../../../../services/gameHelper'
-import SpectatorApiService from '../../../../services/api/spectator'
+<script setup lang="ts">
+import { useGameStore } from "@/stores/game";
+import GameHelper from "../../../../services/gameHelper";
+import type { GameSpectator } from "@solaris/common";
+import { uninviteSpectator } from "@/services/typedapi/spectator";
 
-export default {
-  props: {
-      spectator: Object
-  },
-  data () {
-      return {
-          isLoading: false
-      }
-  },
-  methods: {
-      async uninvite () {
-        this.isLoading = true
+import { httpInjectionKey, isOk } from "@/services/typedapi";
+import { ref, inject, computed } from "vue";
 
-        try {
-            let response = await SpectatorApiService.uninvite(this.$store.state.game._id, this.spectator._id)
+import { useToast } from "vue-toast-notification";
+const props = defineProps<{
+  spectator: GameSpectator<string>;
+}>();
 
-            if (response.status === 200) {
-                this.$toasted.show(`You uninvited ${this.spectator.username} from spectating you in this game.`, { type: 'success' })
+const emit = defineEmits<{
+  (e: "onSpectatorUninvited", spectator: GameSpectator<string>): void;
+}>();
 
-                this.$emit('onSpectatorUninvited', this.spectator)
-            }
-        } catch (err) {
-            console.log(err)
-        }
+const store = useGameStore();
+const httpClient = inject(httpInjectionKey)!;
+const toast = useToast();
 
-        this.isLoading = false
-      }
-  },
-  computed: {
-      players () {
-            return this.$store.state.game.galaxy.players.filter(p => this.spectator.playerIds.includes(p._id))
-      },
-      userPlayer () {
-          return GameHelper.getUserPlayer(this.$store.state.game)
-      }
+const isLoading = ref(false);
+
+const players = computed(() => {
+  return store.game!.galaxy.players.filter((p) =>
+    props.spectator.playerIds.includes(p._id),
+  );
+});
+
+const userPlayer = computed(() => {
+  return GameHelper.getUserPlayer(store.game!);
+});
+
+const uninvite = async () => {
+  isLoading.value = true;
+
+  const response = await uninviteSpectator(httpClient)(
+    store.game!._id,
+    props.spectator._id,
+  );
+
+  if (isOk(response)) {
+    toast.success(
+      `You uninvited ${props.spectator.username} from spectating you in this game.`,
+    );
+    emit("onSpectatorUninvited", props.spectator);
   }
-}
+
+  isLoading.value = false;
+};
 </script>
 
 <style scoped>
 .pointer {
-    cursor: pointer;
+  cursor: pointer;
 }
 </style>

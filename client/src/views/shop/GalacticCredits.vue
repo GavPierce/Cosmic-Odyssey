@@ -1,5 +1,5 @@
 <template>
-  <view-container>
+  <view-container :is-auth-page="true">
     <view-title title="Galactic Credit Packs" />
 
     <p>
@@ -13,7 +13,7 @@
 
     <p>
       By purchasing packs, you help support the continued development of
-      <strong>Cosmic Odyssey</strong>, any purchase will award you with the
+      <strong>Solaris</strong>, any purchase will award you with the
       <span class="text-info"
         ><i class="fas fa-hands-helping"></i> Contributor</span
       >
@@ -23,7 +23,7 @@
     <h5 v-if="userCredits">
       You have
       <span class="text-warning"
-        ><strong>{{ userCredits.credits }}</strong> Galactic Credits</span
+        ><strong>{{ userCredits }}</strong> Galactic Credits</span
       >.
     </h5>
 
@@ -51,7 +51,7 @@
               @click="buyCreditPack(1)"
               :disabled="isLoading"
             >
-              <i class="fas fa-money-bill-wave"></i> $1
+              <i class="fas fa-money-bill-wave"></i> £1
             </button>
           </div>
         </div>
@@ -81,7 +81,7 @@
               @click="buyCreditPack(5)"
               :disabled="isLoading"
             >
-              <i class="fas fa-money-bill-wave"></i> $5
+              <i class="fas fa-money-bill-wave"></i> £5
             </button>
           </div>
         </div>
@@ -111,7 +111,7 @@
               @click="buyCreditPack(10)"
               :disabled="isLoading"
             >
-              <i class="fas fa-money-bill-wave"></i> $9
+              <i class="fas fa-money-bill-wave"></i> £9
             </button>
           </div>
         </div>
@@ -144,7 +144,7 @@
               @click="buyCreditPack(25)"
               :disabled="isLoading"
             >
-              <i class="fas fa-money-bill-wave"></i> $20
+              <i class="fas fa-money-bill-wave"></i> £20
             </button>
           </div>
         </div>
@@ -174,7 +174,7 @@
               @click="buyCreditPack(50)"
               :disabled="isLoading"
             >
-              <i class="fas fa-money-bill-wave"></i> $35
+              <i class="fas fa-money-bill-wave"></i> £35
             </button>
           </div>
         </div>
@@ -204,7 +204,7 @@
               @click="buyCreditPack(100)"
               :disabled="isLoading"
             >
-              <i class="fas fa-money-bill-wave"></i> $50
+              <i class="fas fa-money-bill-wave"></i> £50
             </button>
           </div>
         </div>
@@ -219,61 +219,58 @@
   </view-container>
 </template>
 
-<script>
-import ViewTitle from "../components/ViewTitle";
-import ViewContainer from "../components/ViewContainer";
-import LoadingSpinner from "../components/LoadingSpinner";
-import ShopApiService from "../../services/api/shop";
-import UserApiService from "../../services/api/user";
+<script setup lang="ts">
+import ViewTitle from "../components/ViewTitle.vue";
+import ViewContainer from "../components/ViewContainer.vue";
+import LoadingSpinner from "../components/LoadingSpinner.vue";
+import { getCredits } from "@/services/typedapi/user";
+import { formatError, httpInjectionKey, isOk } from "@/services/typedapi";
+import { inject, ref, onMounted } from "vue";
+import { purchaseGalacticCredits } from "@/services/typedapi/shopPurchase";
+import { useUserStore } from "@/stores/user";
 
-export default {
-  components: {
-    "view-container": ViewContainer,
-    "view-title": ViewTitle,
-    "loading-spinner": LoadingSpinner
-  },
-  data() {
-    return {
-      isLoading: false,
-      userCredits: null
-    };
-  },
-  async mounted() {
-    this.isLoading = true;
-    await this.loadGalacticCredits();
-    this.isLoading = false;
-  },
-  methods: {
-    async loadGalacticCredits() {
-      try {
-        let response = await UserApiService.getUserCredits();
+import { useToast } from "vue-toast-notification";
+const httpClient = inject(httpInjectionKey)!;
+const toast = useToast();
 
-        if (response.status === 200) {
-          this.userCredits = response.data;
+const userStore = useUserStore();
 
-          this.$store.commit("setUserCredits", response.data.credits);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    },
-    async buyCreditPack(credits) {
-      this.isLoading = true;
+const userCredits = ref(0);
+const isLoading = ref(false);
 
-      try {
-        let response = await ShopApiService.purchaseGalacticCredits(credits);
+const loadGalacticCredits = async () => {
+  const response = await getCredits(httpClient)();
 
-        if (response.status === 200) {
-          window.location = response.data.approvalUrl;
-        }
-      } catch (err) {
-        console.error(err);
-      }
+  if (isOk(response)) {
+    userCredits.value = response.data.credits;
 
-      this.isLoading = false;
-    }
+    userStore.setCredits(response.data.credits);
+  } else {
+    console.error(formatError(response));
   }
 };
+
+const buyCreditPack = async (credits: number) => {
+  isLoading.value = true;
+
+  const response = await purchaseGalacticCredits(httpClient)(credits);
+  if (isOk(response)) {
+    window.location.href = response.data.approvalUrl;
+  } else {
+    console.error(formatError(response));
+    toast.error(
+      "An error occurred while trying to purchase Galactic Credits. Please try again later.",
+    );
+  }
+};
+
+onMounted(async () => {
+  isLoading.value = true;
+
+  await loadGalacticCredits();
+
+  isLoading.value = false;
+});
 </script>
 
 <style scoped></style>

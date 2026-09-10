@@ -1,157 +1,197 @@
 <template>
- <form @submit.prevent v-if="player">
+  <form @submit.prevent v-if="player">
     <div class="mb-2 row mb-0 bg-info">
-        <label class="col col-form-label">Total Science:</label>
-        <div class="col text-end">
-            <label class="col-form-label">{{player.stats.totalScience}} <i class="fas fa-flask"></i></label>
-        </div>
+      <label class="col col-form-label">Total Science:</label>
+      <div class="col text-end" v-if="player.stats">
+        <label class="col-form-label"
+          >{{ player.stats.totalScience }} <i class="fas fa-flask"></i
+        ></label>
+      </div>
     </div>
-    <div class="mb-2 row pt-2 pb-2 mb-0 " v-if="!player.defeated && optionsNow.length">
-        <label class="col-5 col-form-label">Researching:</label>
-        <div class="col-7">
-            <select class="form-control" v-model="player.researchingNow" v-on:change="updateResearchNow" v-if="!loadingNow" :disabled="$isHistoricalMode() || isGameFinished">
-                <option v-for="option in optionsNow" v-bind:value="option.value" v-bind:key="option.value">
-                    {{ option.text }}
-                </option>
-            </select>
+    <div
+      class="mb-2 row pt-2 pb-2 mb-0"
+      v-if="!player.defeated && optionsNow.length"
+    >
+      <label class="col-5 col-form-label">Researching:</label>
+      <div class="col-7">
+        <select
+          class="form-select"
+          v-model="player.researchingNow"
+          v-on:change="doUpdateResearchNow"
+          v-if="!loadingNow"
+          :disabled="isHistoricalMode || isGameFinished"
+        >
+          <option
+            v-for="option in optionsNow"
+            v-bind:value="option.value"
+            v-bind:key="option.value"
+          >
+            {{ option.text }}
+          </option>
+        </select>
 
-            <label v-if="loadingNow" class="col-form-label">Loading...</label>
-        </div>
+        <label v-if="loadingNow" class="col-form-label">Loading...</label>
+      </div>
     </div>
-    <div class="mb-2 row mb-0 bg-dark" v-if="!player.defeated && optionsNow.length">
-        <label class="col col-form-label" title="Current research ETA">ETA:</label>
-        <div class="col text-end">
-            <label class="col-form-label">{{timeRemainingEta}}</label>
-        </div>
+    <div
+      class="mb-2 row mb-0 bg-dark"
+      v-if="!player.defeated && optionsNow.length"
+    >
+      <label class="col col-form-label" title="Current research ETA"
+        >ETA:</label
+      >
+      <div class="col text-end">
+        <label class="col-form-label">
+          <timer :showETA="true" :ticks="player.currentResearchTicksEta || 0" />
+        </label>
+      </div>
     </div>
-    <div class="mb-2 row pt-2 pb-2 mb-0  mt-1" v-if="!player.defeated && optionsNext.length > 1">
-        <label class="col-5 col-form-label">Next:</label>
-        <div class="col-7">
-            <select class="form-control" v-model="player.researchingNext" v-on:change="updateResearchNext" v-if="!loadingNext" :disabled="$isHistoricalMode() || isGameFinished">
-                <option v-for="option in optionsNext" v-bind:value="option.value" v-bind:key="option.value">
-                    {{ option.text }}
-                </option>
-            </select>
+    <div
+      class="mb-2 row pt-2 pb-2 mb-0 mt-1"
+      v-if="!player.defeated && optionsNext.length > 1"
+    >
+      <label class="col-5 col-form-label">Next:</label>
+      <div class="col-7">
+        <select
+          class="form-select"
+          v-model="player.researchingNext"
+          v-on:change="doUpdateResearchNext"
+          v-if="!loadingNext"
+          :disabled="isHistoricalMode || isGameFinished"
+        >
+          <option
+            v-for="option in optionsNext"
+            v-bind:value="option.value"
+            v-bind:key="option.value"
+          >
+            {{ option.text }}
+          </option>
+        </select>
 
-            <label v-if="loadingNext" class="col-form-label">Loading...</label>
-        </div>
+        <label v-if="loadingNext" class="col-form-label">Loading...</label>
+      </div>
     </div>
-    <div class="mb-2 row mb-2 bg-dark" v-if="!player.defeated && optionsNext.length > 1 && timeNextRemainingEta">
-        <label class="col col-form-label" title="Next research ETA">ETA:</label>
-        <div class="col text-end">
-            <label class="col-form-label">{{timeNextRemainingEta}}</label>
-        </div>
+    <div
+      class="mb-2 row mb-2 bg-dark"
+      v-if="!player.defeated && optionsNext.length > 1"
+    >
+      <label class="col col-form-label" title="Next research ETA">ETA:</label>
+      <div class="col text-end">
+        <label class="col-form-label">
+          <timer :showETA="true" :ticks="player.nextResearchTicksEta || 0" />
+        </label>
+      </div>
     </div>
-</form>
+  </form>
 </template>
 
-<script>
-import GameHelper from '../../../../services/gameHelper'
-import TechnologyHelper from '../../../../services/technologyHelper'
-import researchService from '../../../../services/api/research'
-import AudioService from '../../../../game/audio'
+<script setup lang="ts">
+import { useGameStore } from "@/stores/game";
+import GameHelper from "../../../../services/gameHelper";
+import TechnologyHelper from "../../../../services/technologyHelper";
+import AudioService from "../../../../services/audio";
+import { ref, computed, onMounted, inject } from "vue";
+import type { Game } from "@/types/game";
+import {
+  updateResearchNow,
+  updateResearchNext,
+} from "@/services/typedapi/research";
+import { formatError, httpInjectionKey, isOk } from "@/services/typedapi";
+import { useIsHistoricalMode } from "@/util/reactiveHooks";
+import type { ResearchType } from "@solaris/common";
+import Timer from "@/views/game/components/time/Timer.vue";
 
-export default {
-  data: function () {
-    return {
-      audio: null,
-      loadingNow: false,
-      loadingNext: false,
-      optionsNow: [],
-      optionsNext: [],
-      timeRemainingEta: null,
-      timeNextRemainingEta: null,
-      intervalFunction: null
-    }
-  },
-  mounted () {
-    this.loadTechnologies()
+import { useToast } from "vue-toast-notification";
+import { useGameServices } from "@/util/gameServices.ts";
+const httpClient = inject(httpInjectionKey)!;
+const toast = useToast();
 
-    this.recalculateTimeRemaining()
+const store = useGameStore();
+const services = useGameServices();
+const isHistoricalMode = useIsHistoricalMode(store);
 
-    if (GameHelper.isGameInProgress(this.$store.state.game) || GameHelper.isGamePendingStart(this.$store.state.game)) {
-      this.intervalFunction = setInterval(this.recalculateTimeRemaining, 1000)
-      this.recalculateTimeRemaining()
-    }
-  },
-  methods: {
-    loadTechnologies () {
-      let options = [
-        { text: 'Scanning', value: 'scanning' },
-        { text: 'Hyperspace Range', value: 'hyperspace' },
-        { text: 'Terraforming', value: 'terraforming' },
-        { text: 'Experimentation', value: 'experimentation' },
-        { text: 'Weapons', value: 'weapons' },
-        { text: 'Banking', value: 'banking' },
-        { text: 'Manufacturing', value: 'manufacturing' },
-        { text: 'Specialists', value: 'specialists' }
-      ]
+const game = computed<Game>(() => store.game!);
+const player = computed(() => GameHelper.getUserPlayer(game.value)!);
+const isGameFinished = computed(() => GameHelper.isGameFinished(game.value));
 
-      this.optionsNow = options.filter(o => TechnologyHelper.isTechnologyEnabled(this.$store.state.game, o.value) 
-                                          && TechnologyHelper.isTechnologyResearchable(this.$store.state.game, o.value))
-      this.optionsNext = options.filter(o => TechnologyHelper.isTechnologyEnabled(this.$store.state.game, o.value)
-                                          && TechnologyHelper.isTechnologyResearchable(this.$store.state.game, o.value))
+type Option = { text: string; value: ResearchType };
 
-      this.optionsNext.push({ text: 'Random', value: 'random' })
-    },
-    async updateResearchNow (e) {
-      this.loadingNow = true
+const loadingNow = ref(false);
+const loadingNext = ref(false);
+const optionsNow = ref<Option[]>([]);
+const optionsNext = ref<Option[]>([]);
 
-      try {
-        let response = await researchService.updateResearchNow(this.$store.state.game._id, this.player.researchingNow)
+const loadTechnologies = () => {
+  const options: Option[] = [
+    { text: "Scanning", value: "scanning" },
+    { text: "Hyperspace Range", value: "hyperspace" },
+    { text: "Terraforming", value: "terraforming" },
+    { text: "Experimentation", value: "experimentation" },
+    { text: "Weapons", value: "weapons" },
+    { text: "Banking", value: "banking" },
+    { text: "Manufacturing", value: "manufacturing" },
+    { text: "Specialists", value: "specialists" },
+  ];
 
-        if (response.status === 200) {
-          AudioService.join()
-          this.player.currentResearchTicksEta = response.data.ticksEta
-          this.player.nextResearchTicksEta = response.data.ticksNextEta
-          this.recalculateTimeRemaining()
-          this.$toasted.show(`Current research updated.`)
-        }
-      } catch (err) {
-        console.error(err)
-      }
+  optionsNow.value = options.filter(
+    (o) =>
+      o.value !== "random" &&
+      services.technologyService.isTechnologyEnabled(game.value, o.value) &&
+      services.technologyService.isTechnologyResearchable(game.value, o.value),
+  );
+  optionsNext.value = options.filter(
+    (o) =>
+      o.value !== "random" &&
+      services.technologyService.isTechnologyEnabled(game.value, o.value) &&
+      services.technologyService.isTechnologyResearchable(game.value, o.value),
+  );
 
-      this.loadingNow = false
-    },
-    async updateResearchNext (e) {
-      this.loadingNext = true
+  optionsNext.value.push({ text: "Random", value: "random" });
+};
 
-      try {
-        let response = await researchService.updateResearchNext(this.$store.state.game._id, this.player.researchingNext)
+const doUpdateResearchNow = async () => {
+  loadingNow.value = true;
 
-        if (response.status === 200) {
-          AudioService.join()
-          this.player.currentResearchTicksEta = response.data.ticksEta
-          this.player.nextResearchTicksEta = response.data.ticksNextEta
-          this.recalculateTimeRemaining()
-          this.$toasted.show(`Next research updated.`)
-        }
-      } catch (err) {
-        console.error(err)
-      }
-
-      this.loadingNext = false
-    },
-    recalculateTimeRemaining () {
-      this.timeRemainingEta = GameHelper.getCountdownTimeStringByTicks(this.$store.state.game, this.player.currentResearchTicksEta)
-
-      if (this.player.nextResearchTicksEta == null) {
-        this.timeNextRemainingEta = null
-      } else {
-        this.timeNextRemainingEta = GameHelper.getCountdownTimeStringByTicks(this.$store.state.game, this.player.nextResearchTicksEta)
-      }
-    }
-  },
-  computed: {
-    player: function () {
-      return GameHelper.getUserPlayer(this.$store.state.game)
-    },
-    isGameFinished: function () {
-      return GameHelper.isGameFinished(this.$store.state.game)
-    }
+  const response = await updateResearchNow(httpClient)(
+    game.value._id,
+    player.value.researchingNow,
+  );
+  if (isOk(response)) {
+    AudioService.join();
+    player.value.currentResearchTicksEta = response.data.ticksEta;
+    player.value.nextResearchTicksEta = response.data.ticksNextEta;
+    toast.default("Current research updated.");
+  } else {
+    console.error(formatError(response));
+    toast.error("Failed to update research.");
   }
-}
+
+  loadingNow.value = false;
+};
+
+const doUpdateResearchNext = async () => {
+  loadingNext.value = true;
+
+  const response = await updateResearchNext(httpClient)(
+    game.value._id,
+    player.value.researchingNext,
+  );
+  if (isOk(response)) {
+    AudioService.join();
+    player.value.currentResearchTicksEta = response.data.ticksEta;
+    player.value.nextResearchTicksEta = response.data.ticksNextEta;
+    toast.default("Next research updated.");
+  } else {
+    console.error(formatError(response));
+    toast.error("Failed to update research.");
+  }
+
+  loadingNext.value = false;
+};
+
+onMounted(() => {
+  loadTechnologies();
+});
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -1,157 +1,147 @@
 <template>
-<div class="container">
-  <div class="row mb-2 g-0">
-    <div class="col-auto">
-      <button class="btn btn-sm" :class="{ 'btn-danger': !showAll, 'btn-success': showAll }" @click="toggleShowAll" v-if="getUserPlayer()">
-        <span v-if="!showAll">Show All</span>
-        <span v-if="showAll">Show Yours</span>
-      </button>
+  <div>
+    <div class="row mb-2 g-0">
+      <div class="col-auto">
+        <button
+          class="btn btn-sm"
+          :class="{ 'btn-danger': !showAll, 'btn-success': showAll }"
+          @click="toggleShowAll"
+          v-if="userPlayer != null"
+        >
+          <span v-if="!showAll">Show All</span>
+          <span v-if="showAll">Show Yours</span>
+        </button>
+      </div>
+      <div class="col ms-2 me-2">
+        <input
+          type="text"
+          class="form-control form-control-sm"
+          v-model="searchFilter"
+          placeholder="Search..."
+        />
+      </div>
     </div>
-    <div class="col ms-2 me-2">
-      <input type="text" class="form-control form-control-sm" v-model="searchFilter" placeholder="Search...">
-    </div>
-  </div>
 
-  <div class="row">
     <div class="table-responsive">
       <table class="table table-striped table-hover mb-0">
-          <thead class="table-dark">
-              <tr>
-                  <td><i class="fas fa-user"></i></td>
-                  <td><a href="javascript:;" @click="sort(['ships'])">Name</a></td>
-                  <td></td>
-                  <td></td>
-                  <td class="text-end">
-                    <span class="infrastructure-filters">
-                      <a href="javascript:;" @click="sort(['infrastructure','economy'])"><i class="fas fa-scale-balanced me-2"></i></a>
-                      <a href="javascript:;" @click="sort(['infrastructure','industry'])"><i class="fas fa-gears me-2"></i></a>
-                      <a href="javascript:;" @click="sort(['infrastructure','science'])"><i class="fas fa-flask"></i></a>
-                    </span>
-                  </td>
-              </tr>
-          </thead>
-          <tbody>
-              <capital-row v-for="star in sortedTableData" v-bind:key="star._id" :star="star"
-                @onOpenStarDetailRequested="onOpenStarDetailRequested"/>
-          </tbody>
+        <thead class="table-dark">
+          <tr>
+            <td title="Player">
+              <a
+                href="javascript:;"
+                @click="
+                  sort(
+                    ['ownedByPlayer', 'alias'],
+                    ['ownedByPlayerId'],
+                    ['name'],
+                  )
+                "
+                ><i class="fas fa-user"></i
+              ></a>
+            </td>
+            <td>
+              <a href="javascript:;" @click="sort(['name'])">Name</a>
+            </td>
+            <td></td>
+            <td title="Specialist">
+              <a href="javascript:;" @click="sort(['specialist', 'name'])"
+                ><i class="fas fa-user-astronaut"></i
+              ></a>
+            </td>
+            <td title="Economy Infrastructure" class="text-end">
+              <a
+                href="javascript:;"
+                @click="sort(['infrastructure', 'economy'])"
+                ><i class="fas fa-money-bill-wave me-2"></i
+              ></a>
+            </td>
+            <td title="Industry Infrastructure" class="text-end">
+              <a
+                href="javascript:;"
+                @click="sort(['infrastructure', 'industry'])"
+                ><i class="fas fa-tools me-2"></i
+              ></a>
+            </td>
+            <td title="Science Infrastructure" class="text-end">
+              <a
+                href="javascript:;"
+                @click="sort(['infrastructure', 'science'])"
+                ><i class="fas fa-flask"></i
+              ></a>
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <capital-row
+            v-for="star in sortedFilteredTableData"
+            v-bind:key="star._id"
+            :star="star"
+            @onOpenStarDetailRequested="onOpenStarDetailRequested"
+          />
+        </tbody>
       </table>
     </div>
-  </div>
 
-  <p v-if="!tableData.length" class="text-center mt-2 mb-2">No stars to display.</p>
-</div>
+    <p v-if="!sortedFilteredTableData.length" class="text-center mt-2 mb-2">
+      No stars to display.
+    </p>
+  </div>
 </template>
 
-<script>
-import GameHelper from '../../../../services/gameHelper'
-import CapitalRowVue from './CapitalRow'
+<script setup lang="ts">
+import { useGameStore } from "@/stores/game";
+import GameHelper from "../../../../services/gameHelper";
+import CapitalRow from "./CapitalRow.vue";
+import { createSortInfo, swapSort } from "../../../../services/data/sortInfo";
+import { ref, onMounted, onUnmounted, computed } from "vue";
+import type { Game, Star } from "@/types/game";
+import { useSortedMapObjectData } from "@/views/game/components/galaxy/table";
+import { useLocalStorage } from "@/util/reactiveHooks";
 
-export default {
-  components: {
-    'capital-row': CapitalRowVue
-  },
-  data: function () {
-    return {
-      showAll: false,
-      tableData: [],
-      sortBy: null,
-      sortDirection: true,
-      searchFilter: ''
-    }
-  },
-  mounted () {
-    this.showAll = this.getUserPlayer() == null
-    this.tableData = this.getTableData()
-    
-    this.sortBy = localStorage.getItem('galaxy_capitals_sortBy') || null
-    this.sortDirection = localStorage.getItem('galaxy_capitals_sortDirection') == 'true' || false
-  },
-  destroyed () {
-    localStorage.setItem('galaxy_capitals_sortBy', this.sortBy)
-    localStorage.setItem('galaxy_capitals_sortDirection', this.sortDirection)
-  },
-  methods: {
-    getUserPlayer () {
-      return GameHelper.getUserPlayer(this.$store.state.game)
-    },
-    toggleShowAll () {
-      this.showAll = !this.showAll
+const emit = defineEmits<{
+  onOpenStarDetailRequested: [starId: string];
+}>();
 
-      this.tableData = this.getTableData()
-    },
-    getTableData () {
-      let sorter = (a, b) => a.name.localeCompare(b.name)
+const SORT_INFO_KEY = "galaxy_capitals_sortInfo";
 
-      if (this.showAll || !this.getUserPlayer()) {
-        return this.$store.state.game.galaxy.stars.filter(s => s.homeStar).sort(sorter)
-      } else {
-        return this.$store.state.game.galaxy.stars.sort(sorter).filter(x => x.homeStar && x.ownedByPlayerId === this.getUserPlayer()._id)
-      }
-    },
-    sort (columnName) {
-      // If sorting by a new column, reset the sort.
-      if (JSON.stringify(this.sortBy) !== JSON.stringify(columnName)) {
-        this.sortBy = columnName
-        this.sortDirection = true
-      } else {
-        // Otherwise if we are sorting by the same column, flip the sort direction.
-        this.sortDirection = !this.sortDirection
-      }
-    },
-    onOpenStarDetailRequested (e) {
-      this.$emit('onOpenStarDetailRequested', e)
-    }
-  },
-  computed: {
-    sortedTableData () {
-      // here be dragons
-      const getNestedObject = (nestedObj, pathArr) => {
-        if (!Array.isArray(pathArr)) {
-          pathArr = pathArr.split(',')
-        }
+const defaultSortInfo = createSortInfo([["name"]], true);
 
-        return pathArr.reduce((obj, key) =>
-          (obj && obj[key] !== 'undefined') ? obj[key] : -1, nestedObj)
-      }
+const store = useGameStore();
+const game = computed<Game>(() => store.game!);
 
-      let filterFunction = a => a.name.toLowerCase().includes(this.searchFilter.toLowerCase())
+const sortInfo = useLocalStorage(SORT_INFO_KEY, defaultSortInfo);
 
-      if (this.sortBy == null) {
-        return this.tableData.filter(filterFunction)
-      }
+const showAll = ref(false);
+const searchFilter = ref("");
 
-      return this.tableData
-        .filter(filterFunction)
-        .sort((a, b) => {
-          let bo = getNestedObject(b, this.sortBy)
-          let ao = getNestedObject(a, this.sortBy)
+const userPlayer = computed(() => GameHelper.getUserPlayer(game.value));
+const tableData = computed(() =>
+  game.value.galaxy.stars.filter((s) => s.homeStar),
+);
 
-          // equal items sort equally
-          if (ao === bo) {
-              return 0;
-          }
-          // nulls sort after anything else
-          else if (ao === null) {
-              return 1;
-          }
-          else if (bo === null) {
-              return -1;
-          }
-          // otherwise, if we're ascending, lowest sorts first
-          else if (this.sortDirection) {
-              return ao < bo ? -1 : 1;
-          }
-          // if descending, highest sorts first
-          else { 
-              return ao < bo ? 1 : -1;
-          }
-        })
-    },
-    isGameFinished: function () {
-      return GameHelper.isGameFinished(this.$store.state.game)
-    }
-  }
-}
+const filter = (s: Star) =>
+  s.name.toLowerCase().includes(searchFilter.value.toLowerCase());
+
+const sortedFilteredTableData = useSortedMapObjectData(
+  tableData,
+  sortInfo,
+  showAll,
+  game,
+  filter,
+);
+
+const toggleShowAll = () => (showAll.value = !showAll.value);
+
+const sort = (...propertyPaths: string[][]) => {
+  sortInfo.value = swapSort(sortInfo.value, propertyPaths);
+};
+
+const onOpenStarDetailRequested = (starId: string) =>
+  emit("onOpenStarDetailRequested", starId);
+
+onMounted(() => {
+  showAll.value = !Boolean(userPlayer.value);
+});
 </script>
 
 <style scoped>

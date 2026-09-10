@@ -1,50 +1,48 @@
-import { Router } from "express";
-import { ExpressJoiInstance } from "express-joi-validation";
 import { DependencyContainer } from "../../services/types/DependencyContainer";
-import BadgeController from '../controllers/badges';
+import BadgeController from "../controllers/badges";
 import { MiddlewareContainer } from "../middleware";
-import { badgesPurchaseBadgeRequestSchema } from "../requests/badges";
+import { SingleRouter } from "../singleRoute";
+import { createBadgeRoutes } from "@solaris/common";
+import { createRoutes } from "../typedapi/routes";
+import { DBObjectId } from "../../services/types/DBObjectId";
 
-export default (router: Router, mw: MiddlewareContainer, validator: ExpressJoiInstance, container: DependencyContainer) => {
+export default (
+    router: SingleRouter,
+    mw: MiddlewareContainer,
+    container: DependencyContainer,
+) => {
     const controller = BadgeController(container);
+    const routes = createBadgeRoutes<DBObjectId>();
 
-    router.get('/api/badges',
-        mw.auth.authenticate(),
-        controller.listAll,
-        mw.core.handleError);
+    const answer = createRoutes(router, mw);
 
-    router.get('/api/badges/user/:userId',
-        mw.auth.authenticate(),
-        controller.listForUser,
-        mw.core.handleError);
+    answer(routes.listAll, mw.auth.authenticate(), controller.listAll);
 
-    router.post('/api/badges/game/:gameId/player/:playerId',
-        mw.auth.authenticate(),
-        validator.body(badgesPurchaseBadgeRequestSchema),
-        mw.game.loadGame({
-            lean: true,
-            state: true,
-            'galaxy.players': true
-        }),
-        controller.purchaseForPlayer,
-        mw.core.handleError);
+    answer(routes.listForUser, mw.auth.authenticate(), controller.listForUser);
 
-    router.post('/api/badges/user/:userId',
-        mw.auth.authenticate(),
-        validator.body(badgesPurchaseBadgeRequestSchema),
-        controller.purchaseForUser,
-        mw.core.handleError);
-
-    router.get('/api/badges/game/:gameId/player/:playerId',
+    answer(
+        routes.purchaseForPlayer,
         mw.auth.authenticate(),
         mw.game.loadGame({
             lean: true,
             state: true,
             settings: true,
-            'galaxy.players': true
+            "galaxy.players": true,
+        }),
+        controller.purchaseForPlayer,
+    );
+
+    answer(
+        routes.listForPlayer,
+        mw.auth.authenticate(),
+        mw.game.loadGame({
+            lean: true,
+            state: true,
+            settings: true,
+            "galaxy.players": true,
         }),
         controller.listForPlayer,
-        mw.core.handleError);
+    );
 
     return router;
-}
+};

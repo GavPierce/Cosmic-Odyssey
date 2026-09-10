@@ -1,94 +1,120 @@
-import ValidationError from "../../errors/validation";
+import { Request } from "express";
+import { ValidationError } from "@solaris/common";
 import { DependencyContainer } from "../../services/types/DependencyContainer";
 
 export interface AuthMiddleware {
-  authenticate: (
-    options?: AuthenticationOptions | undefined
-  ) => (req: any, res: any, next: any) => Promise<any>;
+    authenticate: (
+        options?: AuthenticationOptions | undefined,
+    ) => (req: any, res: any, next: any) => Promise<any>;
 }
 
 export interface AuthenticationOptions {
-  admin?: boolean;
-  subAdmin?: boolean;
-  communityManager?: boolean;
+    admin?: boolean;
+    subAdmin?: boolean;
+    communityManager?: boolean;
+    adminImpersonatingAnotherUser?: boolean;
 }
 
 export const middleware = (container: DependencyContainer): AuthMiddleware => {
-  return {
-    authenticate: (options?: AuthenticationOptions) => {
-      return async (req, res, next) => {
-        try {
-          if (!req.session.userId) {
-            console.log("No Session ID", req.session);
-            return res.sendStatus(401);
-          }
+    return {
+        authenticate: (options?: AuthenticationOptions) => {
+            return async (req: Request<unknown>, res, next) => {
+                try {
+                    if (!req.session.userId) {
+                        throw new ValidationError("Access denied.", 401);
+                    }
 
-          // General Auth
-          let isBanned = await container.userService.getUserIsBanned(
-            req.session.userId
-          );
+                    // General Auth
+                    let isBanned = await container.userService.getUserIsBanned(
+                        req.session.userId,
+                    );
 
-          if (isBanned && !req.session.isImpersonating) {
-            console.log("Account Banned");
+                    if (isBanned && !req.session.isImpersonating) {
+                        throw new ValidationError(
+                            `The account is banned.`,
+                            401,
+                        );
+                    }
 
-            throw new ValidationError(`The account is banned.`, 401);
-          }
+                    if (!req.session.isImpersonating) {
+                        await container.userService.updateLastSeen(
+                            req.session.userId,
+                            (req.headers["x-forwarded-for"] as string) ||
+                                req.connection.remoteAddress!,
+                        );
+                    }
 
-          if (!req.session.isImpersonating) {
-            await container.userService.updateLastSeen(
-              req.session.userId,
-              req.headers["x-forwarded-for"] || req.connection.remoteAddress
-            );
-          }
+                    // Role based authorisation
+                    if (options) {
+                        if (options.admin) {
+                            let isAdmin =
+                                await container.userService.getUserIsAdmin(
+                                    req.session.userId,
+                                );
 
-          // Role based authorisation
-          if (options) {
-            if (options.admin) {
-              let isAdmin = await container.userService.getUserIsAdmin(
-                req.session.userId
-              );
+                            if (!isAdmin) {
+                                throw new ValidationError(
+                                    `The account is not an administrator.`,
+                                    401,
+                                );
+                            }
+                        }
 
-              if (!isAdmin) {
-                throw new ValidationError(
-                  `The account is not an administrator.`,
-                  401
-                );
-              }
-            }
+                        if (options.adminImpersonatingAnotherUser) {
+                            let isAdminImpersonatingAnotherUser = false;
 
-            if (options.subAdmin) {
-              let isSubAdmin = await container.userService.getUserIsSubAdmin(
-                req.session.userId
-              );
+                            if (
+                                req.session.isImpersonating &&
+                                req.session.originalUserId != null
+                            ) {
+                                isAdminImpersonatingAnotherUser =
+                                    await container.userService.getUserIsAdmin(
+                                        req.session.originalUserId,
+                                    );
+                            }
 
-              if (!isSubAdmin) {
-                throw new ValidationError(
-                  `The account is not a sub administrator.`,
-                  401
-                );
-              }
-            }
+                            if (!isAdminImpersonatingAnotherUser) {
+                                throw new ValidationError(
+                                    `The account is not an administrator impersonating another user.`,
+                                    401,
+                                );
+                            }
+                        }
 
-            if (options.communityManager) {
-              let isCommunityManager =
-                await container.userService.getUserIsCommunityManager(
-                  req.session.userId
-                );
+                        if (options.subAdmin) {
+                            let isSubAdmin =
+                                await container.userService.getUserIsSubAdmin(
+                                    req.session.userId,
+                                );
 
-              if (!isCommunityManager) {
-                throw new ValidationError(
-                  `The account is not a community manager.`,
-                  401
-                );
-              }
-            }
-          }
+                            if (!isSubAdmin) {
+                                throw new ValidationError(
+                                    `The account is not a sub administrator.`,
+                                    401,
+                                );
+                            }
+                        }
 
-          next();
-        } catch (err) {
-          next(err);
-        }
-      };
-    },
-  };
+                        if (options.communityManager) {
+                            let isCommunityManager =
+                                await container.userService.getUserIsCommunityManager(
+                                    req.session.userId,
+                                );
+
+                            if (!isCommunityManager) {
+                                throw new ValidationError(
+                                    `The account is not a community manager.`,
+                                    401,
+                                );
+                            }
+                        }
+                    }
+
+                    return next();
+                } catch (err) {
+                    return next(err);
+                }
+            };
+        },
+    };
 };

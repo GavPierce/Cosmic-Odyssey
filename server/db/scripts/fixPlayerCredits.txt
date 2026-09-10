@@ -1,4 +1,4 @@
-use Cosmic Odyssey;
+use solaris;
 
 db.games.find({
     'state.endDate': { $eq: null }

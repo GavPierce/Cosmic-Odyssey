@@ -1,24 +1,15 @@
 <template>
-<div>
-  <p>
-      The game has started. Good luck and have fun!
-  </p>
-</div>
+  <div>
+    <p>The game has started. Good luck and have fun!</p>
+  </div>
 </template>
 
-<script>
-export default {
-  components: {
+<script setup lang="ts">
+import type { GameStartedEvent } from "@solaris/common";
 
-  },
-  props: {
-    event: Object
-  },
-  methods: {
-
-  }
-}
+const props = defineProps<{
+  event: GameStartedEvent<string>;
+}>();
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

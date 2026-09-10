@@ -1,474 +1,430 @@
 <template>
-  <div>
+  <div id="gameRoot">
+    <colour-override-dialog
+      v-if="colourOverride"
+      :playerId="colourOverride.playerId"
+      @onColourOverrideCancelled="onColourOverrideCancelled"
+      @onColourOverrideConfirmed="onColourOverrideConfirmed"
+    />
+
     <logo v-if="!hasGame"></logo>
 
     <loading-spinner :loading="!hasGame" />
 
-    <div v-if="hasGame">
-      <span class="d-none">{{ gameId }}</span>
+    <game-screen v-if="hasGame">
+      <template v-slot:header>
+        <header-bar
+          class="header-bar"
+          @onOpenPlayerDetailRequested="onOpenPlayerDetailRequested"
+        />
+      </template>
 
-      <game-container
-        @onStarClicked="onStarClicked"
-        @onStarRightClicked="onStarRightClicked"
-        @onCarrierClicked="onCarrierClicked"
-        @onCarrierRightClicked="onCarrierRightClicked"
-        @onObjectsClicked="onObjectsClicked"
-      />
+      <template v-slot:content-left>
+        <sidebar-menu />
+      </template>
 
-      <main-bar
-        @onPlayerSelected="onPlayerSelected"
-        @onReloadGameRequested="reloadGame"
-      />
+      <template v-slot:content-ui>
+        <stacked-u-i>
+          <main-bar
+            @onPlayerSelected="onPlayerSelected"
+            @onReloadGameRequested="reloadGame"
+            @onViewColourOverrideRequested="onViewColourOverrideRequested"
+          />
 
-      <chat @onOpenPlayerDetailRequested="onPlayerSelected" />
-    </div>
+          <chat
+            @onOpenPlayerDetailRequested="onPlayerSelected"
+            @onOpenReportPlayerRequested="onOpenReportPlayerRequested"
+          />
+        </stacked-u-i>
+      </template>
+
+      <template v-slot:content-game>
+        <game-container
+          @onStarSelected="onStarSelected"
+          @onStarRightSelected="onStarRightSelected"
+          @onCarrierSelected="onCarrierSelected"
+          @onCarrierRightSelected="onCarrierRightSelected"
+          @onObjectsClicked="onObjectsClicked"
+        />
+      </template>
+
+      <template v-slot:footer>
+        <footer-bar
+          class="footer-bar d-xs-block d-sm-none"
+          @onOpenPlayerDetailRequested="onOpenPlayerDetailRequested"
+        />
+      </template>
+    </game-screen>
   </div>
 </template>
 
-<script>
-import LogoVue from "../components/Logo";
-import LoadingSpinnerVue from "../components/LoadingSpinner";
-import GameContainer from "./components/GameContainer.vue";
-import MENU_STATES from "../../services/data/menuStates";
+<script setup lang="ts">
+import Logo from "../components/Logo.vue";
+import { type ObjectClicked } from "@solaris/map-rendering";
+import LoadingSpinner from "../components/LoadingSpinner.vue";
+// GameContainer is lazy-loaded so the heavy @solaris/map-rendering / Pixi bundle
+// is split into its own chunk and only downloaded once the game view mounts.
+import { defineAsyncComponent } from "vue";
+const GameContainer = defineAsyncComponent(
+  () => import("./components/GameContainer.vue"),
+);
 import MainBar from "./components/menu/MainBar.vue";
 import Chat from "./components/inbox/Chat.vue";
-import GameApiService from "../../services/api/game";
-import UserApiService from "../../services/api/user";
 import GameHelper from "../../services/gameHelper";
-import AudioService from "../../game/audio";
-import moment from "moment";
+import AudioService from "../../services/audio";
 import gameHelper from "../../services/gameHelper";
-import authService from "../../services/api/auth";
+import ColourOverrideDialog from "./components/player/ColourOverrideDialog.vue";
+import { eventBusInjectionKey } from "@/eventBus";
+import {
+  inject,
+  ref,
+  computed,
+  onMounted,
+  onUnmounted,
+  onBeforeUnmount,
+  provide,
+  type Ref,
+} from "vue";
+import { playerClientSocketEmitterInjectionKey } from "@/sockets/socketEmitters/player";
+import { socketInjectionKey } from "@/socket";
+import { DiplomacyClientSocketHandler } from "@/sockets/socketHandlers/diplomacy";
+import { GameClientSocketHandler } from "@/sockets/socketHandlers/game";
+import { PlayerClientSocketHandler } from "@/sockets/socketHandlers/player";
+import { GameRoomClientSocketHandler } from "@/sockets/socketHandlers/gameRoom";
+import GameEventBusEventNames from "../../eventBusEventNames/game";
+import router from "../../router";
+import { withMessages } from "../../util/messages";
+import { userClientSocketEmitterInjectionKey } from "@/sockets/socketEmitters/user";
+import { formatError, httpInjectionKey, isOk } from "@/services/typedapi";
+import { getSettings } from "@/services/typedapi/user";
+import { useRoute } from "vue-router";
+import { detailGalaxy, detailState } from "@/services/typedapi/game";
+import { createGameServices, gameServicesKey } from "@/util/gameServices";
+import type { Game } from "@/types/game";
+import { useUserStore } from "@/stores/user";
+import { useColourStore } from "@/stores/colour";
+import { useGameStore } from "@/stores/game";
+import { useToast } from "vue-toast-notification";
+import GameScreen from "@/views/game/GameScreen.vue";
+import HeaderBar from "@/views/game/components/menu/HeaderBar.vue";
+import SidebarMenu from "@/views/game/components/menu/SidebarMenu.vue";
+import FooterBar from "@/views/game/components/menu/FooterBar.vue";
+import StackedUI from "@/views/game/StackedUI.vue";
+import { createKeyboardShortcutHandler } from "@/services/shortcuts.ts";
+const store = useGameStore();
+const userStore = useUserStore();
+const colourStore = useColourStore();
 
-export default {
-  components: {
-    logo: LogoVue,
-    "loading-spinner": LoadingSpinnerVue,
-    "game-container": GameContainer,
-    "main-bar": MainBar,
-    chat: Chat
-  },
-  data() {
-    return {
-      audio: null,
-      MENU_STATES: MENU_STATES,
-      polling: null,
-      // We use this to track whether we are making a request to the API to get the next tick.
-      // It is used to prevent spamming the API if the app gets suspended and is re-opened after a very long time.
-      ticking: false
-    };
-  },
-  async created() {
-    AudioService.loadStore(this.$store);
+const emit = defineEmits<{
+  onPlayerSelected: [playerId: string];
+}>();
 
-    this.$store.commit("clearGame");
+const eventBus = inject(eventBusInjectionKey)!;
+const playerClientSocketEmitter = inject(
+  playerClientSocketEmitterInjectionKey,
+)!;
+const userClientSockerEmitter = inject(userClientSocketEmitterInjectionKey)!;
+const httpClient = inject(httpInjectionKey)!;
+const socket = inject(socketInjectionKey)!;
+const toast = useToast();
 
-    await this.attemptLogin();
-    await this.reloadSettings();
-    await this.reloadGame();
+const route = useRoute();
 
-    this.subscribeToSockets();
+const polling: Ref<number | null> = ref(null);
+const ticking = ref(false);
+const colourOverride: Ref<{ playerId: string } | null> = ref(null);
 
-    // AudioService.download()
+let diplomacySocketHandler: DiplomacyClientSocketHandler | null = null;
+let gameSocketHandler: GameClientSocketHandler | null = null;
+let playerSocketHandler: PlayerClientSocketHandler | null = null;
+let gameRoomSocketHandler: GameRoomClientSocketHandler | null = null;
 
-    let player = GameHelper.getUserPlayer(this.$store.state.game);
+const game = computed<Game>(() => store.game!);
 
-    let socketData = {
-      gameId: this.$store.state.game._id,
-      userId: this.$store.state.userId
-    };
+const hasGame = computed(() => Boolean(game.value));
 
-    if (player) {
-      socketData.playerId = player._id;
-    }
+const isLoggedIn = computed(() => userStore.isLoggedIn);
 
-    this.$socket.emit("gameRoomJoined", socketData);
+const isHistorical = computed(() => store.tick !== game.value.state.tick);
 
-    // If the user is in the game then display the leaderboard.
-    // Otherwise show the welcome screen if there are empty slots.
-    let userPlayer = this.getUserPlayer();
+const gameServices = createGameServices(store);
+provide(gameServicesKey, gameServices);
 
-    if (userPlayer && !userPlayer.defeated) {
-      if (GameHelper.isTutorialGame(this.$store.state.game)) {
-        this.$store.commit("setMenuState", { state: MENU_STATES.TUTORIAL });
-      } else {
-        this.$store.commit("setMenuState", { state: MENU_STATES.LEADERBOARD });
-      }
-    } else {
-      if (
-        this.$store.state.userId &&
-        GameHelper.gameHasOpenSlots(this.$store.state.game)
-      ) {
-        this.$store.commit("setMenuState", { state: MENU_STATES.WELCOME });
-      } else {
-        this.$store.commit("setMenuState", { state: MENU_STATES.LEADERBOARD }); // Assume the user is spectating.
-      }
-    }
+const onColourOverrideConfirmed = () => {
+  colourOverride.value = null;
+};
 
-    let reloadGameCheckInterval = 1000; // 1 second
+const onColourOverrideCancelled = () => {
+  colourOverride.value = null;
+};
 
-    this.polling = setInterval(this.reloadGameCheck, reloadGameCheckInterval);
+const onViewColourOverrideRequested = (e: string) => {
+  colourOverride.value = { playerId: e };
+};
 
-    this.$store.dispatch("loadSpecialistData");
-  },
-  beforeDestroy() {
-    clearInterval(this.polling);
-  },
-  destroyed() {
-    this.unsubscribeToSockets();
+const onStarSelected = (starId: string) => {
+  store.setMenuState({
+    state: "starDetail",
+    starId,
+  });
 
-    let socketData = {
-      gameId: this.$store.state.game._id,
-      userId: this.$store.state.userId
-    };
+  AudioService.click();
+};
 
-    let player = GameHelper.getUserPlayer(this.$store.state.game);
+const onStarRightSelected = (starId: string) => {
+  const star = GameHelper.getStarById(store.game!, starId)!;
+  const owningPlayer = GameHelper.getStarOwningPlayer(store.game!, star);
 
-    if (player) {
-      socketData.playerId = player._id;
-    }
+  if (owningPlayer) {
+    onPlayerSelected(owningPlayer._id);
+  }
 
-    this.$socket.emit("gameRoomLeft", socketData);
+  AudioService.click();
+};
 
-    document.title = "Cosmic Odyssey";
-  },
-  methods: {
-    async attemptLogin() {
-      if (this.$store.state.userId) {
-        return;
-      }
+const onOpenPlayerDetailRequested = (e: string) => {
+  store.setMenuState({ state: "player", playerId: e });
+};
 
-      try {
-        let response = await authService.verify();
+const onCarrierSelected = (carrierId: string) => {
+  store.setMenuState({
+    state: "carrierDetail",
+    carrierId,
+  });
 
-        if (response.status === 200) {
-          if (response.data._id) {
-            this.$store.commit("setUserId", response.data._id);
-            this.$store.commit("setUsername", response.data.username);
-            this.$store.commit("setRoles", response.data.roles);
-            this.$store.commit("setUserCredits", response.data.credits);
-          }
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    },
-    async reloadGame() {
-      // if (this.$isHistoricalMode()) { // Do not reload if in historical mode
-      //   return
-      // }
+  AudioService.click();
+};
 
-      try {
-        let galaxyResponse = await GameApiService.getGameGalaxy(
-          this.$route.query.id
-        );
+const onCarrierRightSelected = (carrierId: string) => {
+  const carrier = GameHelper.getCarrierById(store.game!, carrierId)!;
+  const owningPlayer = GameHelper.getCarrierOwningPlayer(store.game!, carrier);
 
-        // Make sure the player is still in the current game, they may have quickly
-        // switched to another game.
-        if (this.$route.query.id === galaxyResponse.data._id) {
-          this.$store.commit("setGame", galaxyResponse.data); // Persist to storage
-          this.$store.commit("setTick", galaxyResponse.data.state.tick);
-          this.$store.commit(
-            "setProductionTick",
-            galaxyResponse.data.state.productionTick
-          );
+  if (owningPlayer) {
+    onPlayerSelected(owningPlayer._id);
+  }
 
-          document.title =
-            galaxyResponse.data.settings.general.name + " - Cosmic Odyssey";
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    },
-    async reloadSettings() {
-      try {
-        let response = await UserApiService.getGameSettings();
+  AudioService.click();
+};
 
-        if (response.status === 200) {
-          this.$store.commit("setSettings", response.data); // Persist to storage
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    },
-    getUserPlayer() {
-      return GameHelper.getUserPlayer(this.$store.state.game);
-    },
+const onObjectsClicked = (e: ObjectClicked[]) => {
+  store.setMenuState({
+    state: "mapObjectSelector",
+    objects: e,
+  });
 
-    // MENU
+  AudioService.open();
+};
 
-    resetMenuState() {
-      this.$store.commit("clearMenuState");
-    },
-    onPlayerSelected(e) {
-      this.$store.commit("setMenuState", {
-        state: MENU_STATES.PLAYER,
-        args: e
-      });
+const onPlayerSelected = (playerId: string) => {
+  store.setMenuState({
+    state: "player",
+    playerId,
+  });
 
-      this.$emit("onPlayerSelected", e);
-    },
-    onStarClicked(e) {
-      this.$store.commit("setMenuState", {
-        state: MENU_STATES.STAR_DETAIL,
-        args: e
-      });
+  emit("onPlayerSelected", playerId);
+};
 
-      AudioService.click();
-    },
-    onStarRightClicked(e) {
-      let star = GameHelper.getStarById(this.$store.state.game, e);
-      let owningPlayer = GameHelper.getStarOwningPlayer(
-        this.$store.state.game,
-        star
-      );
+const onOpenReportPlayerRequested = (e: { playerId: string }) => {
+  store.setMenuState({
+    state: "reportPlayer",
+    args: { playerId: e.playerId },
+  });
+};
 
-      if (owningPlayer) {
-        this.onPlayerSelected(owningPlayer._id);
-      }
-
-      AudioService.click();
-    },
-    onCarrierClicked(e) {
-      this.$store.commit("setMenuState", {
-        state: MENU_STATES.CARRIER_DETAIL,
-        args: e
-      });
-
-      AudioService.click();
-    },
-    onCarrierRightClicked(e) {
-      let carrier = GameHelper.getCarrierById(this.$store.state.game, e);
-      let owningPlayer = GameHelper.getCarrierOwningPlayer(
-        this.$store.state.game,
-        carrier
-      );
-
-      if (owningPlayer) {
-        this.onPlayerSelected(owningPlayer._id);
-      }
-
-      AudioService.click();
-    },
-    onObjectsClicked(e) {
-      this.$store.commit("setMenuState", {
-        state: MENU_STATES.MAP_OBJECT_SELECTOR,
-        args: e
-      });
-
-      AudioService.open();
-    },
-
-    // --------------------
-    // Sockets
-    subscribeToSockets() {
-      // TODO: Move all component subscriptions into the components' socket object.
-      this.sockets.subscribe("gameStarted", data => this.onGameStarted(data));
-      this.sockets.subscribe("gamePlayerJoined", data =>
-        this.$store.commit("gamePlayerJoined", data)
-      );
-      this.sockets.subscribe("gamePlayerQuit", data =>
-        this.$store.commit("gamePlayerQuit", data)
-      );
-      this.sockets.subscribe("gamePlayerReady", data =>
-        this.$store.commit("gamePlayerReady", data)
-      );
-      this.sockets.subscribe("gamePlayerNotReady", data =>
-        this.$store.commit("gamePlayerNotReady", data)
-      );
-      this.sockets.subscribe("gamePlayerReadyToQuit", data =>
-        this.$store.commit("gamePlayerReadyToQuit", data)
-      );
-      this.sockets.subscribe("gamePlayerNotReadyToQuit", data =>
-        this.$store.commit("gamePlayerNotReadyToQuit", data)
-      );
-      this.sockets.subscribe("playerDebtSettled", data =>
-        this.$store.commit("playerDebtSettled", data)
-      );
-      this.sockets.subscribe("gameMessageSent", data =>
-        this.onMessageReceived(data)
-      );
-
-      if (!GameHelper.isHiddenPlayerOnlineStatus(this.$store.state.game)) {
-        this.sockets.subscribe("gamePlayerRoomJoined", data =>
-          this.onGamePlayerRoomJoined(data)
-        );
-        this.sockets.subscribe("gamePlayerRoomLeft", data =>
-          this.onGamePlayerRoomLeft(data)
-        );
-      }
-    },
-    unsubscribeToSockets() {
-      this.sockets.unsubscribe("gameStarted");
-      this.sockets.unsubscribe("gamePlayerJoined");
-      this.sockets.unsubscribe("gamePlayerQuit");
-      this.sockets.unsubscribe("gamePlayerReady");
-      this.sockets.unsubscribe("gamePlayerNotReady");
-      this.sockets.unsubscribe("gamePlayerReadyToQuit");
-      this.sockets.unsubscribe("gamePlayerNotReadyToQuit");
-      this.sockets.unsubscribe("playerDebtSettled");
-      this.sockets.unsubscribe("gameMessageSent");
-    },
-    onMessageReceived(e) {
-      if (window.innerWidth >= 992) {
-        // Don't do this if the window is too large as it gets handled elsewhere
-        return;
-      }
-
-      let conversationId = e.conversationId;
-
-      // Show a toast only if the user isn't already in the conversation.
-      if (
-        this.menuState === MENU_STATES.CONVERSATION &&
-        this.menuArguments === conversationId
-      ) {
-        return;
-      }
-
-      let fromPlayer = GameHelper.getPlayerById(
-        this.$store.state.game,
-        e.fromPlayerId
-      );
-
-      this.$toasted.show(`New message from ${fromPlayer.alias}.`, {
-        duration: null,
-        type: "info",
-        duration: 10000,
-        action: [
-          {
-            text: "Dismiss",
-            onClick: (e, toastObject) => {
-              toastObject.goAway(0);
-            }
-          },
-          {
-            text: "View",
-            onClick: (e, toastObject) => {
-              this.$store.commit("setMenuState", {
-                state: MENU_STATES.CONVERSATION,
-                args: conversationId
-              });
-
-              toastObject.goAway(0);
-            }
-          }
-        ]
-      });
-
-      AudioService.join();
-    },
-    onGameStarted(data) {
-      this.$store.commit("gameStarted", data);
-
-      this.$toasted.show(
-        `The game is full and will start soon. Reload the game now to view the galaxy.`,
-        {
-          duration: null,
-          type: "info",
-          action: [
-            {
-              text: "Dismiss",
-              onClick: (e, toastObject) => {
-                toastObject.goAway(0);
-              }
-            },
-            {
-              text: "Reload",
-              onClick: (e, toastObject) => {
-                toastObject.goAway(0);
-
-                location.reload();
-              }
-            }
-          ]
-        }
-      );
-    },
-    onGamePlayerRoomJoined(data) {
-      let player = GameHelper.getPlayerById(
-        this.$store.state.game,
-        data.playerId
-      );
-
-      player.lastSeen = moment().utc();
-      player.isOnline = true;
-    },
-    onGamePlayerRoomLeft(data) {
-      let player = GameHelper.getPlayerById(
-        this.$store.state.game,
-        data.playerId
-      );
-
-      player.lastSeen = moment().utc();
-      player.isOnline = false;
-    },
-    async reloadGameCheck() {
-      if (!this.isLoggedIn || this.ticking) {
-        return;
-      }
-
-      // Check if the next tick date has passed, if so check if the server has finished the game tick.
-      // Alternatively if the game is set to 10s ticks then always check.
-      let canTick =
-        this.$store.state.game.settings.gameTime.speed <= 10 ||
-        gameHelper.canTick(this.$store.state.game);
-
-      if (canTick) {
-        this.ticking = true;
-
-        try {
-          let response = await GameApiService.getGameState(
-            this.$store.state.game._id
-          );
-
-          if (response.status === 200) {
-            if (this.$store.state.tick < response.data.state.tick) {
-              // If the user is currently using the time machine then only set the state variables.
-              // Otherwise reload the current game tick.
-              if (this.$isHistoricalMode()) {
-                this.$store.commit("setTick", response.data.state.tick);
-                this.$store.commit(
-                  "setProductionTick",
-                  response.data.state.productionTick
-                );
-              } else {
-                await this.reloadGame();
-
-                this.$toasted.show(
-                  `The cosmos has shifted. Galactic Cycle ${response.data.state.productionTick}, Stellar Pulse ${response.data.state.tick}.`,
-                  { type: "success" }
-                );
-
-                AudioService.download();
-              }
-            }
-          }
-        } catch (e) {
-          console.error(e);
-        }
-
-        this.ticking = false;
-      }
-    }
-  },
-  computed: {
-    menuState() {
-      return this.$store.state.menuState;
-    },
-    menuArguments() {
-      return this.$store.state.menuArguments;
-    },
-    gameId() {
-      return this.$store.state.game._id;
-    },
-    hasGame() {
-      return this.$store.state.game;
-    },
-    isLoggedIn() {
-      return this.$store.state.userId != null;
-    }
+const attemptLogin = () => {
+  if (!userStore.userId) {
+    userStore.verify(httpClient, userClientSockerEmitter);
   }
 };
+
+const reloadSettings = async () => {
+  const response = await getSettings(httpClient)();
+
+  if (isOk(response)) {
+    store.setSettings(response.data);
+  } else {
+    console.error(formatError(response));
+  }
+};
+
+const reloadGame = async () => {
+  const response = await detailGalaxy(httpClient)(route.query.id as string);
+
+  if (isOk(response)) {
+    // Make sure the player is still in the current game, they may have quickly
+    // switched to another game.
+    if (route.query.id === response.data._id) {
+      store.setGame(response.data as Game); // Persist to storage // TODO: Fix types
+      store.setTick(response.data.state.tick);
+      store.setProductionTick(response.data.state.productionTick);
+
+      document.title = response.data.settings.general.name + " - Solaris";
+    }
+  } else {
+    console.error(formatError(response));
+
+    toast.error("Game failed to load");
+
+    router.push({ name: "main-menu" });
+  }
+};
+
+const reloadGameCheck = async () => {
+  if (!isLoggedIn.value || ticking.value) {
+    return;
+  }
+
+  // Check if the next tick date has passed, if so check if the server has finished the game tick.
+  // Alternatively if the game is set to 10s ticks then always check.
+  const canTick =
+    store.game!.settings.gameTime.speed <= 10 ||
+    gameHelper.canTick(store.game!);
+
+  if (canTick) {
+    ticking.value = true;
+
+    const response = await detailState(httpClient)(store.game!._id);
+
+    if (isOk(response)) {
+      if (!game.value) {
+        return;
+      }
+
+      const hasEnded =
+        !GameHelper.isGameFinished(game.value) &&
+        Boolean(response.data.state?.endDate);
+
+      if (store.tick < response.data.state?.tick || hasEnded) {
+        // If the user is currently using the time machine then only set the state variables.
+        // Otherwise reload the current game tick.
+        if (isHistorical.value) {
+          store.setTick(response.data.state.tick);
+          store.setProductionTick(response.data.state.productionTick);
+        } else {
+          await reloadGame();
+        }
+
+        eventBus.emit(GameEventBusEventNames.OnGameTick);
+
+        if (hasEnded) {
+          toast.success(`The game has ended!`);
+        } else {
+          toast.success(
+            `The game has ticked. Cycle ${response.data.state.productionTick}, Tick ${response.data.state.tick}.`,
+          );
+        }
+
+        AudioService.download();
+      }
+    }
+
+    ticking.value = false;
+  }
+};
+
+withMessages();
+
+AudioService.loadStore(store);
+
+store.clearGame();
+
+//A CSS class that will load only on the game screen to prevent drag-bounce behavior
+const GAME_BODY_CLASS = "game-body";
+
+// keyboard shortcut handling
+const handleKeyDown = createKeyboardShortcutHandler();
+
+onMounted(async () => {
+  diplomacySocketHandler = new DiplomacyClientSocketHandler(socket, eventBus);
+  gameSocketHandler = new GameClientSocketHandler(socket, store, eventBus);
+  playerSocketHandler = new PlayerClientSocketHandler(socket, store, eventBus);
+  gameRoomSocketHandler = new GameRoomClientSocketHandler(
+    socket,
+    store,
+    playerClientSocketEmitter,
+  );
+
+  document.addEventListener("keydown", handleKeyDown);
+
+  attemptLogin();
+
+  await reloadSettings();
+  await reloadGame();
+
+  const userPlayer = GameHelper.getUserPlayer(store.game!);
+
+  if (userPlayer) {
+    userClientSockerEmitter.emitJoined();
+
+    playerClientSocketEmitter.emitGameRoomJoined({
+      gameId: store.game!._id,
+      playerId: userPlayer?._id,
+    });
+  }
+
+  //Remove scroll-bounce effect from the game screen
+  document.documentElement.classList.add(GAME_BODY_CLASS);
+
+  // If the user is in the game then display the leaderboard.
+  // Otherwise show the welcome screen if there are empty slots.
+
+  if (userPlayer && !userPlayer.defeated) {
+    if (GameHelper.isTutorialGame(store.game)) {
+      store.setMenuState({ state: "tutorial" });
+    } else {
+      store.setMenuState({ state: "leaderboard" });
+    }
+  } else {
+    if (userStore.userId && GameHelper.gameHasOpenSlots(store.game)) {
+      store.setMenuState({ state: "welcome" });
+    } else {
+      store.setMenuState({ state: "leaderboard" }); // Assume the user is spectating.
+    }
+  }
+
+  const reloadGameCheckInterval = 1000;
+  polling.value = setInterval(reloadGameCheck, reloadGameCheckInterval);
+
+  await store.loadSpecialistData(httpClient, store.game!._id);
+  await colourStore.loadColourData(httpClient);
+});
+
+onBeforeUnmount(() => {
+  polling.value && clearInterval(polling.value);
+});
+
+onUnmounted(() => {
+  diplomacySocketHandler?.destroy();
+  gameSocketHandler?.destroy();
+  playerSocketHandler?.destroy();
+  gameRoomSocketHandler?.destroy();
+  diplomacySocketHandler = null;
+  gameSocketHandler = null;
+  playerSocketHandler = null;
+  gameRoomSocketHandler = null;
+
+  document.removeEventListener("keydown", handleKeyDown);
+
+  const userPlayer = GameHelper.getUserPlayer(store.game!);
+
+  if (userPlayer) {
+    playerClientSocketEmitter.emitGameRoomLeft({
+      gameId: store.game!._id,
+      playerId: userPlayer?._id,
+    });
+  }
+
+  store.clearGame();
+
+  document.title = "Solaris";
+
+  document.documentElement.classList.remove(GAME_BODY_CLASS);
+});
 </script>
 
 <style scoped></style>
+<style>
+.game-body {
+  overscroll-behavior: none;
+}
+</style>

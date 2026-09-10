@@ -1,36 +1,40 @@
 <template>
-<div v-if="player">
-  <p>
-    You have sent <span class="text-warning">{{event.data.renown}} renown</span> to <a href="javascript:;" @click="onOpenPlayerDetailRequested">{{player.alias}}</a>.
-  </p>
-</div>
+  <div v-if="player">
+    <p>
+      You have sent
+      <span class="text-warning">{{ event.data.renown }} renown</span> to
+      <a href="javascript:;" @click="onOpenPlayerDetailRequested">{{
+        player.alias
+      }}</a
+      >.
+    </p>
+  </div>
 </template>
 
-<script>
-import GameHelper from '../../../../../services/gameHelper'
+<script setup lang="ts">
+import { useGameStore } from "@/stores/game";
+import { computed } from "vue";
+import GameHelper from "../../../../../services/gameHelper";
+import type { PlayerRenownSentEvent } from "@solaris/common";
+import type { Game } from "@/types/game";
 
-export default {
-  components: {
+const props = defineProps<{
+  event: PlayerRenownSentEvent<string>;
+}>();
 
-  },
-  props: {
-    event: Object
-  },
-  data () {
-    return {
-      player: null
-    }
-  },
-  mounted () {
-    this.player = GameHelper.getPlayerById(this.$store.state.game, this.event.data.toPlayerId)
-  },
-  methods: {
-    onOpenPlayerDetailRequested (e) {
-      this.$emit('onOpenPlayerDetailRequested', this.player._id)
-    }
-  }
-}
+const emit = defineEmits<{
+  onOpenPlayerDetailRequested: [playerId: string];
+}>();
+
+const onOpenPlayerDetailRequested = () =>
+  emit("onOpenPlayerDetailRequested", props.event.data.toPlayerId);
+
+const store = useGameStore();
+const game = computed<Game>(() => store.game!);
+
+const player = computed(() =>
+  GameHelper.getPlayerById(game.value, props.event.data.toPlayerId)!,
+);
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

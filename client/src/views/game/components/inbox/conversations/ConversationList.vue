@@ -1,142 +1,134 @@
 <template>
-<div class="container pb-2">
-  <loading-spinner :loading="!conversations"/>
+  <div class="container pb-2">
+    <loading-spinner :loading="isLoading" />
 
-  <div v-if="conversations">
-    <div class="row">
-      <div class="col">
-        <button class="btn btn-sm btn-outline-primary" @click="onRefreshClicked"><i class="fas fa-sync"></i> Refresh</button>
+    <div v-if="conversations">
+      <div class="row">
+        <div class="col">
+          <button
+            class="btn btn-sm btn-outline-primary"
+            @click="onRefreshClicked"
+          >
+            <i class="fas fa-sync"></i> Refresh
+          </button>
+        </div>
+        <div class="col-auto" v-if="canCreateConversation">
+          <button
+            class="btn btn-sm btn-info ms-1"
+            @click="onCreateNewConversationRequested"
+          >
+            <i class="fas fa-comments"></i>
+            Create...
+          </button>
+        </div>
       </div>
-      <div class="col-auto" v-if="canCreateConversation">
-        <!-- <button class="btn btn-sm btn-primary" @click="markAllAsRead" v-if="getConversationsHasUnread()">Mark All Read</button> -->
-        <button class="btn btn-sm btn-info ms-1" @click="onCreateNewConversationRequested">
-          <i class="fas fa-comments"></i>
-          Create...
-        </button>
-      </div>
-    </div>
 
-    <div class="text-center pt-2" v-if="!conversations.length">
+      <div class="text-center pt-2" v-if="conversations?.length === 0">
         No Conversations.
-    </div>
+      </div>
 
-    <div class="pt-2">
-        <conversation-preview 
+      <div class="pt-2">
+        <conversation-preview
           v-for="conversation in orderedConversations"
           v-bind:key="conversation._id"
           :conversation="conversation"
           :isTruncated="true"
           :isFullWidth="true"
-          class="mb-2"/>
+          class="mb-2"
+        />
+      </div>
     </div>
   </div>
-</div>
 </template>
 
-<script>
-import eventBus from '../../../../../eventBus'
-import LoadingSpinnerVue from '../../../../components/LoadingSpinner'
-import ConversationApiService from '../../../../../services/api/conversation'
-import ConversationPreviewVue from './ConversationPreview'
-import gameHelper from '../../../../../services/gameHelper'
+<script setup lang="ts">
+import { useGameStore } from "@/stores/game";
+import { eventBusInjectionKey } from "../../../../../eventBus";
+import LoadingSpinner from "../../../../components/LoadingSpinner.vue";
+import ConversationPreview from "./ConversationPreview.vue";
+import gameHelper from "../../../../../services/gameHelper";
+import { ref, computed, inject, onMounted, onUnmounted } from "vue";
+import UserEventBusEventNames from "../../../../../eventBusEventNames/user";
+import {
+  type ConversationMessageSentResult,
+  type ConversationOverview,
+} from "@solaris/common";
+import { formatError, httpInjectionKey, isOk } from "@/services/typedapi";
+import type { Game } from "@/types/game";
+import { listConversations } from "@/services/typedapi/conversation";
 
-export default {
-  components: {
-    'loading-spinner': LoadingSpinnerVue,
-    'conversation-preview': ConversationPreviewVue
-  },
-  data () {
-    return {
-      conversations: null
+const eventBus = inject(eventBusInjectionKey)!;
+const httpClient = inject(httpInjectionKey)!;
+
+const store = useGameStore();
+const game = computed<Game>(() => store.game!);
+
+const canCreateConversation = computed(
+  () =>
+    game.value.settings.general.playerLimit > 2 &&
+    !gameHelper.isTutorialGame(game.value),
+);
+
+const isLoading = ref(false);
+const conversations = ref<ConversationOverview<string>[]>([]);
+
+const orderedConversations = computed(() => {
+  return conversations.value.sort((a, b) => {
+    if (a === b) {
+      return 0;
+    } else if (a.lastMessage === null) {
+      return 1;
+    } else if (b.lastMessage === null) {
+      return -1;
+    } else {
+      return (
+        b.lastMessage.sentDate.getTime() - a.lastMessage.sentDate.getTime()
+      );
     }
-  },
-  computed: {
-    orderedConversations: function() {
-      return this.conversations.sort(function(a,b) {
-        if (a === b) {
-          return 0
-        }
-        else if (a.lastMessage === null) {
-          return 1
-        }
-        else if (b.lastMessage === null) {
-          return -1
-        }
-        else {
-          return b.lastMessage.sentDate.localeCompare(a.lastMessage.sentDate)
-        }
-      });
-    },
-    canCreateConversation: function () {
-      return this.$store.state.game.settings.general.playerLimit > 2
-        && !gameHelper.isTutorialGame(this.$store.state.game)
-    }
-  },
-  mounted () {
-    this.refreshList()
-  },
-  created () {
-    this.sockets.subscribe('gameMessageSent', this.onMessageReceived)
-  },
-  destroyed () {
-    this.sockets.unsubscribe('gameMessageSent')
-  },
-  methods: {
-    getPlayer (playerId) {
-      return gameHelper.getPlayerById(this.$store.state.game, playerId)
-    },
-    getPlayerColour (playerId) {
-      return gameHelper.getPlayerColour(this.$store.state.game, playerId)
-    },
-    getConversationsHasUnread () {
-      if (!this.conversations) {
-        return false
-      }
+  });
+});
 
-      return this.conversations.find(c => c.unreadCount) != null
-    },
-    async refreshList () {
-      this.conversations = null
+const refreshList = async () => {
+  isLoading.value = true;
+  conversations.value = [];
 
-      try {
-        let response = await ConversationApiService.list(this.$store.state.game._id)
-
-        if (response.status === 200) {
-          this.conversations = response.data
-        }
-      } catch (e) {
-        console.error(e)
-      }
-    },
-    // async markAllAsRead (e) {
-    //   this.conversations = null
-
-    //   try {
-    //     let response = await ConversationApiService.markAllConversationsAsRead(this.$store.state.game._id)
-
-    //     if (response.status === 200) {
-    //       this.refreshList()
-    //     }
-    //   } catch (e) {
-    //     console.error(e)
-    //   }
-    // },
-    onCreateNewConversationRequested (e) {
-      eventBus.$emit('onCreateNewConversationRequested', e)
-    },
-    onRefreshClicked (e) {
-      this.refreshList()
-    },
-    onMessageReceived (e) {
-      // Find the conversation that this message is for and replace the last message.
-      let convo = this.conversations.find(c => c._id === e.conversationId)
-
-      convo.lastMessage = e
-      convo.unreadCount++
-    }
+  const response = await listConversations(httpClient)(game.value._id);
+  if (isOk(response)) {
+    conversations.value = response.data;
+  } else {
+    console.error(formatError(response));
   }
-}
+
+  isLoading.value = false;
+};
+
+const onRefreshClicked = refreshList;
+
+const onMessageReceived = (e: ConversationMessageSentResult<string>) => {
+  // Find the conversation that this message is for and replace the last message.
+  const convo = conversations.value.find((c) => c._id === e.conversationId);
+
+  if (!convo) {
+    return;
+  }
+
+  convo.lastMessage = e;
+  convo.unreadCount++;
+};
+
+const onCreateNewConversationRequested = () => {
+  store.setMenuStateChat({ state: "createConversation", participantIds: [] });
+};
+
+onMounted(() => {
+  eventBus.on(UserEventBusEventNames.GameMessageSent, onMessageReceived);
+
+  onUnmounted(() => {
+    eventBus.off(UserEventBusEventNames.GameMessageSent, onMessageReceived);
+  });
+
+  refreshList();
+});
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

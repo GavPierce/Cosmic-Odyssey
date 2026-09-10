@@ -1,145 +1,127 @@
 <template>
-<form class="pb-1 conversation">
-    <div class="mention-overlay bg-dark mb-1" v-if="suggestMentions && currentMention && currentMention.suggestions && currentMention.suggestions.length">
-      <ul>
-        <li v-for="(suggestion, index) in currentMention.suggestions" :class="{ selected: index === selectedSuggestion }" :key="suggestion" @click="() => useSuggestion(suggestion)">{{suggestion}}</li>
-      </ul>
-    </div>
-    <div class="mb-2 mb-2">
-        <textarea class="form-control" id="txtMessage" rows="3" :placeholder="placeholderText" ref="messageElement" :value="this.$store.state.currentConversation.text" @input="onMessageChange" @keydown="onKeyDown" @keyup="updateSuggestions" @select="updateSuggestions" @focus="updateSuggestions"></textarea>
-    </div>
+  <form class="pb-1 conversation">
+    <mention-box
+      placeholder="Compose a message"
+      :rows="3"
+      v-model="conversationStore.currentConversation!.text"
+      @onSetMessageElement="onSetMessageElement"
+      @onReplaceInMessage="onReplaceInMessage"
+      @onFinish="send"
+    ></mention-box>
     <div class="mb-2 text-end">
       <div class="d-grid gap-2">
-        <button type="button" class="btn btn-success" @click="send" :disabled="isSendingMessage">
+        <button
+          type="button"
+          class="btn btn-success"
+          @click="send"
+          :disabled="isSendingMessage"
+        >
           <i class="fas fa-paper-plane"></i>
           Send Message
         </button>
       </div>
     </div>
-</form>
+  </form>
 </template>
 
-<script>
-import MentionHelper from '../../../../../services/mentionHelper';
-import ConversationApiService from '../../../../../services/api/conversation'
-import AudioService from '../../../../../game/audio'
+<script setup lang="ts">
+import { useGameStore } from "@/stores/game";
+import MentionHelper, {
+  type Mention,
+} from "../../../../../services/mentionHelper";
+import AudioService from "../../../../../services/audio";
+import MentionBox from "../../shared/MentionBox.vue";
+import { inject, ref, computed } from "vue";
+import { httpInjectionKey, isOk } from "@/services/typedapi";
+import type { Game, Player, Star } from "@/types/game";
+import { sendMessage } from "@/services/typedapi/conversation";
+import type { ConversationMessageSentResult } from "@solaris/common";
+import { useMentionStore } from "@/stores/mention";
+import { useConversationStore } from "@/stores/conversation.ts";
 
-export default {
-  components: {
-    
-  },
-  props: {
-    conversationId: String,
-  },
-  data () {
-    return {
-      isSendingMessage: false,
-      focused: false,
-      suggestMentions: false,
-      currentMention: null,
-      selectedSuggestion: null
-    }
-  },
-  mounted () {
-    this.$store.commit('setConversationElement', this.$refs.messageElement)
-    this.suggestMentions = this.$store.state.settings.interface.suggestMentions === 'enabled'
-  },
-  methods: {
-    useSuggestion (suggestion) {
-      if (this.suggestMentions && this.currentMention) {
-        this.selectedSuggestion = null
-        
-        this.$store.commit('replaceInConversationText', {
-          mention: this.currentMention.mention,
-          text: suggestion
-        })
-      }
+const props = defineProps<{
+  conversationId: string;
+}>();
+
+const emit = defineEmits<{
+  onConversationMessageSent: [res: ConversationMessageSentResult<string>];
+}>();
+
+const httpClient = inject(httpInjectionKey)!;
+
+const store = useGameStore();
+const conversationStore = useConversationStore();
+const mentionStore = useMentionStore();
+const game = computed<Game>(() => store.game!);
+
+const isSendingMessage = ref(false);
+const currentMention = ref<string | null>(null);
+
+const onSetMessageElement = (element: HTMLTextAreaElement) => {
+  mentionStore.setMentions({
+    element,
+    callbacks: {
+      player: (player: Player) => {
+        conversationStore.updateCurrentConversationText(
+          MentionHelper.addMention(
+            conversationStore.currentConversation!.text,
+            mentionStore.mentionReceivingElement!,
+            "player",
+            player.alias,
+          ),
+        );
+      },
+      star: (star: Star) => {
+        conversationStore.updateCurrentConversationText(
+          MentionHelper.addMention(
+            conversationStore.currentConversation!.text,
+            mentionStore.mentionReceivingElement!,
+            "star",
+            star.name,
+          ),
+        );
+      },
     },
-    setSelectedSuggestion (newSelected) {
-      const suggestions = this.currentMention.suggestions.length
-      //Modulo instead of remainder so instead of -1 we get the last suggestion
-      this.selectedSuggestion = ((newSelected % suggestions) + suggestions) % suggestions
-    },
-    async onKeyDown (e) {
-      const isEnterTabKey = e.key === "Enter" || e.key === "Tab"
+  });
+};
 
-      if (isEnterTabKey && (e.ctrlKey || e.metaKey)) {
-          e.preventDefault()
-          await this.send()
-      } else if (this.suggestMentions && this.currentMention) {
-        if (isEnterTabKey && this.selectedSuggestion !== null && this.selectedSuggestion !== undefined) {
-          e.preventDefault()
-          this.useSuggestion(this.currentMention.suggestions[this.selectedSuggestion])
-        } else if (e.key === "ArrowDown" || e.key === "Tab") {
-          e.preventDefault()
-          this.setSelectedSuggestion(this.selectedSuggestion + 1)
-        } else if (e.key === "ArrowUp") {
-          e.preventDefault()
-          this.setSelectedSuggestion(this.selectedSuggestion - 1)
-        }
-      }
-    },
-    updateSuggestions () {
-      if (this.suggestMentions) {
-        const oldMention = this.currentMention
+const onReplaceInMessage = (data: { mention: Mention; text: string }) => {
+  conversationStore.updateCurrentConversationText(
+    MentionHelper.useSuggestion(
+      conversationStore.currentConversation!.text,
+      mentionStore.mentionReceivingElement!,
+      data,
+    ),
+  );
+};
 
-        this.currentMention = MentionHelper.getCurrentMention(this.$store.state.game, this.$refs.messageElement)
-        const newSuggestions = this.currentMention && this.currentMention.suggestions && this.currentMention.suggestions.length
+const send = async () => {
+  const messageText = conversationStore.currentConversation?.text;
 
-        if (oldMention && !this.currentMention) {
-          this.selectedSuggestion = null //Mention was left
-        } else if ((!oldMention || !oldMention.suggestions || !oldMention.suggestions.length) && newSuggestions) {
-          this.selectedSuggestion = 0 //Mention was started
-        }
-
-        if (this.currentMention && this.selectedSuggestion != null) {
-          //When the number of new suggestions is smaller, the selection might not get displayed otherwise
-          this.setSelectedSuggestion(this.selectedSuggestion)
-        }
-      }
-    },
-    onMessageChange (e) {
-      this.$store.commit('updateCurrentConversationText', e.target.value)
-    },
-    async send () {
-      let messageText = ''
-
-      if (this.$store.state.currentConversation) {
-        messageText = this.$store.state.currentConversation.text
-
-        if (!messageText) {
-          return
-        }
-      }
-
-      const message = MentionHelper.makeMentionsStatic(this.$store.state.game, messageText)
-
-      try {
-        this.isSendingMessage = true
-
-        let response = await ConversationApiService.send(this.$store.state.game._id, this.conversationId, message)
-
-        if (response.status === 200) {
-          AudioService.type()
-
-          this.$emit('onConversationMessageSent', response.data)
-
-          this.$store.commit('resetCurrentConversationText')
-          this.currentMention = null
-        }
-      } catch (e) {
-        console.error(e)
-      }
-
-      this.isSendingMessage = false
-    }
-  },
-  computed: {
-    placeholderText: function () {
-      return !this.suggestMentions ? 'Compose a message...' : 'Compose a message. Use @ for players and # for stars.'
-    }
+  if (!messageText) {
+    return;
   }
-}
+
+  const message = MentionHelper.makeMentionsStatic(game.value, messageText);
+
+  isSendingMessage.value = true;
+
+  const response = await sendMessage(httpClient)(
+    game.value._id,
+    props.conversationId,
+    message,
+  );
+  if (isOk(response)) {
+    AudioService.type();
+
+    emit("onConversationMessageSent", response.data);
+
+    conversationStore.resetCurrentConversationText();
+    currentMention.value = null;
+  }
+
+  isSendingMessage.value = false;
+};
 </script>
 
 <style scoped>

@@ -1,46 +1,82 @@
 <template>
-<tr>
-    <td><i class="fas fa-circle" v-if="star.ownedByPlayerId" :style="{ 'color': getColour() }"></i></td>
-    <td><a href="javascript:;" @click="clickStar">{{star.name}}</a></td>
-    <td class="no-padding"><a href="javascript:;" @click="goToStar"><i class="far fa-eye"></i></a></td>
-    <td class="sm-padding"><specialist-icon :type="'star'" :specialist="star.specialist" :hideDefaultIcon="true"></specialist-icon></td>
-    <td class="text-end">
-      <span v-if="star.infrastructure" class="text-success me-2" title="Economic infrastructure - Contributes to credits earned at the end of a cycle">{{star.infrastructure.economy}}</span>
-      <span v-if="star.infrastructure" class="text-warning me-2" title="Industrial infrastructure - Contributes to ship production">{{star.infrastructure.industry}}</span>
-      <span v-if="star.infrastructure" class="text-info" title="Scientific infrastructure - Contributes to technology research">{{star.infrastructure.science}}</span>
+  <tr>
+    <td>
+      <player-icon
+        v-if="star.ownedByPlayerId"
+        :playerId="star.ownedByPlayerId"
+      />
+    </td>
+    <td>
+      <a href="javascript:;" @click="clickStar">{{ star.name }}</a>
+    </td>
+    <td class="no-padding">
+      <a href="javascript:;" @click="goToStar"><i class="far fa-eye"></i></a>
+    </td>
+    <td class="sm-padding">
+      <specialist-icon
+        :type="'star'"
+        :specialist="star.specialist"
+        :hideDefaultIcon="true"
+      ></specialist-icon>
     </td>
     <td class="text-end">
-      <star-resources :resources="star.naturalResources" :compareResources="star.terraformedResources" :displayIcon="false" />
+      <span
+        v-if="star.infrastructure"
+        class="text-success me-2"
+        title="Economic infrastructure - Contributes to credits earned at the end of a cycle"
+        >{{ star.infrastructure.economy }}</span
+      >
     </td>
-</tr>
+    <td class="text-end">
+      <span
+        v-if="star.infrastructure"
+        class="text-warning me-2"
+        title="Industrial infrastructure - Contributes to ship production"
+        >{{ star.infrastructure.industry }}</span
+      >
+    </td>
+    <td class="text-end">
+      <span
+        v-if="star.infrastructure"
+        class="text-info"
+        title="Scientific infrastructure - Contributes to technology research"
+        >{{ star.infrastructure.science }}</span
+      >
+    </td>
+    <star-resources
+      :resources="star.naturalResources"
+      :compareResources="star.terraformedResources"
+      :displayIcon="false"
+    />
+  </tr>
 </template>
 
-<script>
-import gameContainer from '../../../../game/container'
-import gameHelper from '../../../../services/gameHelper'
-import SpecialistIcon from '../specialist/SpecialistIcon'
-import StarResourcesVue from '../star/StarResources'
+<script setup lang="ts">
+import PlayerIcon from "../player/PlayerIcon.vue";
+import { MapCommandEventBusEventNames } from "@solaris/map-rendering";
+import SpecialistIcon from "../specialist/SpecialistIcon.vue";
+import StarResources from "../star/StarResources.vue";
+import { eventBusInjectionKey } from "../../../../eventBus";
+import { inject } from "vue";
+import type { Star } from "@/types/game";
+import type { MapObject } from "@solaris/common";
 
-export default {
-  components: {
-    'specialist-icon': SpecialistIcon,
-    'star-resources': StarResourcesVue
-  },
-  props: {
-    star: Object
-  },
-  methods: {
-    getColour () {
-      return gameHelper.getPlayerColour(this.$store.state.game, this.star.ownedByPlayerId)
-    },
-    clickStar (e) {
-      this.$emit('onOpenStarDetailRequested', this.star._id)
-    },
-    goToStar (e) {
-      gameContainer.map.panToStar(this.star)
-    }
-  }
-}
+const props = defineProps<{
+  star: Star;
+}>();
+
+const emit = defineEmits<{
+  onOpenStarDetailRequested: [starId: string];
+}>();
+
+const eventBus = inject(eventBusInjectionKey)!;
+
+const clickStar = () => emit("onOpenStarDetailRequested", props.star._id);
+
+const goToStar = () =>
+  eventBus.emit(MapCommandEventBusEventNames.MapCommandPanToObject, {
+    object: props.star as MapObject<string>,
+  });
 </script>
 
 <style scoped>

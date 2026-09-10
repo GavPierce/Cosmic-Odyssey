@@ -1,191 +1,299 @@
 <template>
-  <div id="gameContainer"></div>
+  <div id="gameContainer" ref="el"></div>
 </template>
 
-<script>
-import { mapState } from "vuex";
-import GameContainer from "../../../game/container";
-import GameApiService from "../../../services/api/game";
+<script setup lang="ts">
+import {
+  ref,
+  inject,
+  onMounted,
+  onBeforeUnmount,
+  type Ref,
+  watch,
+  computed,
+} from "vue";
+import { eventBusInjectionKey } from "@/eventBus.ts";
+import type { Carrier, Game, Star } from "@/types/game.ts";
+import { attachEventDeduplication } from "@/util/eventDeduplication";
+import {
+  createGameContainer,
+  type Services,
+  MapEventBusEventNames,
+  type ObjectClicked,
+  type StarClickDispatchArgs,
+  MapCommandEventBusEventNames,
+} from "@solaris/map-rendering";
+import { mapTextureUrls } from "./textureUrls";
+import { StoreDrawingContext } from "./StoreDrawingContext";
+import { touch } from "@/services/typedapi/game";
+import { httpInjectionKey, isError } from "@/services/typedapi";
+import { useGameServices } from "@/util/gameServices";
+import { useUserStore } from "@/stores/user";
+import { useGameStore } from "@/stores/game";
 
-export default {
-  data() {
-    return {
-      onStarClickedHandler: null,
-      onStarRightClickedHandler: null,
-      onCarrierClickedHandler: null,
-      onWaypointCreatedHandler: null,
-      onObjectsClickedHandler: null,
-      polling: null
-    };
-  },
+import { useToast } from "vue-toast-notification";
+import GameHelper from "@/services/gameHelper.ts";
+import { GameTooltips } from "@/views/game/components/tooltips.ts";
+import type { CarrierClickDispatchArgs } from "@solaris/map-rendering";
+import { useMapClickStore } from "@/stores/mapClick.ts";
+const store = useGameStore();
+const userStore = useUserStore();
+const mapClickStore = useMapClickStore();
 
-  created() {
-    window.addEventListener("resize", this.handleResize);
-  },
+const eventBus = inject(eventBusInjectionKey)!;
+const toast = useToast();
+const httpClient = inject(httpInjectionKey)!;
 
-  beforeMount() {
-    this.gameContainer = GameContainer;
-    this.gameContainer.setupApp(this.$store, this.$store.state.settings);
-    this.loadGame(this.$store.state.game);
-  },
+const serviceProvider = useGameServices();
 
-  mounted() {
-    // Add the game canvas to the screen.
-    this.$el.appendChild(this.gameContainer.app.view); // Add the pixi canvas to the element.
+const emit = defineEmits<{
+  onStarSelected: [starId: string];
+  onStarRightSelected: [starId: string];
+  onCarrierSelected: [carrierId: string];
+  onCarrierRightSelected: [carrierId: string];
+  onObjectsClicked: [objects: ObjectClicked[]];
+}>();
 
-    this.drawGame(this.$store.state.game);
+const polling = ref(0);
+const el: Ref<HTMLElement | null> = ref(null);
 
-    // Bind to game events.
-    this.onStarClickedHandler = this.onStarClicked.bind(this);
-    this.onStarRightClickedHandler = this.onStarRightClicked.bind(this);
-    this.onCarrierClickedHandler = this.onCarrierClicked.bind(this);
-    this.onCarrierRightClickedHandler = this.onCarrierRightClicked.bind(this);
-    this.onWaypointCreatedHandler = this.onWaypointCreated.bind(this);
-    this.onObjectsClickedHandler = this.onObjectsClicked.bind(this);
+onMounted(() => {
+  let unsubscribe;
 
-    this.gameContainer.map.on("onStarClicked", this.onStarClickedHandler);
-    this.gameContainer.map.on(
-      "onStarRightClicked",
-      this.onStarRightClickedHandler
-    );
-    this.gameContainer.map.on("onCarrierClicked", this.onCarrierClickedHandler);
-    this.gameContainer.map.on(
-      "onCarrierRightClicked",
-      this.onCarrierRightClickedHandler
-    );
-    this.gameContainer.map.on(
-      "onWaypointCreated",
-      this.onWaypointCreatedHandler
-    );
-    this.gameContainer.map.on("onObjectsClicked", this.onObjectsClickedHandler);
+  const services: Services = {
+    starDataService: serviceProvider.starDataService,
+    gameTypeService: serviceProvider.gameTypeService,
+    distanceService: serviceProvider.distanceService,
+    pathfindingService: serviceProvider.pathfindingService,
+    tooltips: new GameTooltips(),
+    technologyService: serviceProvider.technologyService,
+  };
 
-    if (this.$store.state.userId) {
-      this.polling = setInterval(this.touchPlayer, 60000);
-      this.touchPlayer();
-    }
+  createGameContainer(
+    services,
+    new StoreDrawingContext(store),
+    store.game!,
+    store.settings!,
+    (msg) => toast.error(msg),
+    eventBus,
+    mapTextureUrls,
+    el.value!,
+  ).then((gameContainer) => {
+    const checkPerformance = () => {
+      const webGLSupport = gameContainer.checkPerformance();
 
-    this.tryShowDonateModal();
-  },
+      console.log("WebGL Support", webGLSupport);
 
-  destroyed() {
-    this.gameContainer.map.off("onStarClicked", this.onStarClickedHandler);
-    this.gameContainer.map.off(
-      "onStarRightClicked",
-      this.onStarRightClickedHandler
-    );
-    this.gameContainer.map.off(
-      "onCarrierClicked",
-      this.onCarrierClickedHandler
-    );
-    this.gameContainer.map.off(
-      "onCarrierRightClicked",
-      this.onCarrierRightClickedHandler
-    );
-    this.gameContainer.map.off(
-      "onWaypointCreated",
-      this.onWaypointCreatedHandler
-    );
-    this.gameContainer.map.off(
-      "onObjectsClicked",
-      this.onObjectsClickedHandler
-    );
-
-    this.gameContainer.destroy();
-  },
-
-  beforeDestroy() {
-    window.removeEventListener("resize", this.handleResize);
-
-    clearInterval(this.polling);
-  },
-
-  methods: {
-    loadGame(game) {
-      this.gameContainer.setupViewport(game);
-      this.gameContainer.setup(game, this.$store.state.settings);
-    },
-    updateGame(game) {
-      this.gameContainer.reloadGame(game, this.$store.state.settings);
-    },
-    drawGame(game, panToUser = true) {
-      this.gameContainer.draw();
-
-      if (panToUser) {
-        this.gameContainer.map.panToUser(game);
+      if (!webGLSupport.webgl) {
+        toast.error("WebGL is not supported on your device", {
+          duration: 10000,
+        });
       }
-    },
-    async touchPlayer() {
+
+      if (webGLSupport.webgl && !webGLSupport.performance) {
+        toast.info(
+          "Low-performance mode detected. You may consider lowering your graphics settings.",
+          { duration: 10000 },
+        );
+      }
+    };
+
+    const drawGame = () => {
+      gameContainer.draw();
+      eventBus.emit(
+        MapCommandEventBusEventNames.MapCommandInitialPanForPlayer,
+        {
+          player: GameHelper.getUserPlayer(store.game!),
+        },
+      );
+    };
+
+    const touchPlayer = async () => {
       try {
-        await GameApiService.touchPlayer(this.$store.state.game._id);
+        if (store.game && userStore.userId) {
+          const response = await touch(httpClient)(store.game._id);
+
+          if (isError(response)) {
+            console.error(response);
+          }
+        }
       } catch (e) {
         console.error(e);
       }
-    },
-    handleResize(e) {
-      this.gameContainer.resize();
-    },
-    onStarClicked(e) {
-      this.$emit("onStarClicked", e._id);
-    },
-    onStarRightClicked(e) {
-      this.$emit("onStarRightClicked", e._id);
-    },
-    onCarrierClicked(e) {
-      this.$emit("onCarrierClicked", e._id);
-    },
-    onCarrierRightClicked(e) {
-      this.$emit("onCarrierRightClicked", e._id);
-    },
-    onWaypointCreated(e) {
-      this.$emit("onWaypointCreated", e);
-    },
-    onObjectsClicked(e) {
-      this.$emit("onObjectsClicked", e);
-    },
-    async tryShowDonateModal() {
-      let chance = Math.floor(Math.random() * (20 - 0 + 1) + 0); // 1 in 20
+    };
 
-      if (
-        chance === 0 &&
-        (await this.$confirm(
-          "Support The Project",
-          `Hello there,
-
-Cosmic Odyssey is free, open source and does not have ads. Please consider donating or purchasing Galactic Credits to support the continued development of the project.
-
-Thank you,
-Gavin`,
-          "Donate",
-          "Dismiss",
-          false,
-          true
-        ))
-      ) {
-        window
-          .open("https://www.buymeacoffee.com/gavinpierce", "_blank")
-          .focus();
+    const updateGame = (game: Game | null) => {
+      if (game) {
+        gameContainer.reloadGame(game, store.settings!);
       }
-    }
-  },
+    };
 
-  computed: mapState(["game"]),
+    const onStarSelectedHandler = ({ star }: { star: Star }) => {
+      emit("onStarSelected", star._id);
+    };
 
-  watch: {
-    game(newGame, oldGame) {
-      this.updateGame(newGame);
+    const onStarClickDispatchHandler = (args: StarClickDispatchArgs) => {
+      mapClickStore.onStarClick(args);
+    };
+
+    const onStarRightClickDispatchHandler = (args: StarClickDispatchArgs) => {
+      mapClickStore.onStarRightClick(args);
+    };
+
+    const onCarrierClickDispatchHandler = (args: CarrierClickDispatchArgs) => {
+      mapClickStore.onCarrierClick(args);
+    };
+
+    const onCarrierRightClickDispatchHandler = (
+      args: CarrierClickDispatchArgs,
+    ) => {
+      mapClickStore.onCarrierRightClick(args);
+    };
+
+    const onStarRightSelected = ({ star }: { star: Star }) => {
+      emit("onStarRightSelected", star._id);
+    };
+
+    const onCarrierSelectedHandler = ({ carrier }: { carrier: Carrier }) => {
+      emit("onCarrierSelected", carrier._id);
+    };
+
+    const onCarrierRightSelectedHandler = ({
+      carrier,
+    }: {
+      carrier: Carrier;
+    }) => {
+      emit("onCarrierRightSelected", carrier._id);
+    };
+
+    const onObjectsClickedHandler = ({
+      objects,
+    }: {
+      objects: ObjectClicked[];
+    }) => {
+      emit("onObjectsClicked", objects);
+    };
+
+    const unwatch = watch(
+      computed(() => store.game),
+      (newGame) => {
+        updateGame(newGame);
+      },
+    ); // watcher is created async, so we have to do the cleanup ourselves
+
+    checkPerformance();
+
+    const canvas = gameContainer.app!.canvas;
+    drawGame();
+
+    const gameRoot = document.getElementById("gameRoot"); // Defined in Game component
+    attachEventDeduplication(gameRoot, canvas);
+
+    eventBus.on(
+      MapEventBusEventNames.MapOnStarClickDispatched,
+      onStarClickDispatchHandler,
+    );
+    eventBus.on(MapEventBusEventNames.MapOnStarSelected, onStarSelectedHandler);
+    eventBus.on(
+      MapEventBusEventNames.MapOnStarRightClickDispatched,
+      onStarRightClickDispatchHandler,
+    );
+    eventBus.on(
+      MapEventBusEventNames.MapOnStarRightSelected,
+      onStarRightSelected,
+    );
+    eventBus.on(
+      MapEventBusEventNames.MapOnCarrierClickDispatched,
+      onCarrierClickDispatchHandler,
+    );
+    eventBus.on(
+      MapEventBusEventNames.MapOnCarrierRightClickDispatched,
+      onCarrierRightClickDispatchHandler,
+    );
+    eventBus.on(
+      MapEventBusEventNames.MapOnCarrierSelected,
+      onCarrierSelectedHandler,
+    );
+    eventBus.on(
+      MapEventBusEventNames.MapOnCarrierRightSelected,
+      onCarrierRightSelectedHandler,
+    );
+    eventBus.on(
+      MapEventBusEventNames.MapOnObjectsClicked,
+      onObjectsClickedHandler,
+    );
+
+    if (userStore.userId) {
+      polling.value = setInterval(touchPlayer, 60000);
+      touchPlayer();
     }
-  }
-};
+
+    unsubscribe = () => {
+      unwatch();
+
+      clearInterval(polling.value);
+
+      gameContainer.destroy();
+
+      eventBus.off(
+        MapEventBusEventNames.MapOnStarClickDispatched,
+        onStarClickDispatchHandler,
+      );
+      eventBus.off(
+        MapEventBusEventNames.MapOnStarSelected,
+        onStarSelectedHandler,
+      );
+      eventBus.off(
+        MapEventBusEventNames.MapOnStarRightClickDispatched,
+        onStarRightClickDispatchHandler,
+      );
+      eventBus.off(
+        MapEventBusEventNames.MapOnStarRightSelected,
+        onStarRightSelected,
+      );
+      eventBus.off(
+        MapEventBusEventNames.MapOnCarrierClickDispatched,
+        onCarrierClickDispatchHandler,
+      );
+      eventBus.off(
+        MapEventBusEventNames.MapOnCarrierRightClickDispatched,
+        onCarrierRightClickDispatchHandler,
+      );
+      eventBus.off(
+        MapEventBusEventNames.MapOnCarrierSelected,
+        onCarrierSelectedHandler,
+      );
+      eventBus.off(
+        MapEventBusEventNames.MapOnCarrierRightSelected,
+        onCarrierRightSelectedHandler,
+      );
+      eventBus.off(
+        MapEventBusEventNames.MapOnObjectsClicked,
+        onObjectsClickedHandler,
+      );
+    };
+  });
+
+  onBeforeUnmount(() => {
+    if (unsubscribe) {
+      unsubscribe();
+    }
+  });
+});
 </script>
-
 <style scoped>
 #gameContainer {
-  position: absolute;
-  left: 0;
-  top: 0;
-  margin: 0;
+  user-select: none;
   height: 100%;
-  width: 100%;
+  width: calc(100vw - 50px);
   overflow: hidden;
+
+  @media screen and (max-width: 576px) {
+    width: 100vw;
+  }
+}
+
+#gameContainer :deep(canvas) {
+  display: block;
 }
 </style>

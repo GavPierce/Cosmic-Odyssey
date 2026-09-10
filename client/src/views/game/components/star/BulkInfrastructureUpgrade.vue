@@ -2,14 +2,23 @@
   <div class="menu-page container">
     <menu-title title="Bulk Upgrade" @onCloseRequested="onCloseRequested" />
 
-    <p v-if="!types.length" class="pb-1 text-danger">Bulk upgrade has been disabled in this game. There are no infrastructure types that can be bulk upgraded.</p>
+    <p v-if="!types.length" class="pb-1 text-danger">
+      Bulk upgrade has been disabled in this game. There are no infrastructure
+      types that can be bulk upgraded.
+    </p>
 
     <div v-if="types.length">
       <div class="row">
-        <p class="col-12"><small>Select an amount of credits to spend and the kind of infrastructure you would like to buy. The cheapest infrastructure will be purchased throughout your empire.</small></p>
+        <p class="col-12">
+          <small
+            >Select an amount of credits to spend and the kind of infrastructure
+            you would like to buy. The cheapest infrastructure will be purchased
+            throughout your empire.</small
+          >
+        </p>
       </div>
 
-      <form-error-list v-bind:errors="errors"/>
+      <form-error-list v-bind:errors="errors" />
 
       <form @submit.prevent>
         <div class="row g-0">
@@ -17,42 +26,163 @@
             <span class="input-group-text">
               <i class="fas fa-calculator"></i>
             </span>
-            <select class="form-select" id="strategyType" v-on:change="resetPreview" v-model="selectedUpgradeStrategy" :disabled="isChecking || isUpgrading">
+            <select
+              class="form-select"
+              id="strategyType"
+              v-on:change="resetPreview"
+              v-model="selectedUpgradeStrategy"
+              :disabled="isChecking || isUpgrading"
+            >
               <option value="totalCredits">Spend credits</option>
-              <option value="infrastructureAmount">Buy infrastructure amount</option>
+              <option value="percentageOfCredits">
+                Spend percentage of credits
+              </option>
+              <option value="infrastructureAmount">
+                Buy infrastructure amount
+              </option>
               <option value="belowPrice">Buy below price</option>
             </select>
           </div>
         </div>
         <div class="row">
-          <div class="mb-2 input-group col pe-1">
+          <div class="mb-2 input-group col">
             <span class="input-group-text">
-              <i class="fas fa-dollar-sign" v-if="selectedUpgradeStrategy === 'totalCredits'"></i>
-              <i class="fas fa-dollar-sign" v-if="selectedUpgradeStrategy === 'belowPrice'"></i>
-              <i class="fas fa-industry" v-if="selectedUpgradeStrategy === 'infrastructureAmount'"></i>
+              <i
+                class="fas fa-dollar-sign"
+                v-if="selectedUpgradeStrategy === 'totalCredits'"
+              ></i>
+              <i
+                class="fas fa-percent"
+                v-if="selectedUpgradeStrategy === 'percentageOfCredits'"
+              ></i>
+              <i
+                class="fas fa-dollar-sign"
+                v-if="selectedUpgradeStrategy === 'belowPrice'"
+              ></i>
+              <i
+                class="fas fa-industry"
+                v-if="selectedUpgradeStrategy === 'infrastructureAmount'"
+              ></i>
             </span>
-            <input v-on:input="resetHasChecked"
+            <input
+              v-on:input="resetHasChecked"
               class="form-control"
               id="amount"
               v-model="amount"
               type="number"
-              required="required"
+              required
               :disabled="isChecking || isUpgrading"
             />
           </div>
-          <div class="mb-2 col ps-0 pe-0">
-            <select class="form-control" id="infrastructureType" v-on:change="resetPreview" v-model="selectedType" :disabled="isChecking || isUpgrading">
+          <div class="mb-2 col">
+            <select
+              class="form-select"
+              id="infrastructureType"
+              v-on:change="resetPreview"
+              v-model="selectedType"
+              :disabled="isChecking || isUpgrading"
+            >
               <option
                 v-for="opt in types"
                 v-bind:key="opt.key"
                 v-bind:value="opt.key"
-              >{{ opt.name }}</option>
+              >
+                {{ opt.name }}
+              </option>
             </select>
           </div>
-          <div class="mb-2 col-4 ps-1">
-            <div class="d-grid gap-2">
-              <button class="btn btn-outline-info" v-on:click="check"
-                :disabled="$isHistoricalMode() || isUpgrading || isChecking || gameIsFinished()" ><i class="fas fa-hammer me-1"></i>Check</button>
+        </div>
+        <div class="row">
+          <div class="mb-2 input-group col">
+            <span class="input-group-text">
+              <i class="fas fa-hourglass"></i>
+            </span>
+            <select
+              class="form-select"
+              id="scheduleType"
+              v-on:change="resetPreview"
+              v-model="selectedScheduleStrategy"
+              :disabled="isChecking || isUpgrading"
+            >
+              <option value="now">Now</option>
+              <option value="future">Future</option>
+              <option value="cycle-start">Start of cycle</option>
+              <option value="cycle-end">End of cycle</option>
+            </select>
+          </div>
+          <div class="mb-2 col-3" v-if="selectedScheduleStrategy === 'now'">
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="fas fa-globe-europe"></i>
+              </span>
+              <input
+                v-on:input="resetPreview"
+                class="form-control"
+                id="terraforming"
+                v-model="terraforming"
+                type="number"
+                required
+                :disabled="isChecking || isUpgrading"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="row"
+          v-if="
+            selectedScheduleStrategy === 'future' ||
+            selectedScheduleStrategy === 'cycle-end' ||
+            selectedScheduleStrategy === 'cycle-start'
+          "
+        >
+          <div
+            class="mb-2 input-group col"
+            v-if="selectedScheduleStrategy === 'future'"
+          >
+            <span class="input-group-text">
+              <i class="fas fa-clock"></i>
+            </span>
+            <input
+              v-on:input="resetHasChecked"
+              class="form-control"
+              id="tick"
+              v-model="tick"
+              type="number"
+              required
+              :disabled="isChecking || isUpgrading"
+            />
+          </div>
+          <div class="mb-2 input-group col">
+            <span class="input-group-text">
+              <i class="fas fa-sync"></i>
+            </span>
+            <select
+              class="form-select"
+              id="repeat"
+              v-on:change="resetPreview"
+              v-model="repeat"
+              :disabled="isChecking || isUpgrading"
+            >
+              <option value="false">One time only</option>
+              <option value="true">Repeat every cycle</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="mb-2 col">
+            <div class="d-grid">
+              <button
+                class="btn btn-outline-info"
+                v-on:click="check"
+                :disabled="
+                  isHistoricalMode ||
+                  isUpgrading ||
+                  isChecking ||
+                  gameIsFinished()
+                "
+              >
+                <i class="fas fa-hammer me-1"></i>{{ checkText }}
+              </button>
             </div>
           </div>
         </div>
@@ -61,229 +191,379 @@
       <loading-spinner :loading="isChecking" />
 
       <div class="row bg-dark" v-if="hasChecked && !isChecking">
-        <div class="col pt-3" >
-          <p><b class="text-success">{{upgradeAvailable}}</b> upgrade<span v-if="upgradeAvailable > 1">s</span> for <b class="text-danger">${{cost}}</b></p>
+        <div class="col pt-3">
+          <p>
+            <b class="text-success">{{ upgradeAvailable }}</b>
+            upgrade<span v-if="upgradeAvailable > 1">s</span> for
+            <b class="text-danger">${{ cost }}</b>
+          </p>
         </div>
         <div class="col-4 pt-2 ps-1">
           <div class="d-grid gap-2">
-            <button class="btn btn-success" v-on:click="upgrade"
-              :disabled="$isHistoricalMode() || isUpgrading || isChecking || gameIsFinished()" ><i class="fas fa-check me-1"></i>Confirm</button>
+            <span
+              :title="
+                isCustomTerraforming
+                  ? 'Preview used a custom terraforming level. Reset it to your actual level to confirm.'
+                  : undefined
+              "
+            >
+              <button
+                class="btn btn-success w-100"
+                v-on:click="upgrade"
+                :disabled="
+                  isHistoricalMode ||
+                  isUpgrading ||
+                  isChecking ||
+                  gameIsFinished() ||
+                  isCustomTerraforming
+                "
+              >
+                <i class="fas fa-check me-1"></i>Confirm
+              </button>
+            </span>
           </div>
         </div>
         <div class="col-12" v-if="ignoredCount">
-          <p><small>{{ignoredCount}} star(s) have been ignored by the bulk upgrade.</small></p>
+          <p>
+            <small
+              >{{ ignoredCount }} star(s) have been ignored by the bulk
+              upgrade.</small
+            >
+          </p>
         </div>
       </div>
 
-      <div v-if="hasChecked && upgradePreview && upgradePreview.stars.length" class="row mt-2">
-        <!-- TODO: This should be a component -->
-        <table class="table table-striped table-hover">
-          <thead class="table-dark">
-              <tr>
-                  <td>Star</td>
-                  <td class="text-end">Upgrade</td>
-                  <td class="text-end"><i class="fas fa-dollar-sign"></i></td>
-              </tr>
-          </thead>
-          <tbody>
-            <!-- TODO: This should be a component -->
-            <tr v-for="previewStar in upgradePreview.stars" :key="previewStar.starId">
-              <td>
-                <a href="javascript:void;" @click="panToStar(previewStar.starId)">
-                  <i class="fas fa-eye"></i>
-                  {{getStar(previewStar.starId).name}}
-                </a>
-              </td>
-              <td class="text-end">
-                <span class="text-danger">{{previewStar.infrastructureCurrent}}</span>
-                <i class="fas fa-arrow-right ms-2 me-2"></i>
-                <span class="text-success">{{previewStar.infrastructure}}</span>
-              </td>
-              <td class="text-end">
-                {{previewStar.infrastructureCostTotal}}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div
+        v-if="hasChecked && upgradePreview && upgradePreview.stars.length"
+        class="row mt-2"
+      >
+        <bulk-infrastructure-upgrade-report
+          :upgrade-report="upgradePreview"
+        ></bulk-infrastructure-upgrade-report>
       </div>
 
+      <div v-if="actionCount > 0">
+        <h4 class="mt-2">Scheduled Buy Actions</h4>
+
+        <bulk-infrastructure-upgrade-schedule-table
+          @bulkScheduleTrashed="updateActionCount"
+        />
+      </div>
       <h4 class="mt-2">Bulk Ignore Stars</h4>
 
-      <star-table @onOpenStarDetailRequested="onOpenStarDetailRequested" @bulkIgnoreChanged="resetPreview" :highlightIgnoredInfrastructure="selectedType"/>
+      <bulk-infrastructure-upgrade-star-table
+        @onOpenStarDetailRequested="onOpenStarDetailRequested"
+        @bulkIgnoreChanged="resetPreview"
+        :highlightIgnoredInfrastructure="selectedType || undefined"
+      />
     </div>
   </div>
 </template>
 
-<script>
-import MenuTitle from '../MenuTitle'
-import FormErrorList from '../../../components/FormErrorList'
-import starService from '../../../../services/api/star'
-import GameHelper from '../../../../services/gameHelper'
-import AudioService from '../../../../game/audio'
-import GameContainer from '../../../../game/container'
-import BulkInfrastructureUpgradeStarTableVue from './BulkInfrastructureUpgradeStarTable'
-import LoadingSpinner from '../../../components/LoadingSpinner'
+<script setup lang="ts">
+import { useGameStore } from "@/stores/game";
+import { MapCommandEventBusEventNames } from "@solaris/map-rendering";
+import MenuTitle from "../MenuTitle.vue";
+import FormErrorList from "../../../components/FormErrorList.vue";
+import GameHelper from "../../../../services/gameHelper";
+import AudioService from "../../../../services/audio";
+import { inject, ref, computed, onUnmounted, onMounted, type Ref } from "vue";
+import BulkInfrastructureUpgradeScheduleTable from "./BulkInfrastructureUpgradeScheduleTable.vue";
+import BulkInfrastructureUpgradeStarTable from "./BulkInfrastructureUpgradeStarTable.vue";
+import LoadingSpinner from "../../../components/LoadingSpinner.vue";
+import { eventBusInjectionKey } from "@/eventBus";
+import BulkInfrastructureUpgradeReport from "@/views/game/components/star/BulkInfrastructureUpgradeReport.vue";
+import {
+  extractErrors,
+  formatError,
+  httpInjectionKey,
+  isOk,
+} from "@/services/typedapi";
+import type {
+  BulkUpgradeReport,
+  InfrastructureType,
+  MapObject,
+} from "@solaris/common";
+import {
+  scheduleBulk,
+  upgradeBulk,
+  upgradeBulkCheck,
+} from "@/services/typedapi/star";
+import { useConfirm } from "@/hooks/confirm.ts";
+import { useIsHistoricalMode } from "@/util/reactiveHooks";
 
-export default {
-  components: {
-    'menu-title': MenuTitle,
-    'form-error-list': FormErrorList,
-    'star-table': BulkInfrastructureUpgradeStarTableVue,
-    'loading-spinner': LoadingSpinner
-  },
-  data () {
-    return {
-      errors: [],
-      audio: null,
-      isUpgrading: false,
-      isChecking: false,
-      hasChecked: false,
-      upgradePreview: null,
-      amount: 0,
-      previewAmount: 0,
-      upgradeAvailable: 0,
-      cost: 0,
-      ignoredCount: 0,
-      selectedType: 'economy',
-      selectedUpgradeStrategy: 'totalCredits',
-      types: []
+import { useToast } from "vue-toast-notification";
+type ScheduleStrategy = "future" | "cycle-start" | "cycle-end" | "now";
+
+const emit = defineEmits<{
+  onCloseRequested: [];
+  onOpenStarDetailRequested: [starId: string];
+}>();
+
+const httpClient = inject(httpInjectionKey)!;
+const toast = useToast();
+const eventBus = inject(eventBusInjectionKey)!;
+
+const store = useGameStore();
+const confirm = useConfirm();
+
+const errors: Ref<string[]> = ref([]);
+const isUpgrading = ref(false);
+const isChecking = ref(false);
+const hasChecked = ref(false);
+const terraforming: Ref<number> = ref(0);
+const upgradePreview: Ref<BulkUpgradeReport<string> | null> = ref(null);
+const amount = ref(0);
+const previewAmount = ref(0);
+const upgradeAvailable = ref(0);
+const cost = ref(0);
+const ignoredCount = ref(0);
+const selectedType: Ref<InfrastructureType | null> = ref("economy");
+const selectedUpgradeStrategy = ref("totalCredits");
+const selectedScheduleStrategy: Ref<ScheduleStrategy> = ref("now");
+const repeat = ref("false");
+const tick: Ref<number> = ref(store.game!.state.tick);
+const types: Ref<{ key: InfrastructureType; name: string }[]> = ref([]);
+const actionCount = ref(0);
+
+const isHistoricalMode = useIsHistoricalMode(store);
+
+const actualTerraformingLevel = computed(
+  () =>
+    GameHelper.getUserPlayer(store.game!)?.research?.terraforming?.level ?? 0,
+);
+const isCustomTerraforming = computed(
+  () =>
+    selectedScheduleStrategy.value === "now" &&
+    terraforming.value !== actualTerraformingLevel.value,
+);
+
+const checkText = computed(() => {
+  if (
+    selectedScheduleStrategy.value === "future" ||
+    selectedScheduleStrategy.value === "cycle-end" ||
+    selectedScheduleStrategy.value === "cycle-start"
+  ) {
+    return "Schedule";
+  } else {
+    return "Check";
+  }
+});
+
+const setupInfrastructureTypes = () => {
+  types.value = [];
+
+  if (store.game!.settings.player.developmentCost.economy !== "none") {
+    types.value.push({
+      key: "economy",
+      name: "Economy",
+    });
+  }
+
+  if (store.game!.settings.player.developmentCost.industry !== "none") {
+    types.value.push({
+      key: "industry",
+      name: "Industry",
+    });
+  }
+
+  if (store.game!.settings.player.developmentCost.science !== "none") {
+    types.value.push({
+      key: "science",
+      name: "Science",
+    });
+  }
+
+  selectedType.value = types.value.length ? types.value[0].key : null;
+};
+
+const onCloseRequested = () => emit("onCloseRequested");
+
+const onOpenStarDetailRequested = (e: string) =>
+  emit("onOpenStarDetailRequested", e);
+
+const resetPreview = () => {
+  hasChecked.value = false;
+  upgradePreview.value = null;
+};
+
+const updateActionCount = () =>
+  (actionCount.value =
+    GameHelper.getUserPlayer(store.game!)?.scheduledActions?.length || 0);
+
+const getStar = (starId: string) =>
+  GameHelper.getStarById(store.game!, starId)!;
+
+const panToStar = (starId: string) => {
+  const star: MapObject<string> = getStar(starId)!;
+  eventBus.emit(MapCommandEventBusEventNames.MapCommandPanToObject, {
+    object: star,
+  });
+};
+
+const gameIsFinished = () => GameHelper.isGameFinished(store.game!);
+
+const resetHasChecked = () => !hasChecked.value;
+
+const isFutureStrategy = (strategy: ScheduleStrategy) =>
+  strategy === "future" ||
+  strategy === "cycle-end" ||
+  strategy === "cycle-start";
+
+const check = async () => {
+  errors.value = [];
+  upgradePreview.value = null;
+
+  if (
+    !selectedType.value ||
+    amount.value <= 0 ||
+    (selectedUpgradeStrategy.value === "percentageOfCredits" &&
+      amount.value > 100) ||
+    terraforming.value < 1
+  ) {
+    return;
+  }
+
+  if (
+    selectedScheduleStrategy.value === "future" &&
+    tick.value < store.game!.state.tick
+  ) {
+    return;
+  }
+
+  isChecking.value = true;
+
+  if (isFutureStrategy(selectedScheduleStrategy.value)) {
+    if (selectedScheduleStrategy.value === "cycle-end") {
+      const cycleTicks = store.game!.settings.galaxy.productionTicks;
+      const currentTick = store.game!.state.tick;
+      const cycle = Math.floor(currentTick / cycleTicks) + 1;
+      tick.value = cycle * cycleTicks - 1;
+    } else if (selectedScheduleStrategy.value === "cycle-start") {
+      const cycleTicks = store.game!.settings.galaxy.productionTicks;
+      const currentTick = store.game!.state.tick;
+      const cycle = Math.floor(currentTick / cycleTicks) + 1;
+      tick.value = cycle * cycleTicks;
     }
-  },
-  mounted () {
-    GameContainer.map.showIgnoreBulkUpgrade()
 
-    this.amount = GameHelper.getUserPlayer(this.$store.state.game).credits
+    const response = await scheduleBulk(httpClient)(store.game!._id, {
+      infrastructureType: selectedType.value!,
+      buyType: selectedUpgradeStrategy.value,
+      tick: tick.value,
+      amount: amount.value,
+      repeat: repeat.value === "true",
+    });
 
-    this.setupInfrastructureTypes()
-  },
-  destroyed () {
-    GameContainer.map.hideIgnoreBulkUpgrade()
-  },
-  methods: {
-    onCloseRequested (e) {
-      this.$emit('onCloseRequested', e)
-    },
-    onOpenStarDetailRequested (e) {
-      this.$emit('onOpenStarDetailRequested', e)
-    },
-    setupInfrastructureTypes () {
-      this.types = []
+    if (isOk(response)) {
+      AudioService.join();
 
-      if (this.$store.state.game.settings.player.developmentCost.economy !== 'none') {
-        this.types.push({
-            key: 'economy',
-            name: 'Economy'
-        })
-      }
+      store.gameBulkActionAdded(response.data);
 
-      if (this.$store.state.game.settings.player.developmentCost.industry !== 'none') {
-        this.types.push({
-            key: 'industry',
-            name: 'Industry'
-        })
-      }
+      updateActionCount();
 
-      if (this.$store.state.game.settings.player.developmentCost.science !== 'none') {
-        this.types.push({
-            key: 'science',
-            name: 'Science'
-        })
-      }
+      toast.success(
+        `Action scheduled. Action will be executed on tick ${response.data.tick}.`,
+      );
+    } else {
+      console.error(formatError(response));
+      errors.value = extractErrors(response);
+    }
+  } else {
+    // execute immediately
+    upgradeAvailable.value = 0;
+    cost.value = 0;
 
-      this.selectedType = this.types.length ? this.types[0].key : null
-    },
-    resetPreview (e) {
-      this.hasChecked = false
-      this.upgradePreview = null
-    },
-    panToStar (starId) {
-      let star = this.getStar(starId)
+    const response = await upgradeBulkCheck(httpClient)(store.game!._id, {
+      infrastructure: selectedType.value!,
+      upgradeStrategy: selectedUpgradeStrategy.value,
+      amount: amount.value,
+      terraformingLevel: terraforming.value,
+    });
 
-      GameContainer.map.panToStar(star)
-    },
-    gameIsFinished () {
-      return GameHelper.isGameFinished(this.$store.state.game)
-    },
-    resetHasChecked () {
-      this.hasChecked = false
-    },
-    async check () {
-      this.errors = []
-      this.upgradePreview = null
+    if (isOk(response)) {
+      AudioService.join();
 
-      if (this.amount <= 0) {
-        return
-      }
-
-      try {
-        this.upgradeAvailable = 0
-        this.cost = 0
-        this.isChecking = true
-        let response = await starService.checkBulkUpgradedAmount(
-          this.$store.state.game._id,
-          this.selectedUpgradeStrategy,
-          this.selectedType,
-          this.amount
-        )
-        if (response.status === 200) {
-          AudioService.join()
-          this.upgradePreview = response.data
-          this.upgradeAvailable = response.data.upgraded
-          this.cost = response.data.cost
-          this.previewAmount = response.data.budget
-          this.ignoredCount = response.data.ignoredCount
-        }
-      } catch (err) {
-        this.errors = err.response.data.errors || []
-      }
-      this.isChecking = false
-      this.hasChecked = true
-    },
-    async upgrade () {
-      this.errors = []
-
-      if (this.cost <= 0 || this.amount <= 0) {
-        return
-      }
-
-      if (!await this.$confirm('Bulk upgrade', `Are you sure you want to spend $${this.cost} credits to upgrade ${this.selectedType} across all of your stars?`)) {
-        return
-      }
-
-      try {
-        this.isUpgrading = true
-
-        let response = await starService.bulkInfrastructureUpgrade(
-          this.$store.state.game._id,
-          this.selectedUpgradeStrategy,
-          this.selectedType,
-          this.amount
-        )
-
-        if (response.status === 200) {
-          AudioService.join()
-
-          this.$store.commit('gameStarBulkUpgraded', response.data)
-          
-          this.$toasted.show(`Upgrade complete. Purchased ${response.data.upgraded} ${this.selectedType} for ${response.data.cost} credits.`, { type: 'success' })
-
-          if (this.selectedUpgradeStrategy === 'totalCredits') {
-            this.amount = GameHelper.getUserPlayer(this.$store.state.game).credits
-          }
-        }
-      } catch (err) {
-        this.errors = err.response.data.errors || []
-      }
-
-      this.hasChecked = false
-      this.isUpgrading = false
-    },
-    getStar(starId) {
-      return GameHelper.getStarById(this.$store.state.game, starId)
+      upgradePreview.value = response.data;
+      upgradeAvailable.value = response.data.upgraded;
+      cost.value = response.data.cost;
+      previewAmount.value = response.data.budget;
+      ignoredCount.value = response.data.ignoredCount;
+      hasChecked.value = true;
+    } else {
+      console.error(formatError(response));
+      errors.value = extractErrors(response);
     }
   }
-}
+
+  isChecking.value = false;
+};
+
+const upgrade = async () => {
+  errors.value = [];
+
+  if (cost.value <= 0 || amount.value <= 0) {
+    return;
+  }
+
+  if (
+    !(await confirm(
+      "Bulk upgrade",
+      `Are you sure you want to spend $${cost.value} credits to upgrade ${selectedType.value} across all of your stars?`,
+    ))
+  ) {
+    return;
+  }
+
+  isUpgrading.value = true;
+
+  const response = await upgradeBulk(httpClient)(store.game!._id, {
+    infrastructure: selectedType.value!,
+    upgradeStrategy: selectedUpgradeStrategy.value,
+    amount: amount.value,
+  });
+
+  if (isOk(response)) {
+    AudioService.join();
+
+    store.gameStarBulkUpgraded(eventBus, response.data);
+
+    toast.success(
+      `Upgrade complete. Purchased ${response.data.upgraded} ${selectedType.value} for ${response.data.cost} credits.`,
+    );
+
+    if (selectedUpgradeStrategy.value === "totalCredits") {
+      const userPlayer = GameHelper.getUserPlayer(store.game!)!;
+      amount.value = userPlayer.credits;
+    }
+  } else {
+    console.error(formatError(response));
+    errors.value = extractErrors(response);
+  }
+
+  hasChecked.value = false;
+  isUpgrading.value = false;
+};
+
+onMounted(() => {
+  eventBus.emit(
+    MapCommandEventBusEventNames.MapCommandShowIgnoreBulkUpgrade,
+    {},
+  );
+
+  const userPlayer = GameHelper.getUserPlayer(store.game!)!;
+  amount.value = userPlayer.credits;
+  actionCount.value = userPlayer?.scheduledActions?.length || 0;
+  terraforming.value = userPlayer.research?.terraforming?.level ?? 0;
+
+  setupInfrastructureTypes();
+});
+
+onUnmounted(() => {
+  eventBus.emit(
+    MapCommandEventBusEventNames.MapCommandHideIgnoreBulkUpgrade,
+    {},
+  );
+});
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -1,62 +1,65 @@
 <template>
-  <div id="header" class="app-header">
-    <div class="brand">
-      <a href="javascript:;" class="brand-logo" @click="goHome" title="Main Menu">
-          <span class="brand-img"></span>
-      </a>
-    </div>
+  <header class="solaris-header">
+    <a href="javascript:;" class="solaris-header-el logo-link" @click="goHome">
+      <img class="solaris-logo" alt="Solaris Logo" :src="solarisLogo" />
+      <span class="solaris-name">SOLARIS</span>
+    </a>
 
-    <div class="menu" v-if="userId">
-      <div class="menu-item dropdown dropdown-mobile-full">
+    <nav class="solaris-header-el" v-if="userId">
+      <button
+        v-if="userIsImpersonated"
+        @click="doEndImpersonate()"
+        class="btn btn-success"
+      >
+        End Impersonation
+      </button>
+      <div class="solaris-menu-item">
         <router-link
-          :to="{ name: 'administration' }"
+          :to="{ name: 'administration-games' }"
           v-if="userHasAdminRole"
           class="menu-link"
         >
-          <div class="menu-icon"><i class="fas fa-users-cog"></i></div>
-          <div class="menu-text d-sm-block d-none ms-1">Admin</div>
+          <span class="menu-icon"><i class="fas fa-users-cog"></i></span>
+          <span class="menu-text d-sm-block d-none ms-1">Admin</span>
         </router-link>
       </div>
-      <div class="menu-item dropdown dropdown-mobile-full">
-        <router-link
-          :to="{ name: 'administration' }"
-          v-if="userHasAdminRole"
-          class="menu-link"
-          title="Access administrator features."
-        >
-          <div class="menu-icon"><i class="fas fa-users-cog"></i></div>
-          <div class="menu-text d-sm-block d-none ms-1">Admin</div>
+      <div class="solaris-menu-item">
+        <router-link :to="{ name: 'galactic-credits-shop' }" class="menu-link">
+          <span class="menu-icon"><i class="fas fa-coins"></i></span>
+          <span class="menu-text d-sm-block d-none ms-1">
+            {{ userCredits }} Credit{{ userCredits === 1 ? "" : "s" }}
+          </span>
         </router-link>
       </div>
-      <div class="menu-item dropdown dropdown-mobile-full">
-        <router-link :to="{ name: 'avatars' }" class="menu-link" title="View unlockable factions, symbols and colors to customize your play-style.">
-          <div class="menu-icon"><i class="fas fa-pastafarianism"></i></div>
-          <div class="menu-text d-sm-block d-none ms-1">Unlockables</div>
+      <div class="solaris-menu-item">
+        <router-link :to="{ name: 'avatars' }" class="menu-link">
+          <span class="menu-icon"><i class="fas fa-shopping-basket"></i></span>
+          <span class="menu-text d-sm-block d-none ms-1">Shop</span>
         </router-link>
       </div>
-      <div class="menu-item dropdown dropdown-mobile-full">
+      <div class="solaris-menu-item dropdown">
         <a
           href="#"
           data-bs-toggle="dropdown"
           data-bs-display="static"
           class="menu-link"
-          title="View your account settings, game-play statistics and achievements."
         >
-          <!-- <div class="menu-img online">
-          <img src="assets/img/user/profile.jpg" alt="Profile" height="60">
-        </div> -->
-          <div class="menu-icon"><i class="fas fa-user"></i></div>
-          <div class="menu-text d-sm-block d-none ms-1">{{ username }}</div>
+          <span class="menu-icon"><i class="fas fa-user"></i></span>
+          <span class="menu-text d-sm-block d-none ms-1">{{ username }}</span>
         </a>
         <div class="dropdown-menu dropdown-menu-end me-lg-3 fs-11px mt-1">
           <router-link
             to="/account/settings"
             class="dropdown-item d-flex align-items-center"
           >
-            ACCOUNT <i class="fas fa-user ms-auto text-theme fs-16px my-n1"></i>
+            ACCOUNT
+            <i class="fas fa-user ms-auto text-theme fs-16px my-n1"></i>
           </router-link>
           <router-link
-            :to="{ name: 'account-achievements', params: { userId: userId } }"
+            :to="{
+              name: 'account-achievements',
+              params: { userId: userId },
+            }"
             class="dropdown-item d-flex align-items-center"
           >
             ACHIEVEMENTS
@@ -65,7 +68,7 @@
           <div class="dropdown-divider"></div>
           <a
             href="javascript:;"
-            @click="logout"
+            @click="doLogout"
             :disabled="isLoggingOut"
             class="dropdown-item d-flex align-items-center"
           >
@@ -74,86 +77,137 @@
           </a>
         </div>
       </div>
-    </div>
-  </div>
+    </nav>
+  </header>
 </template>
 
-<script>
+<script setup lang="ts">
+import solarisLogo from "../../assets/solaris_logo_small.png";
 import router from "../../router";
-import authService from "../../services/api/auth";
+import { ref, computed, inject } from "vue";
+import type { UserRoles } from "@solaris/common";
+import { formatError, httpInjectionKey, isOk } from "@/services/typedapi";
+import { endImpersonate } from "@/services/typedapi/admin";
+import { logout } from "@/services/typedapi/auth";
+import { useUserStore } from "@/stores/user";
+import { useToast } from "vue-toast-notification";
 
-export default {
-  data() {
-    return {
-      isLoggingOut: false
-    };
-  },
-  methods: {
-    async logout() {
-      this.isLoggingOut = true;
+const userStore = useUserStore();
 
-      await authService.logout();
+const httpClient = inject(httpInjectionKey)!;
+const toast = useToast();
 
-      this.$store.commit("clearUserId");
-      this.$store.commit("clearUsername");
-      this.$store.commit("clearRoles");
-      this.$store.commit("clearUserCredits");
-      this.$store.commit("clearUserIsEstablishedPlayer");
+const userId = computed(() => userStore.userId);
+const username = computed(() => userStore.username);
+const userCredits = computed(() => userStore.credits);
 
-      this.isLoggingOut = false;
+const userHasAdminRole = computed(() => {
+  const roles: UserRoles | null = userStore.roles;
 
-      router.push({ name: "home" });
-    },
-    routeToPath(path) {
-      router.push(path);
-    },
-    goHome() {
-      router.push({ name: "home" });
-    }
-  },
-  computed: {
-    userId() {
-      return this.$store.state.userId;
-    },
-    username() {
-      return this.$store.state.username;
-    },
-    userCredits() {
-      return this.$store.state.userCredits || 0;
-    },
-    userHasAdminRole() {
-      return (
-        this.$store.state.roles &&
-        (this.$store.state.roles.administrator ||
-          this.$store.state.roles.communityManager ||
-          this.$store.state.roles.gameMaster)
-      );
-    }
+  return roles?.administrator || roles?.communityManager || roles?.gameMaster;
+});
+
+const userIsImpersonated = computed(() => userStore.isImpersonating);
+
+const isLoggingOut = ref(false);
+
+const doEndImpersonate = async () => {
+  const response = await endImpersonate(httpClient)();
+
+  if (isOk(response)) {
+    userStore.setUserId(response.data._id);
+    userStore.setUsername(response.data.username);
+    userStore.setRoles(response.data.roles);
+    userStore.setCredits(response.data.credits);
+    userStore.setIsImpersonating(undefined);
+
+    router.push({ name: "home" });
+  } else {
+    console.error(formatError(response));
+    toast.error("Failed to end impersonation");
+  }
+};
+
+const goHome = () => {
+  router.push({ name: "home" });
+};
+
+const doLogout = async () => {
+  isLoggingOut.value = true;
+
+  const response = await logout(httpClient)();
+  if (isOk(response)) {
+    userStore.clearAll();
+
+    isLoggingOut.value = false;
+
+    router.push({ name: "home" });
+  } else {
+    console.error(formatError(response));
   }
 };
 </script>
 
 <style scoped>
-.app-header {
-  background-color: black !important;
-}
-.brand {
-  justify-content: center;
-  font-family: "Bangers", cursive;
-}
-.brand-logo {
-  justify-content: center;
-}
-.brand-img {
-  background-image: url("../../assets/CO_LOGO.png") !important;
-  width: 10.625rem !important;
-  height: 2.625rem !important;
-}
-.row {
-  padding-bottom: 15px;
+.solaris-header {
+  flex-shrink: 0;
+  background-color: rgba(29, 40, 53, 0.95);
+  display: flex;
+  flex-direction: row;
+  height: 3.25rem;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.2rem 1rem 0.2rem 1rem;
 }
 
-.container {
-  font-size: 20px;
+.solaris-menu-item {
+  .menu-icon {
+    margin-right: 0.25rem;
+  }
+
+  .menu-link {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-decoration: none;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  .menu-text {
+    color: #ffffff;
+  }
+
+  .menu-icon {
+    color: #ffffff;
+    font-size: 1.25rem;
+  }
+}
+
+.solaris-header-el {
+  padding: 0.25rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logo-link {
+  text-decoration: none;
+}
+
+.solaris-name {
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  text-decoration: none;
+}
+
+.solaris-logo {
+  height: 2rem;
+  width: 2rem;
 }
 </style>

@@ -1,69 +1,89 @@
-import { Router } from "express";
-import { ExpressJoiInstance } from "express-joi-validation";
 import { DependencyContainer } from "../../services/types/DependencyContainer";
-import EventController from '../controllers/event';
+import EventController from "../controllers/event";
 import { MiddlewareContainer } from "../middleware";
+import { SingleRouter } from "../singleRoute";
+import { createEventRoutes } from "@solaris/common";
+import { DBObjectId } from "../../services/types/DBObjectId";
+import { createRoutes } from "../typedapi/routes";
 
-export default (router: Router, mw: MiddlewareContainer, validator: ExpressJoiInstance, container: DependencyContainer) => {
+export default (
+    router: SingleRouter,
+    mw: MiddlewareContainer,
+    container: DependencyContainer,
+) => {
     const controller = EventController(container);
+    const routes = createEventRoutes<DBObjectId>();
+    const answer = createRoutes(router, mw);
 
-    router.get('/api/game/:gameId/events',
+    answer(
+        routes.listEvents,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             settings: true,
             state: true,
             galaxy: true,
-            constants: true
+            constants: true,
         }),
         mw.player.loadPlayer,
         controller.list,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
-    router.patch('/api/game/:gameId/events/markAsRead',
+    answer(
+        routes.markAllAsRead,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             settings: true,
             state: true,
             galaxy: true,
-            constants: true
+            constants: true,
         }),
         mw.game.validateGameState({
-            isUnlocked: true
+            isUnlocked: true,
         }),
         mw.player.loadPlayer,
         controller.markAllAsRead,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
-    router.patch('/api/game/:gameId/events/:eventId/markAsRead',
+    answer(
+        routes.markAsRead,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             settings: true,
             state: true,
             galaxy: true,
-            constants: true
+            constants: true,
         }),
         mw.game.validateGameState({
-            isUnlocked: true
+            isUnlocked: true,
         }),
         mw.player.loadPlayer,
         controller.markAsRead,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
-    router.get('/api/game/:gameId/events/unread',
+    answer(
+        routes.unreadCount,
         mw.auth.authenticate(),
+        mw.playerMutex.wait(),
         mw.game.loadGame({
             lean: true,
             settings: true,
             state: true,
             galaxy: true,
-            constants: true
+            constants: true,
         }),
         mw.player.loadPlayer,
         controller.getUnreadCount,
-        mw.core.handleError);
+        mw.playerMutex.release(),
+    );
 
     return router;
-}
+};

@@ -1,22 +1,40 @@
 <template>
-  <view-container>
+  <view-container :is-auth-page="true">
     <view-title
       title="Main Menu"
       :hideHomeButton="true"
       :showSocialLinks="true"
     />
 
+    <warnings v-if="user" :warnings="user.warnings" />
+
     <div class="row pb-0 achievements">
       <div class="col-sm-12 col-md-6 col-lg-5">
         <p class="mb-1">
-          A grand space strategy game filled with exploration, diplomacy, subterfuge and conquest.
+          A space strategy game filled with conquest, betrayal and subterfuge.
         </p>
         <p class="mb-2 mt-2">
-          Play <span class="text-warning">Cosmic Odyssey</span> on
-          <a href="https://cosmic-odyssey.io/" target="_blank" title="Web"
-            ><i class="fab fa-chrome me-1"></i>Web</a
+          <small
+            >Play <span class="text-warning">Solaris</span> on
+            <a href="https://solaris.games" target="_blank" title="Web"
+              ><i class="fab fa-chrome me-1"></i>Web</a
+            >,
+            <a
+              href="https://store.steampowered.com/app/1623930/Solaris/"
+              target="_blank"
+              title="Steam"
+              ><i class="fab fa-steam me-1"></i>Steam</a
+            >
+            and
+            <a
+              href="https://play.google.com/store/apps/details?id=com.voxel.solaris_android"
+              target="_blank"
+              title="Android"
+              ><i class="fab fa-google-play me-1"></i>Android</a
+            >.</small
           >
         </p>
+        <announcements-button />
       </div>
       <div class="col-sm-12 col-md-6 col-lg-7">
         <!-- player quick stats -->
@@ -32,19 +50,22 @@
     </div>
 
     <div class="row pb-0 pt-3">
+      <poll></poll>
+    </div>
+
+    <div class="row pb-0 pt-0">
       <div class="col-sm-12 col-md-6 col-lg-6">
         <div
           class="card bg-dark text-white p-1"
           @click="routeToPath('/game/active-games')"
         >
-          <img
-            class="card-img"
-            :src="require('../assets/screenshots/home-1-small.png')"
-            alt="View my games"
-          />
+          <picture style="display: contents">
+            <source :srcset="home1Webp" type="image/webp" />
+            <img class="card-img" :src="home1" alt="View my games" />
+          </picture>
           <div class="card-img-overlay">
             <h5 class="card-title">
-              <i class="fas fa-star-half-alt"></i>
+              <i class="fas fa-user"></i>
               <span class="ms-2">My Games</span>
             </h5>
           </div>
@@ -61,14 +82,13 @@
         @click="routeToPath('/game/list')"
       >
         <div class="card bg-dark text-white p-1">
-          <img
-            class="card-img"
-            :src="require('../assets/screenshots/home-2-small.png')"
-            alt="Join a game"
-          />
+          <picture style="display: contents">
+            <source :srcset="home2Webp" type="image/webp" />
+            <img class="card-img" :src="home2" alt="Join a game" />
+          </picture>
           <div class="card-img-overlay">
             <h5 class="card-title">
-              <i class="fa-solid fa-play fa-bounce"></i>
+              <i class="fas fa-gamepad"></i>
               <span class="ms-2">Join Game</span>
             </h5>
           </div>
@@ -85,11 +105,10 @@
           class="card bg-dark text-white p-1"
           @click="routeToPath('/leaderboard')"
         >
-          <img
-            class="card-img"
-            :src="require('../assets/screenshots/home-3-small.png')"
-            alt="Leaderboard"
-          />
+          <picture style="display: contents">
+            <source :srcset="home3Webp" type="image/webp" />
+            <img class="card-img" :src="home3" alt="Leaderboard" />
+          </picture>
           <div class="card-img-overlay">
             <h5 class="card-title">
               <i class="fas fa-list-ol"></i>
@@ -106,14 +125,13 @@
       </div>
       <div class="col-sm-12 col-md-4 col-lg-4">
         <div class="card bg-dark text-white p-1" @click="routeToPath('/guild')">
-          <img
-            class="card-img"
-            :src="require('../assets/screenshots/home-4-small.png')"
-            alt="Guilds"
-          />
+          <picture style="display: contents">
+            <source :srcset="home4Webp" type="image/webp" />
+            <img class="card-img" :src="home4" alt="Guilds" />
+          </picture>
           <div class="card-img-overlay">
             <h5 class="card-title">
-              <i class="fas fa-users"></i>
+              <i class="fas fa-shield-alt"></i>
               <span class="ms-2">{{
                 user && user.guildId ? "My Guild" : "Guilds"
               }}</span>
@@ -132,17 +150,14 @@
           class="card bg-dark text-white p-1"
           @click="routeToPath('/avatars')"
         >
-          <img
-            class="card-img"
-            :src="require('../assets/screenshots/home-5-small.png')"
-            alt="Shop"
-          />
+          <picture style="display: contents">
+            <source :srcset="home5Webp" type="image/webp" />
+            <img class="card-img" :src="home5" alt="Shop" />
+          </picture>
           <div class="card-img-overlay">
-
-            <h5 class="card-title ">
-            <!-- Originally: "h5 class="card-title card-title-success" but removed "card-title-success" for consistent color scheme-->
-              <i class="fas fa-pastafarianism"></i>
-              <span class="ms-2">Factions</span>
+            <h5 class="card-title card-title-success">
+              <i class="fas fa-shopping-basket"></i>
+              <span class="ms-2">Avatar Shop</span>
             </h5>
           </div>
           <div class="card-arrow">
@@ -155,88 +170,103 @@
       </div>
     </div>
 
+    <div class="row pb-0">
+      <div class="col-sm-12 col-md-12 col-lg-12">
+        <a
+          class="card bg-dark text-white p-1"
+          href="https://command.solaris.games/"
+        >
+          <picture style="display: contents">
+            <source :srcset="solarisCommandImgWebp" type="image/webp" />
+            <img
+              class="card-img"
+              alt="Solaris:Command"
+              :src="solarisCommandImg"
+            />
+          </picture>
+          <div class="card-img-overlay">
+            <h5 class="card-title">Solaris:Command</h5>
+            <p class="card-text bg-dark p-2">
+              Solaris:Command, the new, hex-based strategy and tactics game, is
+              live!
+            </p>
+            <div class="card-arrow">
+              <div class="card-arrow-top-left"></div>
+              <div class="card-arrow-top-right"></div>
+              <div class="card-arrow-bottom-left"></div>
+              <div class="card-arrow-bottom-right"></div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+
     <hr />
 
-    <!-- 
-      Comment out tutorial game until we can make proper videos so that it doesn't show Solaris youtube videos.
-      <tutorial-game />
-
-      -->
+    <community />
 
     <hr />
   </view-container>
 </template>
 
-<script>
-import LoadingSpinnerVue from "./components/LoadingSpinner";
+<script setup lang="ts">
+import home1 from "../assets/screenshots/tiles/home-1.jpg";
+import home1Webp from "../assets/screenshots/tiles/home-1.webp";
+import home2 from "../assets/screenshots/tiles/home-2.jpg";
+import home2Webp from "../assets/screenshots/tiles/home-2.webp";
+import home3 from "../assets/screenshots/tiles/home-3.jpg";
+import home3Webp from "../assets/screenshots/tiles/home-3.webp";
+import home4 from "../assets/screenshots/tiles/home-4.jpg";
+import home4Webp from "../assets/screenshots/tiles/home-4.webp";
+import home5 from "../assets/screenshots/tiles/home-5.jpg";
+import home5Webp from "../assets/screenshots/tiles/home-5.webp";
+import solarisCommandImg from "../assets/screenshots/solaris_command_1.jpg";
+import solarisCommandImgWebp from "../assets/screenshots/solaris_command_1.webp";
+import { ref, onMounted, type Ref, inject } from "vue";
+import LoadingSpinner from "./components/LoadingSpinner.vue";
 import router from "../router";
-import authService from "../services/api/auth";
-import userService from "../services/api/user";
-import ViewContainer from "./components/ViewContainer";
-import ViewTitle from "./components/ViewTitle";
-import Achievements from "./game/components/player/Achievements";
-import TutorialGame from "./game/components/menu/TutorialGame";
+import ViewContainer from "./components/ViewContainer.vue";
+import ViewTitle from "./components/ViewTitle.vue";
+import Achievements from "./game/components/player/Achievements.vue";
+import Poll from "./components/Poll.vue";
+import Warnings from "./account/Warnings.vue";
+import AnnouncementsButton from "./components/AnnouncementsButton.vue";
+import { detailMe } from "@/services/typedapi/user";
+import { formatError, httpInjectionKey, isOk } from "@/services/typedapi/index";
+import type { UserPrivate, UserAchievements } from "@solaris/common";
+import Community from "@/views/game/components/menu/Community.vue";
+import { useUserStore } from "@/stores/user";
 
-export default {
-  components: {
-    "loading-spinner": LoadingSpinnerVue,
-    "view-container": ViewContainer,
-    "view-title": ViewTitle,
-    achievements: Achievements,
-    "tutorial-game": TutorialGame
-  },
-  data() {
-    return {
-      user: null,
-      achievements: null,
-      isLoggingOut: false
-    };
-  },
-  mounted() {
-    this.loadAchievements();
-  },
-  methods: {
-    async logout() {
-      this.isLoggingOut = true;
+const userStore = useUserStore();
 
-      await authService.logout();
+const httpClient = inject(httpInjectionKey)!;
 
-      this.$store.commit("clearUserId");
-      this.$store.commit("clearUsername");
-      this.$store.commit("clearRoles");
-      this.$store.commit("clearUserCredits");
-      this.$store.commit("clearUserIsEstablishedPlayer");
+const user: Ref<UserPrivate<string> | null> = ref(null);
+const achievements: Ref<UserAchievements<string> | null> = ref(null);
 
-      this.isLoggingOut = false;
+const loadData = async () => {
+  const response = await detailMe(httpClient)();
 
-      router.push({ name: "home" });
-    },
-    async loadAchievements() {
-      try {
-        let response = await userService.getMyUserInfo();
+  if (isOk(response)) {
+    user.value = response.data;
+    achievements.value = response.data.achievements;
 
-        this.user = response.data;
-        this.achievements = response.data.achievements;
-
-        this.$store.commit("setUserCredits", response.data.credits);
-        this.$store.commit(
-          "setUserIsEstablishedPlayer",
-          response.data.isEstablishedPlayer
-        );
-      } catch (err) {
-        console.error(err);
-      }
-    },
-    routeToPath(path) {
-      router.push(path);
-    }
-  },
-  computed: {
-    documentationUrl() {
-      return process.env.VUE_APP_DOCUMENTATION_URL;
-    }
+    userStore.setUser(response.data);
+    userStore.setRoles(response.data.roles);
+    userStore.setCredits(response.data.credits);
+    userStore.setIsEstablishedPlayer(response.data.isEstablishedPlayer);
+  } else {
+    console.error(formatError(response));
   }
 };
+
+const routeToPath = (path: string) => {
+  router.push(path);
+};
+
+onMounted(async () => {
+  await loadData();
+});
 </script>
 
 <style scoped>

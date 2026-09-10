@@ -1,281 +1,358 @@
 <template>
-	<div class="menu-page container" v-if="carrier">
+  <div class="menu-page container" v-if="carrier">
     <menu-title :title="carrier.name" @onCloseRequested="onCloseRequested">
-      <span class="me-2" title="Hyperspace Technology Level" v-if="userPlayer"><i class="fas fa-forward me-1"></i>{{userPlayer.research.hyperspace.level}}</span>
-      <span class="me-2"><i class="fas fa-shuttle-space me-1"></i>{{carrier.ships == null ? '???' : carrier.ships}}</span>
-    	<button class="btn btn-sm btn-outline-info" @click="toggleCarrierWaypointsDisplay" title="Toggle Waypoints Display">
-        <i class="fas" :class="{'fa-eye-slash':!display,'fa-eye':display}"></i>
+      <span class="me-2" title="Hyperspace technology level" v-if="userPlayer"
+        ><i class="fas fa-gas-pump me-1"></i
+        >{{ userPlayer.research.hyperspace.level }}</span
+      >
+      <span class="me-2"
+        ><i class="fas fa-rocket me-1"></i
+        >{{ carrier.ships == null ? "???" : carrier.ships }}</span
+      >
+      <button
+        class="btn btn-sm btn-outline-info"
+        @click="toggleCarrierWaypointsDisplay"
+        title="Toggle waypoints display"
+      >
+        <i
+          class="fas"
+          :class="{ 'fa-eye-slash': !display, 'fa-eye': display }"
+        ></i>
       </button>
     </menu-title>
 
     <p v-if="!display" class="pb-2 text-warning">
-      <small><i>Click the <i class="fas fa-eye-slash"></i> button to view the waypoints.</i></small>
+      <small
+        ><i
+          >Click the <i class="fas fa-eye-slash"></i> button to view the
+          waypoints.</i
+        ></small
+      >
     </p>
 
     <template v-if="display">
       <strong>Waypoints</strong>:
       <span v-if="!carrier.waypoints.length" class="text-warning">None</span>
-		  <ul class="ps-4 mt-2" v-if="isStandardUIStyle">
-		  	<li v-for="waypoint in carrier.waypoints" :key="waypoint._id">
-		  		<!-- <a href="javascript:;" @click="onOpenStarDetailRequested(waypoint.destination)">{{getStarName(waypoint.destination)}}</a> -->
-		  		<span>{{getStarName(waypoint.destination)}}</span>
+      <ul class="ps-4 mt-2" v-if="isStandardUIStyle">
+        <li v-for="waypoint in carrier.waypoints" :key="waypoint._id">
+          <!-- <a href="javascript:;" @click="onOpenStarDetailRequested(waypoint.destination)">{{getStarName(waypoint.destination)}}</a> -->
+          <span>{{ getStarName(waypoint.destination) }}</span>
 
-		  		<i class="ms-2" :class="{
-		  			'fas fa-angle-double-up text-success': waypoint.action == 'collectAll',
-		  			'fas fa-angle-double-down text-danger': waypoint.action == 'dropAll',
-		  			'fas fa-caret-up text-success': waypoint.action == 'collect',
-		  			'fas fa-caret-down text-danger': waypoint.action == 'drop',
-		  			'fas fa-angle-up text-success': waypoint.action == 'collectAllBut',
-		  			'fas fa-angle-down text-danger': waypoint.action == 'dropAllBut',
-		  			'fas fa-star text-warning': waypoint.action == 'garrison'
-		  		}"></i>
-		  		<span v-if="waypoint.actionShips"> {{waypoint.actionShips}}</span>
-		  	</li>
-		  </ul>
+          <i
+            class="ms-2"
+            :class="{
+              'fas fa-angle-double-up text-success':
+                waypoint.action == 'collectAll',
+              'fas fa-angle-double-down text-danger':
+                waypoint.action == 'dropAll',
+              'fas fa-caret-up text-success': waypoint.action == 'collect',
+              'fas fa-caret-down text-danger': waypoint.action == 'drop',
+              'fas fa-angle-up text-success':
+                waypoint.action == 'collectAllBut',
+              'fas fa-angle-down text-danger': waypoint.action == 'dropAllBut',
+              'fas fa-star text-warning': waypoint.action == 'garrison',
+            }"
+          ></i>
+          <span v-if="waypoint.actionShips"> {{ waypoint.actionShips }}</span>
+        </li>
+      </ul>
 
-      <span v-if="isCompactUIStyle">{{waypointAsList}}</span>
+      <span v-if="isCompactUIStyle">{{ waypointAsList }}</span>
 
-      <form-error-list v-bind:errors="errors" class="mt-2"/>
+      <form-error-list v-bind:errors="errors" class="mt-2" />
 
-		  <div class="row mt-2">
-		  	<div class="col-12 pt-2 pb-2 bg-dark" v-if="carrier.waypoints && carrier.waypoints.length">
+      <div class="row mt-2">
+        <div
+          class="col-12 pt-2 pb-2 bg-dark"
+          v-if="carrier.waypoints && carrier.waypoints.length"
+        >
           <!--Yes, that key-property depending on the current date is there for a reason. Otherwise, under certain circumstances, the text is not updated on screen on iOS Safari.-->
           <!-- https://stackoverflow.com/questions/55008261/my-react-component-does-not-update-in-the-safari-browser -->
           <!-- Seriously, what is wrong with you, Safari? -->
-		  		<p class="mb-0" :key="(new Date()).getTime().toString()" v-if="totalEtaTimeString && carrier.waypoints.length">ETA<orbital-mechanics-eta-warning />: {{totalEtaTimeString}}</p>
-		  	</div>
+          <p
+            class="mb-0"
+            :key="new Date().getTime().toString()"
+            v-if="
+              totalTicksEta !== null &&
+              totalTicksEta !== undefined &&
+              carrier.waypoints.length
+            "
+          >
+            <timer :ticks="totalTicksEta" :show-e-t-a="true" />
+            <orbital-mechanics-e-t-a-warning />
+          </p>
+        </div>
       </div>
 
       <div class="row bg-dark pt-2 pb-2">
-		  	<div class="col">
-		  		<button class="btn btn-sm btn-warning" @click="removeLastWaypoint()" :disabled="isSavingWaypoints">
+        <div class="col">
+          <button
+            class="btn btn-sm btn-warning"
+            @click="removeLastWaypoint()"
+            :disabled="isSavingWaypoints"
+          >
             <i class="fas fa-undo"></i>
             <span class="ms-1 d-none d-sm-inline-block">Last</span>
           </button>
-		  		<button class="btn btn-sm btn-outline-danger ms-1" @click="removeAllWaypoints()" :disabled="isSavingWaypoints">
+          <button
+            class="btn btn-sm btn-outline-danger ms-1"
+            @click="removeAllWaypoints()"
+            :disabled="isSavingWaypoints"
+          >
             <i class="fas fa-trash"></i>
             <span class="ms-1 d-none d-sm-inline-block">All</span>
           </button>
-		  		<button class="btn btn-sm ms-1" :class="{'btn-success':carrier.waypointsLooped,'btn-outline-primary':!carrier.waypointsLooped}" @click="toggleLooped()" :disabled="!canLoop" title="Loop/Unloop the carrier's waypoints">
+          <button
+            class="btn btn-sm ms-1"
+            :class="{
+              'btn-success': carrier.waypointsLooped,
+              'btn-outline-primary': !carrier.waypointsLooped,
+            }"
+            @click="toggleLooped()"
+            :disabled="!canLoop"
+            title="Loop/Unloop the carrier's waypoints"
+          >
             <i class="fas fa-sync"></i>
           </button>
-		  	</div>
-		  	<div class="col-auto" v-if="!$isHistoricalMode()">
-		  		<button class="btn btn-sm btn-outline-success ms-1" @click="saveWaypoints()" :disabled="isSavingWaypoints">
+        </div>
+        <div class="col-auto" v-if="!isHistoricalMode">
+          <button
+            class="btn btn-sm btn-outline-success ms-1"
+            @click="doSaveWaypoints()"
+            :disabled="isSavingWaypoints"
+          >
             <i class="fas fa-save"></i>
             <span class="ms-1">Save</span>
           </button>
-		  		<button class="btn btn-sm btn-success ms-1" @click="saveWaypoints(true)" :disabled="isSavingWaypoints">
-            <i class="fas fa-edit"></i> 
+          <button
+            class="btn btn-sm btn-success ms-1"
+            @click="doSaveWaypoints(true)"
+            :disabled="isSavingWaypoints"
+          >
+            <i class="fas fa-edit"></i>
             <span class="ms-1 d-none d-sm-inline-block">Save &amp; Edit</span>
           </button>
-		  	</div>
-		  </div>
+        </div>
+      </div>
     </template>
-	</div>
+  </div>
 </template>
 
-<script>
-import MenuTitle from '../MenuTitle'
-import FormErrorList from '../../../components/FormErrorList'
-import GameHelper from '../../../../services/gameHelper'
-import GameContainer from '../../../../game/container'
-import CarrierApiService from '../../../../services/api/carrier'
-import AudioService from '../../../../game/audio'
-import OrbitalMechanicsETAWarningVue from '../shared/OrbitalMechanicsETAWarning'
+<script setup lang="ts">
+import { useGameStore } from "@/stores/game";
+import { computed, inject, onMounted, onUnmounted, ref } from "vue";
+import MenuTitle from "../MenuTitle.vue";
+import FormErrorList from "../../../components/FormErrorList.vue";
+import GameHelper from "../../../../services/gameHelper";
+import AudioService from "../../../../services/audio";
+import OrbitalMechanicsETAWarning from "../shared/OrbitalMechanicsETAWarning.vue";
+import { eventBusInjectionKey } from "../../../../eventBus";
+import {
+  type Mode,
+  ModeKind,
+  MapEventBusEventNames,
+  MapCommandEventBusEventNames,
+} from "@solaris/map-rendering";
+import { httpInjectionKey, isOk } from "@/services/typedapi";
+import type { Carrier, Game, Player } from "@/types/game";
+import type { CarrierWaypoint } from "@solaris/common";
+import { useIsHistoricalMode } from "@/util/reactiveHooks";
+import type { TempWaypoint } from "@/types/waypoint";
+import { useGameServices } from "@/util/gameServices";
+import Timer from "@/views/game/components/time/Timer.vue";
+import { saveWaypoints } from "@/views/game/components/carrier/action";
 
-export default {
-  components: {
-    'menu-title': MenuTitle,
-    'form-error-list': FormErrorList,
-    'orbital-mechanics-eta-warning': OrbitalMechanicsETAWarningVue
-  },
-  props: {
-    carrierId: String
-  },
-  data () {
-    return {
-      audio: null,
-      userPlayer: null,
-      carrier: null,
-      isSavingWaypoints: false,
-      oldWaypoints: [],
-      oldWaypointsLooped: false,
-      totalEtaTimeString: null,
-      waypointCreatedHandler: null,
-      waypointOutOfRangeHandler: null,
-      isStandardUIStyle: false,
-      isCompactUIStyle: false,
-      errors: [],
-      display: true
-    }
-  },
-  mounted () {
-    this.isStandardUIStyle = this.$store.state.settings.interface.uiStyle === 'standard'
-    this.isCompactUIStyle = this.$store.state.settings.interface.uiStyle === 'compact'
+import { useToast } from "vue-toast-notification";
+const props = defineProps<{
+  carrierId: string;
+}>();
 
-    this.userPlayer = GameHelper.getUserPlayer(this.$store.state.game)
-    this.carrier = GameHelper.getCarrierById(this.$store.state.game, this.carrierId)
+const emit = defineEmits<{
+  onCloseRequested: [];
+  onOpenStarDetailRequested: [starId: string];
+  onOpenCarrierDetailRequested: [carrierId: string];
+  onEditWaypointRequested: [
+    { carrierId: string; waypoint: CarrierWaypoint<string> },
+  ];
+}>();
 
-    GameContainer.setMode('waypoints', this.carrier)
+const eventBus = inject(eventBusInjectionKey)!;
+const toast = useToast();
+const httpClient = inject(httpInjectionKey)!;
 
-    this.waypointCreatedHandler = this.onWaypointCreated.bind(this)
-    	GameContainer.map.on('onWaypointCreated', this.waypointCreatedHandler)
+const store = useGameStore();
+const isHistoricalMode = useIsHistoricalMode(store);
 
-    this.waypointOutOfRangeHandler = this.onWaypointOutOfRange.bind(this)
-    	GameContainer.map.on('onWaypointOutOfRange', this.waypointOutOfRangeHandler)
+const game = computed<Game>(() => store.game!);
 
-    this.oldWaypoints = this.carrier.waypoints.slice(0)
-    this.oldWaypointsLooped = this.carrier.waypointsLooped
+const gameServices = useGameServices();
 
-    this.recalculateTotalEta()
-  },
-  destroyed () {
-    this.carrier.waypoints = this.oldWaypoints
-    this.carrier.waypointsLooped = this.oldWaypointsLooped
-    GameContainer.drawWaypoints()
+const isStandardUIStyle = computed(
+  () => store.settings!.interface.uiStyle === "standard",
+);
+const isCompactUIStyle = computed(
+  () => store.settings!.interface.uiStyle === "compact",
+);
 
-    GameContainer.resetMode()
+const userPlayer = computed<Player | undefined>(() =>
+  GameHelper.getUserPlayer(game.value),
+);
+const carrier = computed<Carrier>(() =>
+  GameHelper.getCarrierById(game.value, props.carrierId)!,
+);
+const canLoop = computed<boolean>(() =>
+  gameServices.waypointService.canLoop(game.value, carrier.value),
+);
+const waypointAsList = computed<string>(() =>
+  carrier.value.waypoints.map((w) => getStarName(w.destination)).join(", "),
+);
 
-    GameContainer.map.off('onWaypointCreated', this.waypointCreatedHandler)
-    GameContainer.map.off('onWaypointOutOfRange', this.waypointOutOfRangeHandler)
-  },
-  methods: {
-    toggleCarrierWaypointsDisplay () {
-      this.display = !this.display
-    },
-    onCloseRequested (e) {
-      this.$emit('onCloseRequested', e)
-    },
-    onOpenStarDetailRequested (e) {
-      this.$emit('onOpenStarDetailRequested', e)
-    },
-    getStarName (starId) {
-      return this.$store.state.game.galaxy.stars.find(s => s._id === starId).name
-    },
-    getWaypointsString () {
-      if (!this.carrier.waypoints.length) {
-        return 'None'
-      }
+const isSavingWaypoints = ref(false);
+const oldWaypoints = ref<CarrierWaypoint<string>[]>([]);
+const oldWaypointsLooped = ref(false);
+const totalTicksEta = ref<number | null>(null);
+const errors = ref<string[]>([]);
+const display = ref(true);
 
-      return this.carrier.waypoints.map(w => this.getStarName(w.destination)).join(', ')
-    },
-    removeLastWaypoint () {
-      // If the carrier is not currently in transit to the waypoint
-      // then remove it.
-      let lastWaypoint = this.carrier.waypoints[this.carrier.waypoints.length - 1]
+const onCloseRequested = () => {
+  emit("onCloseRequested");
+};
 
-      if (!GameHelper.isCarrierInTransitToWaypoint(this.carrier, lastWaypoint)) {
-        this.carrier.waypoints.splice(this.carrier.waypoints.indexOf(lastWaypoint), 1)
+const toggleLooped = () => {
+  carrier.value.waypointsLooped = !carrier.value.waypointsLooped;
+};
 
-        GameContainer.drawWaypoints()
-      }
+const getStarName = (starId: string) => {
+  const star = GameHelper.getStarById(game.value, starId);
+  return star ? star.name : "Unknown Star";
+};
 
-      if (!this.carrier.waypoints.length) {
-        this.totalEtaTimeString = null
-      }
+const recalculateLooped = () => {
+  if (carrier.value.waypointsLooped) {
+    carrier.value.waypointsLooped = canLoop.value;
+  }
+};
 
-      AudioService.backspace()
+const recalculateTotalEta = () => {
+  totalTicksEta.value = gameServices.waypointService.calculateWaypointTicksEta(
+    game.value,
+    carrier.value,
+    carrier.value.waypoints[carrier.value.waypoints.length - 1],
+  );
+};
 
-      this.recalculateTotalEta()
-      this.recalculateLooped()
-    },
-    removeAllWaypoints () {
-      // Remove all waypoints up to the last waypoint (if in transit)
-      this.carrier.waypoints = this.carrier.waypoints.filter(w => GameHelper.isCarrierInTransitToWaypoint(this.carrier, w))
+const removeLastWaypoint = () => {
+  // If the carrier is not currently in transit to the waypoint
+  // then remove it.
+  const lastWaypoint =
+    carrier.value.waypoints[carrier.value.waypoints.length - 1];
 
-      GameContainer.draw()
+  if (!GameHelper.isCarrierInTransitToWaypoint(carrier.value, lastWaypoint)) {
+    carrier.value.waypoints.splice(
+      carrier.value.waypoints.indexOf(lastWaypoint),
+      1,
+    );
 
-      this.totalEtaTimeString = null
+    eventBus.emit(MapCommandEventBusEventNames.MapCommandUpdateWaypoints, {});
+  }
 
-      AudioService.backspace()
+  if (!carrier.value.waypoints.length) {
+    totalTicksEta.value = null;
+  }
 
-      this.recalculateTotalEta()
-      this.recalculateLooped()
-    },
-    onWaypointCreated (e) {
-      // Overwrite the default action and default action ships
-      e.action = this.$store.state.settings.carrier.defaultAction
-      e.actionShips = this.$store.state.settings.carrier.defaultAmount
+  AudioService.backspace();
 
-      AudioService.type()
+  recalculateTotalEta();
+  recalculateLooped();
+};
 
-      this.recalculateTotalEta()
-      this.recalculateLooped()
-    },
-    onWaypointOutOfRange (e) {
-      this.$toasted.show(`This waypoint is out of hyperspace range.`, { type: 'error' })
-    },
-    recalculateTotalEta () {
-      let totalTicksEta = GameHelper.calculateWaypointTicksEta(this.$store.state.game, this.carrier,
-        this.carrier.waypoints[this.carrier.waypoints.length - 1])
+const waypointsSaveAction = saveWaypoints(game, isSavingWaypoints);
 
-      this.totalEtaTimeString = GameHelper.getCountdownTimeStringByTicks(this.$store.state.game, totalTicksEta)
-    },
-    recalculateLooped () {
-      if (this.carrier.waypointsLooped) {
-        this.carrier.waypointsLooped = this.canLoop
-      }
-    },
-    toggleLooped () {
-      this.carrier.waypointsLooped = !this.carrier.waypointsLooped
-    },
-    async saveWaypoints (saveAndEdit = false) {
-      this.errors = []
+const doSaveWaypoints = async (saveAndEdit = false) => {
+  const res = await waypointsSaveAction(carrier.value, carrier.value.waypoints);
 
-      // Push the waypoints to the API.
-      try {
-        this.isSavingWaypoints = true
-        let response = await CarrierApiService.saveWaypoints(this.$store.state.game._id, this.carrier._id, this.carrier.waypoints, this.carrier.waypointsLooped)
+  if (res) {
+    oldWaypoints.value = carrier.value.waypoints.slice(0);
+    oldWaypointsLooped.value = carrier.value.waypointsLooped;
 
-        if (response.status === 200) {
-          AudioService.join()
-
-          // Update the waypoints
-          this.carrier.ticksEta = response.data.ticksEta
-          this.carrier.ticksEtaTotal = response.data.ticksEtaTotal
-          this.carrier.waypoints = response.data.waypoints
-
-          this.oldWaypoints = this.carrier.waypoints
-          this.oldWaypointsLooped = this.carrier.waypointsLooped
-
-          this.$toasted.show(`${this.carrier.name} waypoints updated.`)
-
-          GameContainer.reloadCarrier(this.carrier)
-          
-          if (saveAndEdit) {
-            if (this.carrier.waypoints.length) {
-              this.$emit('onEditWaypointRequested', {
-                carrierId: this.carrier._id,
-                waypoint: this.carrier.waypoints[0]
-              })
-            } else {
-              this.$emit('onOpenCarrierDetailRequested', this.carrier._id)
-            }
-          } else {
-            this.onCloseRequested()
-          }
-        }
-      } catch (err) {
-        this.errors = err.response.data.errors || []
-      }
-
-      this.isSavingWaypoints = false
-    }
-  },
-  computed: {
-    canLoop () {
-      return GameHelper.canLoop(this.$store.state.game, this.userPlayer, this.carrier)
-    },
-    waypointAsList () {
-      return this.carrier.waypoints.map(w => this.getStarName(w.destination)).join(', ')
+    if (saveAndEdit) {
+      emit("onEditWaypointRequested", {
+        carrierId: carrier.value._id,
+        waypoint: carrier.value.waypoints[0],
+      });
+    } else {
+      emit("onOpenCarrierDetailRequested", carrier.value._id);
     }
   }
-}
+};
+
+const removeAllWaypoints = () => {
+  // Remove all waypoints up to the last waypoint (if in transit)
+  carrier.value.waypoints = carrier.value.waypoints.filter((w) =>
+    GameHelper.isCarrierInTransitToWaypoint(carrier.value, w),
+  );
+
+  eventBus.emit(MapCommandEventBusEventNames.MapCommandUpdateWaypoints, {});
+
+  totalTicksEta.value = null;
+
+  AudioService.backspace();
+
+  recalculateTotalEta();
+  recalculateLooped();
+};
+
+const onWaypointCreated = ({ waypoint }: { waypoint: TempWaypoint }) => {
+  AudioService.type();
+
+  recalculateTotalEta();
+  recalculateLooped();
+};
+
+const toggleCarrierWaypointsDisplay = () => {
+  display.value = !display.value;
+};
+
+const onWaypointOutOfRange = () => {
+  toast.error(`This waypoint is out of hyperspace range.`);
+};
+
+onMounted(() => {
+  const mode: Mode = {
+    mode: ModeKind.Waypoints,
+    carrier: carrier.value,
+  };
+
+  eventBus.emit(MapCommandEventBusEventNames.MapCommandSetMode, mode as Mode);
+  eventBus.on(MapEventBusEventNames.MapOnWaypointCreated, onWaypointCreated);
+  eventBus.on(
+    MapEventBusEventNames.MapOnWaypointOutOfRange,
+    onWaypointOutOfRange,
+  );
+
+  oldWaypoints.value = carrier.value.waypoints.slice(0);
+  oldWaypointsLooped.value = carrier.value.waypointsLooped;
+
+  recalculateTotalEta();
+
+  onUnmounted(() => {
+    carrier.value.waypoints = oldWaypoints.value;
+    carrier.value.waypointsLooped = oldWaypointsLooped.value;
+
+    eventBus.emit(MapCommandEventBusEventNames.MapCommandUpdateWaypoints, {});
+    eventBus.emit(MapCommandEventBusEventNames.MapCommandResetMode, {});
+
+    eventBus.off(MapEventBusEventNames.MapOnWaypointCreated, onWaypointCreated);
+    eventBus.off(
+      MapEventBusEventNames.MapOnWaypointOutOfRange,
+      onWaypointOutOfRange,
+    );
+  });
+});
 </script>
 
 <style scoped>
 li {
-	list-style-type: none;
+  list-style-type: none;
 }
 </style>

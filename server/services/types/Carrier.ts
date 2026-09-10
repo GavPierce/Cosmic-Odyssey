@@ -1,8 +1,8 @@
 import { Location } from "./Location";
-import { CarrierWaypoint } from "./CarrierWaypoint";
+import { CarrierWaypoint } from "@solaris/common";
 import { MapObject } from "./Map";
 import { DBObjectId } from "./DBObjectId";
-import { Specialist } from "./Specialist";
+import { Specialist } from "@solaris/common";
 import { PlayerTechnologyLevels } from "./Player";
 
 export interface Carrier extends MapObject {
@@ -13,8 +13,10 @@ export interface Carrier extends MapObject {
     specialistId: number | null;
     specialistExpireTick: number | null;
     specialist: Specialist | null;
+    specialistTargetedPlayers: DBObjectId[];
     isGift: boolean;
-    waypoints: CarrierWaypoint[];
+    isScuttled: boolean;
+    waypoints: CarrierWaypoint<DBObjectId>[];
     ticksEta?: number | null;
     ticksEtaTotal?: number | null;
     locationNext: Location | null;
@@ -22,7 +24,7 @@ export interface Carrier extends MapObject {
     effectiveTechs?: PlayerTechnologyLevels;
 
     toObject(): Carrier;
-};
+}
 
 export interface CarrierPosition {
     carrier: Carrier;
@@ -34,4 +36,5 @@ export interface CarrierPosition {
     distanceToDestinationCurrent: number;
     distanceToSourceNext: number;
     distanceToDestinationNext: number;
-};
+    speed: number;
+}

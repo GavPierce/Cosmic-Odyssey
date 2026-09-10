@@ -5,7 +5,7 @@ export interface ReportReasons {
     spamming: boolean;
     multiboxing: boolean;
     inappropriateAlias: boolean;
-};
+}
 
 export interface Report {
     _id: DBObjectId;
@@ -16,6 +16,10 @@ export interface Report {
     reportedByPlayerId: DBObjectId;
     reportedByUserId: DBObjectId;
     reportedByPlayerAlias: string;
-    reasons: ReportReasons,
+    reportedConversationId: DBObjectId | null;
+    reportedMessageId: DBObjectId | null;
+    reasons: ReportReasons;
     actioned: boolean;
-};
+    actionedBy: DBObjectId | null;
+    date: Date;
+}

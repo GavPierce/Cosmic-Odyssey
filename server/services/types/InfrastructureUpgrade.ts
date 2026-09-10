@@ -1,16 +1,27 @@
 import { DBObjectId } from "./DBObjectId";
-import { InfrastructureType, Star } from "./Star";
+import { InfrastructureType, NaturalResources, Star } from "./Star";
+
+export interface StarUpgradeReport {
+    starId: DBObjectId;
+    starName: string;
+    naturalResources: NaturalResources;
+    infrastructureCurrent: number;
+    infrastructureCostTotal: number;
+    nextInfrastructureCost: number;
+    infrastructure: number;
+    manufacturing?: number;
+}
 
 export interface BulkUpgradeReport {
     budget: number;
-    stars;
+    stars: StarUpgradeReport[];
     cost: number;
     upgraded: number;
     infrastructureType: InfrastructureType;
     ignoredCount: number;
     currentResearchTicksEta?: number | null;
     nextResearchTicksEta?: number | null;
-};
+}
 
 export interface InfrastructureUpgradeCosts {
     economy: number | null;
@@ -18,7 +29,7 @@ export interface InfrastructureUpgradeCosts {
     science: number | null;
     warpGate: number | null;
     carriers: number | null;
-};
+}
 
 export interface InfrastructureUpgradeReport {
     playerId: DBObjectId;
@@ -30,4 +41,4 @@ export interface InfrastructureUpgradeReport {
     manufacturing?: number;
     currentResearchTicksEta?: number | null;
     nextResearchTicksEta?: number | null;
-};
+}

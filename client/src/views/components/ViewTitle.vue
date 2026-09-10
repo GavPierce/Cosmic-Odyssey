@@ -6,6 +6,24 @@
     <div class="col-auto">
       <slot></slot>
       <a
+        v-if="showSocialLinks"
+        class="btn btn-outline-secondary ms-1"
+        href="https://discord.com/invite/v7PD33d"
+        target="_blank"
+        title="Discord"
+      >
+        <i class="fab fa-discord"></i>
+      </a>
+      <a
+        v-if="showSocialLinks"
+        class="btn btn-outline-secondary ms-1"
+        href="https://steamcommunity.com/app/1623930/discussions/"
+        target="_blank"
+        title="Forum"
+      >
+        <i class="far fa-comments"></i>
+      </a>
+      <a
         class="btn btn-outline-info ms-1"
         :href="documentationUrl"
         target="_blank"
@@ -26,33 +44,41 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import router from "../../router";
+import { computed, inject } from "vue";
+import { configInjectionKey } from "@/config";
+import { useUserStore } from "@/stores/user";
 
-export default {
-  props: {
-    title: String,
-    navigation: { type: String, default: "main-menu" },
-    icon: { type: String, default: "home" },
-    hideHomeButton: Boolean,
-    showSocialLinks: Boolean
-  },
-  methods: {
-    navigate() {
-      if (this.isLoggedIn) {
-        router.push({ name: this.navigation });
-      } else {
-        router.push({ name: "home" });
-      }
-    }
-  },
-  computed: {
-    isLoggedIn() {
-      return this.$store.state.userId != null;
-    },
-    documentationUrl() {
-      return process.env.VUE_APP_DOCUMENTATION_URL;
-    }
+type Props = {
+  title: string;
+  navigation?: string;
+  icon?: string;
+  hideHomeButton?: boolean;
+  showSocialLinks?: boolean;
+};
+
+const {
+  title,
+  navigation = "main-menu",
+  icon = "home",
+  hideHomeButton,
+  showSocialLinks,
+} = defineProps<Props>();
+
+const config = inject(configInjectionKey)!;
+
+const userStore = useUserStore();
+
+const isLoggedIn = computed(() => userStore.isLoggedIn);
+
+const documentationUrl = config.appDocumentationUrl;
+
+const navigate = () => {
+  if (isLoggedIn.value) {
+    router.push({ name: navigation });
+  } else {
+    router.push({ name: "home" });
   }
 };
 </script>

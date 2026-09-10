@@ -1,244 +1,91 @@
 <template>
-  <div class="d-none d-lg-block" v-if="isUserInGame && !isTutorialGame">
-    <div id="toggle" class="text-center" :class="{'bg-success has-read': !unreadMessages, 'bg-warning has-unread pulse': unreadMessages}" @click="toggle" title="Inbox (M)">
-      <span class="icon-text"><i class="fas fa-comments me-1"></i>{{unreadMessages ? unreadMessages : ''}}</span>
+  <div class="chat-ui" v-if="isUserInGame && !isTutorialGame">
+    <div
+      id="toggle"
+      class="d-none d-lg-flex chat-toggle"
+      :class="{
+        'bg-success has-read': !unreadMessages,
+        'bg-warning has-unread pulse': unreadMessages,
+      }"
+      @click="toggle"
+      title="Inbox (M)"
+    >
+      <span
+        ><i class="fas fa-comments me-1"></i
+        >{{ unreadMessages ? unreadMessages : "" }}</span
+      >
     </div>
 
-    <div id="window" v-if="isExpanded" class="header-bar-bg">
-      <conversation-list v-if="menuState === MENU_STATES.INBOX"/>
-      <create-conversation v-if="menuState == MENU_STATES.CREATE_CONVERSATION"
-        :participantIds="menuArguments"
-        @onCloseRequested="toggle"/>
-      <conversation v-if="menuState == MENU_STATES.CONVERSATION"
-        :conversationId="menuArguments"
-        :key="menuArguments"
+    <div id="chat-window" v-if="isExpanded" class="header-bar-bg">
+      <conversation-create
+        v-if="store.menuStateChat.state === 'createConversation'"
+        :participantIds="store.menuStateChat.participantIds"
         @onCloseRequested="toggle"
-        @onOpenPlayerDetailRequested="onOpenPlayerDetailRequested"/>
+      />
+      <conversation-detail
+        v-if="store.menuStateChat.state === 'conversation'"
+        :conversationId="store.menuStateChat.conversationId"
+        @onCloseRequested="toggle"
+        @onOpenPlayerDetailRequested="onOpenPlayerDetailRequested"
+        @onOpenReportPlayerRequested="onOpenReportPlayerRequested"
+      />
+      <inbox
+        v-if="store.menuStateChat.state == 'inbox'"
+        @onCloseRequested="toggle"
+        @onOpenPlayerDetailRequested="onOpenPlayerDetailRequested"
+      />
     </div>
   </div>
 </template>
 
-<script>
-import eventBus from '../../../../eventBus'
-import MENU_STATES from '../../../../services/data/menuStates'
-import KEYBOARD_SHORTCUTS from '../../../../services/data/keyboardShortcuts'
-import GameHelper from '../../../../services/gameHelper'
-import ConversationListVue from '../inbox/conversations/ConversationList'
-import ConversationCreateVue from './conversations/ConversationCreate.vue'
-import ConversationDetailVue from './conversations/ConversationDetail.vue'
-import AudioService from '../../../../game/audio'
+<script setup lang="ts">
+import { useGameStore } from "@/stores/game";
+import GameHelper from "../../../../services/gameHelper";
+import ConversationCreate from "./conversations/ConversationCreate.vue";
+import ConversationDetail from "./conversations/ConversationDetail.vue";
+import { computed } from "vue";
+import type { Game } from "@/types/game";
+import { useUserStore } from "@/stores/user";
+import Inbox from "@/views/game/components/inbox/Inbox.vue";
 
-export default {
-  components: {
-    'conversation-list': ConversationListVue,
-    'create-conversation': ConversationCreateVue,
-    'conversation': ConversationDetailVue,
-  },
-  data () {
-    return {
-      MENU_STATES: MENU_STATES,
-      isExpanded: false
-    }
-  },
-  created () {
-    document.addEventListener('keydown', this.handleKeyDown)
-    window.addEventListener('resize', this.handleResize)
+const emit = defineEmits<{
+  onOpenPlayerDetailRequested: [playerId: string];
+  onOpenReportPlayerRequested: [
+    { playerId: string; messageId: string; conversationId: string },
+  ];
+}>();
 
-    this.sockets.subscribe('gameMessageSent', (data) => this.onMessageReceived(data))
-  },
-  mounted () {
-    this.$store.commit('setMenuStateChat', {
-      state: MENU_STATES.INBOX,
-      args: null
-    })
+const store = useGameStore();
+const userStore = useUserStore();
 
-    // TODO: These event names should be global constants
-    eventBus.$on('onMenuChatSidebarRequested', this.toggle)
-    eventBus.$on('onCreateNewConversationRequested', this.onCreateNewConversationRequested)
-    eventBus.$on('onViewConversationRequested', this.onViewConversationRequested)
-    eventBus.$on('onOpenInboxRequested', this.onOpenInboxRequested)
-  },
-  destroyed () {
-    document.removeEventListener('keydown', this.handleKeyDown)
-    window.removeEventListener('resize', this.handleResize)
+const onOpenPlayerDetailRequested = (e: string) =>
+  emit("onOpenPlayerDetailRequested", e);
 
-    this.sockets.unsubscribe('gameMessageSent')
-    
-    eventBus.$off('onMenuChatSidebarRequested', this.toggle)
-    eventBus.$off('onCreateNewConversationRequested', this.onCreateNewConversationRequested)
-    eventBus.$off('onViewConversationRequested', this.onViewConversationRequested)
-    eventBus.$off('onOpenInboxRequested', this.onOpenInboxRequested)
-  },
-  methods: {
-    onOpenPlayerDetailRequested (e) {
-      this.$emit('onOpenPlayerDetailRequested', e)
-    },
-    toggle () {
-      this.isExpanded = !this.isExpanded;
+const onOpenReportPlayerRequested = (e: {
+  playerId: string;
+  messageId: string;
+  conversationId: string;
+}) => emit("onOpenReportPlayerRequested", e);
 
-      this.$store.commit('setMenuStateChat', {
-        state: MENU_STATES.INBOX,
-        args: null
-      })
-    },
-    onViewConversationRequested (e) {
-      if (!this.canHandleConversationEvents()) {
-        return
-      }
+const game = computed<Game>(() => store.game!);
 
-      if (e.conversationId) {
-        this.$store.commit('setMenuStateChat', {
-          state: MENU_STATES.CONVERSATION,
-          args: e.conversationId
-        })
-      } else if (e.participantIds) {
-        this.$store.commit('setMenuStateChat', {
-          state: MENU_STATES.CREATE_CONVERSATION,
-          args: e.participantIds
-        })
-      }
+const unreadMessages = computed<number | null>(() => store.unreadMessages);
 
-      this.isExpanded = true
-    },
-    onOpenInboxRequested (e) {
-      if (!this.canHandleConversationEvents()) {
-        return
-      }
-      
-      this.$store.commit('setMenuStateChat', {
-        state: MENU_STATES.INBOX,
-        args: null
-      })
+const isUserInGame = computed(() =>
+  Boolean(GameHelper.getUserPlayer(game.value)),
+);
 
-      this.isExpanded = true
-    },
-    onCreateNewConversationRequested (e) {
-      if (!this.canHandleConversationEvents()) {
-        return
-      }
-      
-      this.$store.commit('setMenuStateChat', {
-        state: MENU_STATES.CREATE_CONVERSATION,
-        args: e.participantIds || null
-      })
+const isTutorialGame = computed(() => GameHelper.isTutorialGame(game.value));
 
-      this.isExpanded = true
-    },
-    onMessageReceived (e) {
-      if (!this.canHandleConversationEvents()) { // Don't do this if the window is too small as this component won't be displayed
-        return
-      }
+const isExpanded = computed(() => store.menuStateChat.state !== "none");
 
-      // TODO: Copied from Game.vue, any way to share this?
-      let conversationId = e.conversationId
-
-      // Show a toast only if the user isn't already in the conversation.
-      if (this.menuState === MENU_STATES.CONVERSATION && this.menuArguments === conversationId) {
-        return
-      }
-
-      let fromPlayer = GameHelper.getPlayerById(this.$store.state.game, e.fromPlayerId)
-
-      this.$toasted.show(`New message from ${fromPlayer.alias}.`, {
-        duration: null,
-        type: 'info',
-        duration: 10000,
-        action: [
-          {
-            text: 'Dismiss',
-            onClick: (e, toastObject) => {
-              toastObject.goAway(0)
-            }
-          },
-          {
-            text: 'View',
-            onClick: (e, toastObject) => {
-              this.$store.commit('setMenuStateChat', {
-                state: MENU_STATES.CONVERSATION,
-                args: conversationId
-              })
-
-              this.isExpanded = true
-
-              toastObject.goAway(0)
-            }
-          }
-        ]
-      })
-
-      AudioService.join()
-    },
-    handleKeyDown (e) {
-      // Note: We only care about the INBOX key here.
-      if (/^(?:input|textarea|select|button)$/i.test(e.target.tagName)) return
-
-      let key = e.key
-
-      // Check for modifier keys and ignore the keypress if there is one.
-      if (e.altKey || e.shiftKey || e.ctrlKey || e.metaKey) {
-        return
-      }
-      
-      let isLoggedIn = this.$store.state.userId != null
-      let isInGame = this.isUserInGame
-
-      if (!isLoggedIn || !isInGame) {
-        return
-      }
-      
-      let menuState = KEYBOARD_SHORTCUTS.all[key]
-
-      if (menuState === null && this.isExpanded) {
-        return this.toggle()
-      }
-
-      menuState = KEYBOARD_SHORTCUTS.player[key]
-
-      if (!menuState) {
-        return
-      }
-
-      // Special case for Inbox shortcut, only do this if the screen is large
-      if (menuState !== MENU_STATES.INBOX || !this.canHandleConversationEvents()) {
-        return
-      }
-
-      this.$store.commit('setMenuStateChat', {
-        state: menuState,
-        args: null
-      })
-
-      this.toggle()
-    },
-    handleResize (e) {
-      if (!this.isExpanded) { // Don't care about this if it is already collapsed
-        return
-      }
-
-      this.isExpanded = this.canHandleConversationEvents()
-    },
-    canHandleConversationEvents () {
-      return window.innerWidth >= 992
-    }
-  },
-  computed: {
-    menuState () {
-      return this.$store.state.menuStateChat
-    },
-    menuArguments () {
-      return this.$store.state.menuArgumentsChat
-    },
-    unreadMessages () {
-      return this.$store.state.unreadMessages
-    },
-    isUserInGame () {
-      return GameHelper.getUserPlayer(this.$store.state.game) != null
-    },
-    isTutorialGame () {
-      return GameHelper.isTutorialGame(this.$store.state.game)
-    }
+const toggle = () => {
+  if (store.menuStateChat.state === "none") {
+    store.setMenuStateChat({ state: "inbox" });
+  } else {
+    store.setMenuStateChat(store.menuStateChat);
   }
-}
+};
 </script>
 
 <style scoped>
@@ -254,20 +101,33 @@ export default {
   z-index: 1;
 }
 
-#window {
-  position: absolute;
-  right: 0px;
-  bottom: 100px;
-  width: 473px;
-  top: 45px;
+#chat-window {
+  max-height: min(1200px, 100dvh - 200px);
+  width: min(600px, 100%);
   overflow: auto;
-  overflow-x: hidden;
   scrollbar-width: none;
 }
 
-.icon-text {
-  display: table-cell;
-  vertical-align: middle;
+@media screen and (max-width: 576px) {
+  #chat-window {
+    max-height: min(1200px, 100dvh - 100px);
+  }
+}
+
+.chat-ui {
+  min-height: 0;
+  max-height: 100%;
+  grid-area: stacked-content;
+  z-index: 100;
+  pointer-events: none;
+  min-width: 0;
+  max-width: 100%;
+  display: flex;
+  flex-direction: row-reverse;
+
+  * {
+    pointer-events: auto;
+  }
 }
 
 .has-unread {
@@ -282,13 +142,18 @@ export default {
   animation: blinker 1.5s linear infinite;
 }
 
+.chat-toggle {
+  align-items: center;
+  justify-content: center;
+}
+
 @keyframes blinker {
   0% {
     opacity: 0.5;
   }
   50% {
     opacity: 1;
-    transform: scale(1.1)
+    transform: scale(1.1);
   }
   100% {
     opacity: 0.5;

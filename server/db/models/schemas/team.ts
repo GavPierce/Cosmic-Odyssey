@@ -1,36 +1,10 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 const Types = Schema.Types;
-const schema = new Schema({
-  teamCaptain: {
-    type: Types.ObjectId,
 
-    required: true,
-  },
-  teamName: {
-    type: String,
-    required: true,
-  },
-  teamAvatar: {
-    type: String,
-    default: null,
-  },
-  members: [
-    {
-      type: Types.ObjectId,
-      required: true,
-    },
-  ],
-  invited: [
-    {
-      type: Types.ObjectId,
-      required: true,
-    },
-  ],
-  isOpen: {
-    type: Boolean,
-    default: false,
-  },
+const schema = new Schema({
+    name: { type: Types.String, required: true },
+    players: [{ type: Types.ObjectId, required: true }],
 });
 
 export default schema;

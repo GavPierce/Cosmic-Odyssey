@@ -1,17 +1,19 @@
 import { DBObjectId } from "./DBObjectId";
-import { DiplomaticState } from "./Diplomacy";
+import {
+    DiplomaticState,
+    ResearchType,
+    ResearchTypeNotRandom,
+} from "@solaris/common";
 import { PlayerStatistics } from "./Leaderboard";
 import { AiState } from "./Ai";
+import { InfrastructureType } from "./Star";
 
-export type PlayerShape = 'circle'|'square'|'diamond'|'hexagon';
-export type ResearchType = 'scanning'|'hyperspace'|'terraforming'|'experimentation'|'weapons'|'banking'|'manufacturing'|'specialists'|'random';
-export type ResearchTypeNotRandom = 'scanning'|'hyperspace'|'terraforming'|'experimentation'|'weapons'|'banking'|'manufacturing'|'specialists';
+export type PlayerShape = "circle" | "square" | "diamond" | "hexagon";
 
 export interface PlayerColour {
     alias: string;
     value: string;
-};
-
+}
 
 export interface PlayerLedger {
     credits: PlayerLedgerDebt[];
@@ -21,28 +23,28 @@ export interface PlayerLedger {
 export interface PlayerLedgerDebt {
     playerId: DBObjectId;
     debt: number;
-};
+}
 
 export interface PlayerReputation {
     playerId: DBObjectId;
     score: number;
-};
+}
 
 export interface ResearchProgress {
     level: number;
     progress?: number;
-};
+}
 
 export interface PlayerResearch {
-    scanning: ResearchProgress,
-    hyperspace: ResearchProgress,
-    terraforming: ResearchProgress,
-    experimentation: ResearchProgress,
-    weapons: ResearchProgress,
-    banking: ResearchProgress,
-    manufacturing: ResearchProgress,
-    specialists: ResearchProgress
-};
+    scanning: ResearchProgress;
+    hyperspace: ResearchProgress;
+    terraforming: ResearchProgress;
+    experimentation: ResearchProgress;
+    weapons: ResearchProgress;
+    banking: ResearchProgress;
+    manufacturing: ResearchProgress;
+    specialists: ResearchProgress;
+}
 
 export interface PlayerTechnologyLevels {
     scanning: number;
@@ -53,26 +55,36 @@ export interface PlayerTechnologyLevels {
     banking: number;
     manufacturing: number;
     specialists: number;
-};
+}
 
-export interface PlayerDiplomaticState { 
+export interface PlayerDiplomaticState {
     playerId: DBObjectId;
     status: DiplomaticState;
-};
+}
+
+export interface PlayerScheduledActions {
+    _id: DBObjectId;
+    infrastructureType: InfrastructureType;
+    buyType: string;
+    amount: number;
+    repeat: boolean;
+    tick: number;
+    active: boolean;
+}
 
 export interface Player {
     _id: DBObjectId;
     userId: DBObjectId | null;
     isRealUser?: boolean;
     isAIControlled?: boolean;
-    homeStarId: DBObjectId | null;
+    homeStarId?: DBObjectId | null;
     alias: string;
     avatar: string | null;
     notes?: string | null;
     colour: {
         alias: string;
         value: string;
-    },
+    };
     shape: PlayerShape;
     lastSeen: Date | null;
     isOnline?: boolean | null;
@@ -89,14 +101,15 @@ export interface Player {
     renownToGive: number;
     ready: boolean;
     readyToCycle: boolean;
-    readyToQuit: boolean;
+    readyToQuit?: boolean;
     missedTurns: number;
     hasSentTurnReminder: boolean;
     hasFilledAfkSlot: boolean;
-    research: PlayerResearch,
-    ledger: PlayerLedger,
-    reputations: PlayerReputation[],
-    diplomacy: PlayerDiplomaticState[],
+    research: PlayerResearch;
+    ledger: PlayerLedger;
+    reputations: PlayerReputation[];
+    diplomacy: PlayerDiplomaticState[];
+    scheduledActions: PlayerScheduledActions[];
     spectators: DBObjectId[];
     stats?: PlayerStatistics;
     isKingOfTheHill?: boolean;
@@ -105,9 +118,10 @@ export interface Player {
     nextResearchTicksEta?: number | null;
     aiState?: AiState | null;
     hasPerspective?: boolean;
-};
+    colourMapping?: Map<String, PlayerColour>;
+}
 
 export interface PlayerColourShapeCombination {
     colour: PlayerColour;
     shape: PlayerShape;
-};
+}

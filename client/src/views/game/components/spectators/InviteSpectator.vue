@@ -1,83 +1,110 @@
 <template>
   <div>
-    <loading-spinner :loading="isLoading"/>
+    <loading-spinner :loading="isLoading" />
 
     <h5>Invite Spectator</h5>
 
-    <form-error-list :errors="errors"/>
-      
+    <form-error-list :errors="errors" />
+
     <form @submit="handleSubmit">
-        <div class="row g-0">
-            <div class="col">
-                <input type="text" required="required" class="form-control" name="username" v-model="username" :disabled="isLoading" placeholder="Enter Player Name..." minlength="3" maxlength="24">
-            </div>
-            <div class="col-auto ms-2">
-                <button type="submit" class="btn btn-success" :disabled="isLoading">
-                    <i class="fas fa-user-plus"></i>
-                    Invite
-                </button>
-            </div>
+      <div class="row g-0">
+        <div class="col">
+          <textarea
+            :required="true"
+            class="form-control"
+            name="usernames"
+            v-model="usernames"
+            :disabled="isLoading"
+            placeholder="Enter usernames here..."
+          >
+          </textarea>
         </div>
+        <div class="col-auto ms-2">
+          <button type="submit" class="btn btn-success" :disabled="isLoading">
+            <i class="fas fa-user-plus"></i>
+            Invite
+          </button>
+        </div>
+      </div>
     </form>
   </div>
 </template>
 
-<script>
-import FormErrorList from '../../../components/FormErrorList'
-import LoadingSpinner from '../../../components/LoadingSpinner.vue'
-import SpectatorApiService from '../../../../services/api/spectator'
+<script setup lang="ts">
+import { useGameStore } from "@/stores/game";
+import FormErrorList from "../../../components/FormErrorList.vue";
+import LoadingSpinner from "../../../components/LoadingSpinner.vue";
+import { ref, inject, type Ref } from "vue";
+import { useConfirm } from "@/hooks/confirm.ts";
+import {
+  extractErrors,
+  formatError,
+  httpInjectionKey,
+  isOk,
+} from "@/services/typedapi";
+import { inviteSpectators } from "@/services/typedapi/spectator";
 
-export default {
-  components: {
-    'form-error-list': FormErrorList,
-    'loading-spinner': LoadingSpinner
-  },
-  data () {
-    return {
-      isLoading: false,
-      errors: [],
-      username: ''
-    }
-  },
-  methods: {
-    async handleSubmit (e) {
-      this.errors = []
+import { useToast } from "vue-toast-notification";
+const store = useGameStore();
+const confirm = useConfirm();
+const toast = useToast();
+const httpClient = inject(httpInjectionKey)!;
 
-      if (!this.username) {
-        this.errors.push('Username is required.')
-      }
+const emit = defineEmits<{
+  (e: "onSpectatorsInvited"): void;
+}>();
 
-      e.preventDefault()
+const isLoading = ref(false);
+const usernames = ref("");
+const errors: Ref<string[] | null> = ref(null);
 
-      if (this.errors.length) return
+const handleSubmit = async (e) => {
+  errors.value = [];
 
-      if (!(await this.$confirm('Invite Spectator', `Are you sure you want to invite ${this.username} to spectate? They will be able to view the galaxy from your perspective.`))) {
-        return
-      }
-
-      try {
-        this.isLoading = true
-
-        let response = await SpectatorApiService.invite(this.$store.state.game._id, this.username)
-
-        if (response.status === 200) {
-          this.$toasted.show(`You invited ${this.username} to spectate you in this game.`, { type: 'success' })
-
-          this.$emit('onSpectatorInvited', response.data)
-
-          this.username = ''
-        }
-      } catch (err) {
-        console.log(err)
-        this.errors = err.response.data.errors || []
-      }
-
-      this.isLoading = false
-    }
+  if (!usernames.value) {
+    errors.value.push("Usernames are required.");
   }
-}
+
+  e.preventDefault();
+
+  if (errors.value.length) {
+    return;
+  }
+
+  const actualUsernames = usernames.value
+    .split("\n")
+    .map((username) => username.trim())
+    .filter((username) => username.length > 0);
+  const usernamesText = actualUsernames.join(", ");
+
+  if (
+    !(await confirm(
+      "Invite Spectator",
+      `Are you sure you want to invite ${usernamesText} to spectate? They will be able to view the galaxy from your perspective.`,
+    ))
+  ) {
+    return;
+  }
+
+  isLoading.value = true;
+
+  const response = await inviteSpectators(httpClient)(
+    store.game!._id,
+    actualUsernames,
+  );
+
+  if (isOk(response)) {
+    toast.success(`You invited ${usernamesText} to spectate you in this game.`);
+  } else {
+    console.log(formatError(response));
+    errors.value = extractErrors(response);
+  }
+
+  usernames.value = "";
+  emit("onSpectatorsInvited");
+
+  isLoading.value = false;
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -1,7 +1,8 @@
-import { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 
-export interface DBObjectId extends ObjectId {
-    // equals(id: DBObjectId): boolean; -- Note: We never use this as we cannot ensure that anything that comes through the API layer via params are mongo object IDs unless we explicitly cast them.
-    getTimestamp(): Date;
-    toString(): string;
-};
+export interface DBObjectId extends mongoose.Types.ObjectId {}
+
+export const objectId = (): DBObjectId => new mongoose.Types.ObjectId() as any;
+
+export const objectIdFromString = (s: string): DBObjectId =>
+    new mongoose.Types.ObjectId(s) as any;

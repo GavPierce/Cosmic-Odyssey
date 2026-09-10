@@ -1,136 +1,152 @@
 <template>
-<div class="container">
-  <div class="row mb-2 g-0">
-    <div class="col-auto">
-      <button class="btn btn-sm" :class="{ 'btn-danger': !showAll, 'btn-success': showAll }" @click="toggleShowAll" v-if="getUserPlayer()">
-        <span v-if="!showAll">Show All</span>
-        <span v-if="showAll">Show Yours</span>
-      </button>
+  <div>
+    <div class="row mb-2 g-0">
+      <div class="col-auto">
+        <button
+          class="btn btn-sm"
+          :class="{ 'btn-danger': !showAll, 'btn-success': showAll }"
+          @click="toggleShowAll"
+          v-if="userPlayer != null"
+        >
+          <span v-if="!showAll">Show All</span>
+          <span v-if="showAll">Show Yours</span>
+        </button>
+      </div>
+      <div class="col ms-2">
+        <input
+          type="text"
+          class="form-control form-control-sm"
+          v-model="searchFilter"
+          placeholder="Search..."
+        />
+      </div>
     </div>
-    <div class="col ms-2">
-      <input type="text" class="form-control form-control-sm" v-model="searchFilter" placeholder="Search...">
-    </div>
-  </div>
 
-  <div class="row">
     <div class="table-responsive">
-        <table class="table table-striped table-hover mb-0">
-            <thead class="table-dark">
-                <tr>
-                    <td><i class="fas fa-user"></i></td>
-                    <td><a href="javascript:;" @click="sort(['name'])">Name</a></td>
-                    <td></td>
-                    <td></td>
-                    <td class="text-end"><a href="javascript:;" @click="sort(['ships'])"><i class="fas fa-shuttle-space"></i></a></td>
-                    <td class="text-end"><a href="javascript:;" @click="sort(['waypoints', 'length'])"><i class="fas fa-map-marker-alt"></i></a></td>
-                    <!-- <td></td> -->
-                    <td class="text-end"><a href="javascript:;" @click="sort(['ticksEta'])">ETA</a></td>
-                    <td class="text-end"><a href="javascript:;" @click="sort(['ticksEtaTotal'])">Total</a></td>
-                </tr>
-            </thead>
-            <tbody>
-                <carrier-row v-for="carrier in sortedTableData" v-bind:key="carrier._id" :carrier="carrier"
-                  @onOpenCarrierDetailRequested="onOpenCarrierDetailRequested"/>
-            </tbody>
-        </table>
+      <table class="table table-striped table-hover mb-0">
+        <thead class="table-dark">
+          <tr>
+            <td title="Player">
+              <a
+                href="javascript:;"
+                @click="
+                  sort(
+                    ['ownedByPlayer', 'alias'],
+                    ['ownedByPlayerId'],
+                    ['name'],
+                  )
+                "
+                ><i class="fas fa-user"></i
+              ></a>
+            </td>
+            <td>
+              <a href="javascript:;" @click="sort(['name'])">Name</a>
+            </td>
+            <td></td>
+            <td title="Specialist">
+              <a
+                href="javascript:;"
+                @click="sort(['specialist', 'name'], ['name'], ['_id'])"
+                ><i class="fas fa-user-astronaut"></i
+              ></a>
+            </td>
+            <td title="Ships" class="text-end">
+              <a href="javascript:;" @click="sort(['ships'], ['name'], ['_id'])"
+                ><i class="fas fa-rocket"></i
+              ></a>
+            </td>
+            <td title="Waypoints" class="text-end">
+              <a
+                href="javascript:;"
+                @click="sort(['waypoints', 'length'], ['name'], ['_id'])"
+                ><i class="fas fa-map-marker-alt"></i
+              ></a>
+            </td>
+            <!-- <td></td> -->
+            <td class="text-end">
+              <a
+                href="javascript:;"
+                @click="sort(['ticksEta'], ['name'], ['_id'])"
+                >ETA</a
+              >
+            </td>
+            <td class="text-end">
+              <a
+                href="javascript:;"
+                @click="sort(['ticksEtaTotal'], ['name'], ['_id'])"
+                >Total</a
+              >
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <carrier-row
+            v-for="carrier in sortedFilteredTableData"
+            v-bind:key="carrier._id"
+            :carrier="carrier"
+            @onOpenCarrierDetailRequested="onOpenCarrierDetailRequested"
+          />
+        </tbody>
+      </table>
     </div>
-  </div>
 
-  <p v-if="!tableData.length" class="text-center mt-2 mb-2">No carriers to display.</p>
-</div>
+    <p v-if="!sortedFilteredTableData.length" class="text-center mt-2 mb-2">
+      No carriers to display.
+    </p>
+  </div>
 </template>
 
-<script>
-import GameHelper from '../../../../services/gameHelper'
-import CarrierRowVue from './CarrierRow'
+<script setup lang="ts">
+import { useGameStore } from "@/stores/game";
+import { ref, computed, onMounted } from "vue";
+import GameHelper from "../../../../services/gameHelper";
+import CarrierRow from "./CarrierRow.vue";
+import { createSortInfo, swapSort } from "../../../../services/data/sortInfo";
+import { useLocalStorage } from "@/util/reactiveHooks";
+import type { Carrier, Game, Star } from "@/types/game";
+import { useSortedMapObjectData } from "@/views/game/components/galaxy/table";
 
-export default {
-  components: {
-    'carrier-row': CarrierRowVue
-  },
-  data: function () {
-    return {
-      showAll: false,
-      tableData: [],
-      sortBy: ['ticksEta'],
-      sortDirection: true,
-      searchFilter: ''
-    }
-  },
-  mounted () {
-    this.showAll = this.getUserPlayer() == null
-    this.tableData = this.getTableData()
-    
-    this.sortBy = localStorage.getItem('galaxy_carriers_sortBy') || null
-    this.sortDirection = localStorage.getItem('galaxy_carriers_sortDirection') == 'true' || false
-  },
-  destroyed () {
-    localStorage.setItem('galaxy_carriers_sortBy', this.sortBy)
-    localStorage.setItem('galaxy_carriers_sortDirection', this.sortDirection)
-  },
-  methods: {
-    getUserPlayer () {
-      return GameHelper.getUserPlayer(this.$store.state.game)
-    },
-    toggleShowAll () {
-      this.showAll = !this.showAll
+const SORT_INFO_KEY = "galaxy_carriers_sortInfo";
 
-      this.tableData = this.getTableData()
-    },
-    getTableData () {
-      let sorter = (a, b) => a.name.localeCompare(b.name)
+const defaultSortInfo = createSortInfo([["ticksEta"]], true);
 
-      if (this.showAll || !this.getUserPlayer()) {
-        return this.$store.state.game.galaxy.carriers.sort(sorter)
-      } else {
-        return this.$store.state.game.galaxy.carriers.sort(sorter).filter(x => x.ownedByPlayerId === this.getUserPlayer()._id)
-      }
-    },
-    onOpenCarrierDetailRequested (e) {
-      this.$emit('onOpenCarrierDetailRequested', e)
-    },
-    sort (columnName) {
-      // If sorting by a new column, reset the sort.
-      if (JSON.stringify(this.sortBy) !== JSON.stringify(columnName)) {
-        this.sortBy = columnName
-        this.sortDirection = true
-      } else {
-        // Otherwise if we are sorting by the same column, flip the sort direction.
-        this.sortDirection = !this.sortDirection
-      }
-    }
-  },
-  computed: {
-    sortedTableData () {
-      // here be dragons
-      const getNestedObject = (nestedObj, pathArr) => {
-        if (!Array.isArray(pathArr)) {
-          pathArr = pathArr.split(',')
-        }
+const emit = defineEmits<{
+  onOpenCarrierDetailRequested: [carrierId: string];
+}>();
 
-        return pathArr.reduce((obj, key) =>
-          (obj && obj[key] !== 'undefined') ? obj[key] : -1, nestedObj)
-      }
+const store = useGameStore();
+const game = computed<Game>(() => store.game!);
 
-      let filterFunction = a => a.name.toLowerCase().includes(this.searchFilter.toLowerCase())
+const showAll = ref(false);
+const sortInfo = useLocalStorage(SORT_INFO_KEY, defaultSortInfo);
+const searchFilter = ref("");
 
-      if (this.sortBy == null) {
-        return this.tableData.filter(filterFunction)
-      }
+const userPlayer = computed(() => GameHelper.getUserPlayer(game.value));
+const tableData = computed(() => game.value.galaxy.carriers);
 
-      return this.tableData
-        .filter(filterFunction)
-        .sort((a, b) => {
-          if (this.sortDirection) { // Ascending
-            return getNestedObject(b, this.sortBy) < getNestedObject(a, this.sortBy) ? 1 : -1
-          }
+const toggleShowAll = () => (showAll.value = !showAll.value);
 
-          // Descending
-          return getNestedObject(a, this.sortBy) <= getNestedObject(b, this.sortBy) ? 1 : -1
-        })
-    }
-  }
-}
+const onOpenCarrierDetailRequested = (e) =>
+  emit("onOpenCarrierDetailRequested", e);
+
+const filter = (c: Carrier) =>
+  c.name.toLowerCase().includes(searchFilter.value.toLowerCase());
+
+const sortedFilteredTableData = useSortedMapObjectData(
+  tableData,
+  sortInfo,
+  showAll,
+  game,
+  filter,
+);
+
+const sort = (...propertyPaths) => {
+  sortInfo.value = swapSort(sortInfo.value, propertyPaths);
+};
+
+onMounted(() => {
+  showAll.value = !Boolean(userPlayer.value);
+});
 </script>
 
 <style scoped>

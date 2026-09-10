@@ -1,115 +1,159 @@
 <template>
-<div class="menu-page container">
+  <div class="menu-page container">
     <menu-title title="Award Player Badge" @onCloseRequested="onCloseRequested">
-        <button @click="onOpenPlayerDetailRequested" class="btn btn-sm btn-outline-primary" title="Back to Player Profile"><i class="fas fa-arrow-left"></i></button>
+      <button
+        @click="onOpenPlayerDetailRequested"
+        class="btn btn-sm btn-outline-primary"
+        title="Back to Player Profile"
+      >
+        <i class="fas fa-arrow-left"></i>
+      </button>
     </menu-title>
 
     <div class="row">
-        <div class="col text-center pt-3">
-            <p class="mb-1" v-if="recipientPlayer">Buy <a href="javascript:;" @click="onOpenPlayerDetailRequested">{{recipientPlayer.alias}}</a> a <strong>Badge of Honor<i class="fas fa-medal ms-1"></i></strong></p>
-            
-            <p v-if="userCredits"><small>You have <span class="text-warning"><strong>{{userCredits.credits}}</strong> Galactic Credits</span>.</small></p>
-        </div>
+      <div class="col text-center pt-3">
+        <p class="mb-1" v-if="recipientPlayer">
+          Buy
+          <a href="javascript:;" @click="onOpenPlayerDetailRequested">{{
+            recipientPlayer.alias
+          }}</a>
+          a
+          <strong>Badge of Honor<i class="fas fa-medal ms-1"></i></strong>
+        </p>
+
+        <p v-if="userCredits !== null && userCredits !== undefined">
+          <small
+            >You have
+            <span class="text-warning"
+              ><strong>{{ userCredits }}</strong> Galactic Credits</span
+            >.</small
+          >
+        </p>
+      </div>
     </div>
 
-    <loading-spinner :loading="isLoading"/>
+    <loading-spinner :loading="isLoading" />
 
-    <div class="pt-3 pb-3" v-if="!isLoading">
-        <badge-shop-list :badges="badges" :userCredits="userCredits.credits" :recipientName="recipientPlayer.alias" @onPurchaseBadgeConfirmed="onPurchaseBadgeConfirmed" />
+    <div
+      class="pt-3 pb-3"
+      v-if="
+        !isLoading &&
+        userCredits !== null &&
+        userCredits !== undefined &&
+        recipientPlayer
+      "
+    >
+      <badge-shop-list
+        :badges="badges"
+        :userCredits="userCredits"
+        :recipientName="recipientPlayer.alias"
+        @onPurchaseBadgeConfirmed="onPurchaseBadgeConfirmed"
+      />
     </div>
-</div>
+  </div>
 </template>
 
-<script>
-import MenuTitle from '../../components/MenuTitle'
-import LoadingSpinner from '../../../components/LoadingSpinner'
-import BadgeApiService from '../../../../services/api/badge'
-import UserApiService from '../../../../services/api/user'
-import GameHelper from '../../../../services/gameHelper'
-import BadgeShopList from './BadgeShopList'
+<script setup lang="ts">
+import { useGameStore } from "@/stores/game";
+import { ref, onMounted, type Ref, inject } from "vue";
+import type { Axios } from "axios";
+import MenuTitle from "../../components/MenuTitle.vue";
+import LoadingSpinner from "../../../components/LoadingSpinner.vue";
+import GameHelper from "../../../../services/gameHelper";
+import BadgeShopList from "./BadgeShopList.vue";
+import {
+  formatError,
+  httpInjectionKey,
+  isError,
+  isOk,
+} from "../../../../services/typedapi";
+import type { ToastPluginApi } from "vue-toast-notification";
+import type { Badge } from "@solaris/common";
+import type { Player } from "../../../../types/game";
+import { purchaseBadgeForPlayer } from "../../../../services/typedapi/badge";
+import { getCredits } from "../../../../services/typedapi/user";
+import { useUserStore } from "../../../../stores/user";
+import { useBadgeStore } from "../../../../stores/badge";
 
-export default {
-  components: {
-    'menu-title': MenuTitle,
-    'loading-spinner': LoadingSpinner,
-    'badge-shop-list': BadgeShopList
-  },
-  props: {
-    recipientPlayerId: String
-  },
-  data () {
-    return {
-        isLoading: false,
-        userCredits: null,
-        badges: [],
-        recipientPlayer: null
-    }
-  },
-  async mounted () {
-        this.recipientPlayer = GameHelper.getPlayerById(this.$store.state.game, this.recipientPlayerId)
+import { useToast } from "vue-toast-notification";
+const props = defineProps<{ recipientPlayerId: string }>();
 
-        await this.loadGalacticCredits()
-        await this.loadBadges()
-  },
-  methods: {
-    onCloseRequested (e) {
-        this.$emit('onCloseRequested', e)
-    },
-    onOpenPlayerDetailRequested () {
-        this.$emit('onOpenPlayerDetailRequested', this.recipientPlayerId)
-    },
-    async loadGalacticCredits () {
-        this.isLoading = true
+const isLoading: Ref<boolean> = ref(true);
+const userCredits: Ref<number | null> = ref(null);
+const badges: Ref<Badge[]> = ref([]);
+const recipientPlayer: Ref<Player | undefined> = ref(undefined);
 
-        try {
-            let response = await UserApiService.getUserCredits()
+const emit = defineEmits<{
+  onCloseRequested: [e: Event];
+  onOpenPlayerDetailRequested: [playerId: string];
+}>();
 
-            if (response.status === 200) {
-                this.userCredits = response.data
+const store = useGameStore();
+const userStore = useUserStore();
+const badgeStore = useBadgeStore();
 
-                this.$store.commit('setUserCredits', response.data.credits)
-            }
-        } catch (err) {
-            console.error(err)
-        }
+const httpClient: Axios = inject(httpInjectionKey)!;
 
-        this.isLoading = false
-    },
-    async loadBadges () {
-        this.isLoading = true
-            
-        try {
-            let response = await BadgeApiService.listBadges(this.$store.state.game._id)
+const toast = useToast();
 
-            if (response.status === 200) {
-                this.badges = response.data
-            }
-        } catch (err) {
-            console.error(err)
-        }
+const loadGalacticCredits = async () => {
+  isLoading.value = true;
 
-        this.isLoading = false
-    },
-    async onPurchaseBadgeConfirmed (badge) {
-        this.isLoading = true
-            
-        try {
-            let response = await BadgeApiService.purchaseBadgeForPlayer(this.$store.state.game._id, this.recipientPlayer._id, badge.key)
+  const response = await getCredits(httpClient)();
 
-            if (response.status === 200) {
-                this.$toasted.show(`You succesfully purchased the ${badge.name} badge for ${this.recipientPlayer.alias}!`, { type: 'success' })
+  if (isOk(response)) {
+    userCredits.value = response.data.credits;
 
-                this.onOpenPlayerDetailRequested()
-            }
-        } catch (err) {
-            console.error(err)
-        }
-
-        this.isLoading = false
-    }
+    userStore.setCredits(response.data.credits);
+  } else {
+    console.error(formatError(response));
   }
-}
+
+  isLoading.value = false;
+};
+
+onMounted(async () => {
+  recipientPlayer.value = GameHelper.getPlayerById(
+    store.game!,
+    props.recipientPlayerId,
+  );
+
+  await badgeStore.loadBadges(httpClient);
+  badges.value = badgeStore.purchasableBadges;
+  await loadGalacticCredits();
+});
+
+const onCloseRequested = (e: Event) => {
+  emit("onCloseRequested", e);
+};
+
+const onOpenPlayerDetailRequested = () => {
+  emit("onOpenPlayerDetailRequested", props.recipientPlayerId);
+};
+
+const onPurchaseBadgeConfirmed = async (badge: Badge) => {
+  isLoading.value = true;
+
+  try {
+    const response = await purchaseBadgeForPlayer(httpClient)(
+      store.game!._id,
+      recipientPlayer.value!._id,
+      badge.key,
+    );
+
+    if (!isError(response)) {
+      toast.success(
+        `You successfully purchased the ${badge.name} badge for ${recipientPlayer.value!.alias}!`,
+      );
+
+      onOpenPlayerDetailRequested();
+    }
+  } catch (err) {
+    console.error(err);
+  }
+
+  isLoading.value = false;
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

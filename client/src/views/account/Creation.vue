@@ -1,12 +1,13 @@
 <template>
   <div class="full-container">
-    <view-container :hideTopBar="true">
+    <view-container :hideTopBar="true" :is-auth-page="false">
       <view-title title="Create Account" navigation="home" />
 
       <div class="row">
         <div class="col-sm-12 col-md-6">
           <h4>
-            Sign up to play <span class="text-warning">Cosmic Odyssey</span>!
+            Sign up to play
+            <span class="text-warning">Solaris</span>!
           </h4>
           <p>
             Discover a space strategy game filled with conquest, betrayal and
@@ -17,28 +18,43 @@
             <span class="text-danger">galactic domination.</span>
           </p>
           <p>
-            <span class="text-info">Research and improve technologies</span> to
-            gain an edge over your opponents. Trade with allies and build up
+            <span class="text-info">Research and improve technologies</span>
+            to gain an edge over your opponents. Trade with allies and build up
             huge fleets of ships.
           </p>
           <p>Will you conquer the galaxy?</p>
           <hr />
           <p>
-            You can play <span class="text-warning">Cosmic Odyssey</span> on any
-            of the following platforms:
+            You can play
+            <span class="text-warning">Solaris</span> on any of the following
+            platforms:
           </p>
           <p>
             <a
-              href="https://cosmic-odyssey.io/"
+              href="https://solaris.games"
               target="_blank"
               title="Web"
               class="me-2"
             >
               <i class="fab fa-chrome"></i> Web
             </a>
+            <a
+              href="https://store.steampowered.com/app/1623930/Solaris/"
+              target="_blank"
+              title="Steam"
+              class="me-2"
+            >
+              <i class="fab fa-steam"></i> Steam
+            </a>
+            <a
+              href="https://play.google.com/store/apps/details?id=com.voxel.solaris_android"
+              target="_blank"
+              title="Android"
+            >
+              <i class="fab fa-google-play"></i> Android
+            </a>
           </p>
         </div>
-
         <div class="col-sm-12 col-md-6">
           <form-error-list v-bind:errors="errors" />
 
@@ -47,7 +63,7 @@
               <label for="email">Email Address</label>
               <input
                 type="email"
-                required="required"
+                :required="true"
                 class="form-control"
                 name="email"
                 v-model="email"
@@ -59,7 +75,7 @@
               <label for="username">Username</label>
               <input
                 type="text"
-                required="required"
+                :required="true"
                 class="form-control"
                 name="username"
                 minlength="3"
@@ -73,7 +89,7 @@
               <label for="password">Password</label>
               <input
                 type="password"
-                required="required"
+                :required="true"
                 class="form-control"
                 name="password"
                 v-model="password"
@@ -85,7 +101,7 @@
               <label for="passwordConfirm">Re-enter Password</label>
               <input
                 type="password"
-                required="required"
+                :required="true"
                 class="form-control"
                 name="passwordConfirm"
                 v-model="passwordConfirm"
@@ -93,13 +109,26 @@
               />
             </div>
 
-            <div class="mb-2" v-if="recaptchaEnabled">
-              <recaptcha
-                :sitekey="recaptchaSiteKey"
-                @verify="onRecaptchaVerify"
-                @expired="onRecaptchaExpired"
-              >
-              </recaptcha>
+            <div class="checkbox mb-2">
+              <input
+                id="privacyPolicy"
+                type="checkbox"
+                :required="true"
+                name="privacyPolicy"
+                v-model="privacyPolicyAccepted"
+                :disabled="isLoading"
+                class="me-2"
+              />
+              <label for="privacyPolicy"
+                >Accept
+                <router-link
+                  :to="{ name: 'privacy-policy' }"
+                  class="me-2"
+                  title="Privacy Policy"
+                >
+                  Privacy Policy
+                </router-link>
+              </label>
             </div>
 
             <div class="mb-2">
@@ -133,130 +162,93 @@
           <loading-spinner :loading="isLoading" />
         </div>
       </div>
-
-      <!-- <div class="row mb-3">
-      <div class="carousel slide w-100" data-ride="carousel">
-        <div class="carousel-inner">
-          <div class="carousel-item active">
-              <img :src="require('../../assets/screenshots/game-carousel-1.png')" alt="Cosmic Odyssey" class="d-block w-100"/>
-          </div>
-          <div class="carousel-item">
-              <img :src="require('../../assets/screenshots/game-carousel-2.png')" alt="Cosmic Odyssey" class="d-block w-100"/>
-          </div>
-          <div class="carousel-item">
-              <img :src="require('../../assets/screenshots/game-carousel-3.png')" alt="Cosmic Odyssey" class="d-block w-100"/>
-          </div>
-        </div>
-      </div>
-    </div> -->
     </view-container>
-
     <parallax />
   </div>
 </template>
 
-<script>
-import VueRecaptcha from "vue-recaptcha";
-import LoadingSpinnerVue from "../components/LoadingSpinner";
-import ViewContainer from "../components/ViewContainer";
+<script setup lang="ts">
+import LoadingSpinner from "../components/LoadingSpinner.vue";
+import ViewContainer from "../components/ViewContainer.vue";
 import router from "../../router";
-import ViewTitle from "../components/ViewTitle";
-import FormErrorList from "../components/FormErrorList";
-import userService from "../../services/api/user";
-import ParallaxVue from "../components/Parallax";
+import ViewTitle from "../components/ViewTitle.vue";
+import FormErrorList from "../components/FormErrorList.vue";
+import Parallax from "../components/Parallax.vue";
+import { inject, ref } from "vue";
+import {
+  extractErrors,
+  formatError,
+  httpInjectionKey,
+  isOk,
+} from "@/services/typedapi";
+import { createUser } from "@/services/typedapi/user";
 
-export default {
-  components: {
-    "loading-spinner": LoadingSpinnerVue,
-    "view-container": ViewContainer,
-    "view-title": ViewTitle,
-    "form-error-list": FormErrorList,
-    recaptcha: VueRecaptcha,
-    parallax: ParallaxVue
-  },
-  data() {
-    return {
-      isLoading: false,
-      errors: [],
-      email: null,
-      username: null,
-      password: null,
-      passwordConfirm: null,
-      recaptchaToken: null
-    };
-  },
-  methods: {
-    onRecaptchaVerify(e) {
-      this.recaptchaToken = e;
-    },
-    onRecaptchaExpired(e) {
-      this.recaptchaToken = null;
-    },
-    async handleSubmit(e) {
-      this.errors = [];
+import { useToast } from "vue-toast-notification";
+const httpClient = inject(httpInjectionKey)!;
+const toast = useToast();
 
-      if (!this.email) {
-        this.errors.push("Email required.");
-      }
+const isLoading = ref(false);
+const errors = ref<string[]>([]);
+const email = ref("");
+const username = ref("");
+const password = ref("");
+const passwordConfirm = ref("");
+const privacyPolicyAccepted = ref(false);
 
-      if (!this.username) {
-        this.errors.push("Username required.");
-      }
+const handleSubmit = async (e: Event) => {
+  errors.value = [];
 
-      if (!this.password) {
-        this.errors.push("Password required.");
-      }
-
-      if (!this.passwordConfirm) {
-        this.errors.push("Password confirmation required.");
-      }
-
-      if (this.password !== this.passwordConfirm) {
-        this.errors.push("Passwords must match.");
-      }
-
-      if (this.recaptchaEnabled && !this.recaptchaToken) {
-        this.errors.push("Please complete the Recaptcha");
-      }
-
-      e.preventDefault();
-
-      if (this.errors.length) return;
-
-      try {
-        this.isLoading = true;
-
-        // Call the account create API endpoint
-        let response = await userService.createUser(
-          this.email,
-          this.username,
-          this.password,
-          this.recaptchaToken
-        );
-
-        if (response.status === 201) {
-          this.$toasted.show(
-            `Welcome ${this.username}! You can now log in and play Cosmic Odyssey.`,
-            { type: "success" }
-          );
-
-          router.push({ name: "home" });
-        }
-      } catch (err) {
-        this.errors = err.response.data.errors || [];
-      }
-
-      this.isLoading = false;
-    }
-  },
-  computed: {
-    recaptchaEnabled() {
-      return process.env.VUE_APP_GOOGLE_RECAPTCHA_ENABLED === "true";
-    },
-    recaptchaSiteKey() {
-      return process.env.VUE_APP_GOOGLE_RECAPTCHA_SITE_KEY;
-    }
+  if (!email.value) {
+    errors.value.push("Email required.");
   }
+
+  if (!username.value) {
+    errors.value.push("Username required.");
+  }
+
+  if (!password.value) {
+    errors.value.push("Password required.");
+  }
+
+  if (!passwordConfirm.value) {
+    errors.value.push("Password confirmation required.");
+  }
+
+  if (password.value !== passwordConfirm.value) {
+    errors.value.push("Passwords must match.");
+  }
+
+  if (!privacyPolicyAccepted.value) {
+    errors.value.push("Privacy policy must be accepted.");
+  }
+
+  e.preventDefault();
+
+  if (errors.value.length) {
+    return;
+  }
+
+  isLoading.value = true;
+
+  // Call the account create API endpoint
+  const response = await createUser(httpClient)(
+    email.value,
+    username.value,
+    password.value,
+  );
+
+  if (isOk(response)) {
+    toast.success(
+      `Welcome ${username.value}! You can now log in and play Solaris.`,
+    );
+
+    router.push({ name: "home" });
+  } else {
+    console.error(formatError(response));
+    errors.value = extractErrors(response);
+  }
+
+  isLoading.value = false;
 };
 </script>
 

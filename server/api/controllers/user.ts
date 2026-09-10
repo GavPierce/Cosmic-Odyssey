@@ -1,148 +1,215 @@
-import ValidationError from '../../errors/validation';
-import { DependencyContainer } from '../../services/types/DependencyContainer';
-import { mapToUserCreateUserRequest, mapToUserRequestPasswordResetRequest, mapToUserRequestUsernameRequest, mapToUserResetPasswordResetRequest, mapToUserUpdateEmailPreferenceRequest, mapToUserUpdateEmailRequest, mapToUserUpdatePasswordRequest, mapToUserUpdateUsernameRequest } from '../requests/user';
+import { ValidationError } from "@solaris/common";
+import { DependencyContainer } from "../../services/types/DependencyContainer";
+import {
+    mapToUserRequestPasswordResetRequest,
+    mapToUserRequestUsernameRequest,
+    mapToUserResetPasswordResetRequest,
+    mapToUserUpdateEmailPreferenceRequest,
+    parseUserUpdateEmailRequest,
+    parseUserUpdatePasswordRequest,
+    parseUserUpdateUserNameRequest,
+    parseCreateUserRequest,
+    parseUpdateSettingsRequest,
+} from "../requests/user";
+import { logger } from "../../utils/logging";
+
+const log = logger("User Controller");
 
 export default (container: DependencyContainer) => {
     return {
         listLeaderboard: async (req, res, next) => {
             try {
                 const limit = +req.query.limit || null;
-                const result = await container.leaderboardService.getUserLeaderboard(limit, req.query.sortingKey);
-    
-                return res.status(200).json(result);
+                const skip = +req.query.skip || 0;
+
+                if (limit !== null && limit > 1000) {
+                    throw new ValidationError("Limit cannot exceed 1000.");
+                }
+
+                if (skip > 1000) {
+                    throw new ValidationError("Skip cannot exceed 1000.");
+                }
+
+                const result =
+                    await container.userLeaderboardService.getUserLeaderboard(
+                        limit,
+                        req.query.sortingKey,
+                        skip,
+                    );
+
+                res.status(200).json(result);
+                return next();
             } catch (err) {
                 return next(err);
             }
         },
         create: async (req, res, next) => {
-            let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-            let recaptchaEnabled = container.recaptchaService.isEnabled();
-    
+            const ip =
+                req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+
             try {
-                const reqObj = mapToUserCreateUserRequest(req.body, recaptchaEnabled);
+                const reqObj = parseCreateUserRequest(req.body);
 
                 const email = reqObj.email.toLowerCase();
-    
-                const emailExists = await container.userService.userExists(email);
-    
+
+                const emailExists =
+                    await container.userService.userExists(email);
+
                 if (emailExists) {
-                    throw new ValidationError('An account with this email already exists');
+                    throw new ValidationError(
+                        "An account with this email already exists",
+                    );
                 }
-    
+
                 const username = reqObj.username;
-    
-                const usernameExists = await container.userService.usernameExists(username);
-    
+
+                const usernameExists =
+                    await container.userService.usernameExists(username);
+
                 if (usernameExists) {
-                    throw new ValidationError('An account with this username already exists');
+                    throw new ValidationError(
+                        "An account with this username already exists",
+                    );
                 }
-    
-                // Before we create a new account, verify that the user is not a robot.
-                if (recaptchaEnabled) {
-                    try {
-                        let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    
-                        await container.recaptchaService.verify(ip, reqObj.recaptchaToken!);
-                    } catch (err) {
-                        throw new ValidationError(['Recaptcha is invalid']);
-                    }
-                }
-    
-                let userId = await container.userService.create(email, username, reqObj.password, ip);
-    
-                return res.status(201).json({ id: userId });
+
+                const userId = await container.userService.create(
+                    email,
+                    username,
+                    reqObj.password,
+                    ip,
+                    container.emailService,
+                );
+
+                res.status(201).json({ id: userId });
+                return next();
             } catch (err) {
                 return next(err);
             }
         },
         getSettings: async (req, res, next) => {
             try {
-                let settings = await container.userService.getGameSettings(req.session.userId);
-    
-                return res.status(200).json(settings);
+                const settings = await container.userService.getGameSettings(
+                    req.session.userId,
+                );
+
+                res.status(200).json(settings);
+                return next();
             } catch (err) {
                 return next(err);
             }
         },
         saveSettings: async (req, res, next) => {
             try {
-                await container.userService.saveGameSettings(req.session.userId, req.body);
-    
-                return res.sendStatus(200);
+                const settings = parseUpdateSettingsRequest(req.body);
+
+                await container.userService.saveGameSettings(
+                    req.session.userId,
+                    settings,
+                );
+
+                res.sendStatus(200);
+                return next();
             } catch (err) {
                 return next(err);
             }
         },
         getSubscriptions: async (req, res, next) => {
             try {
-                let subscriptions = await container.userService.getSubscriptions(req.session.userId);
-    
-                return res.status(200).json(subscriptions);
+                let subscriptions =
+                    await container.userService.getSubscriptions(
+                        req.session.userId,
+                    );
+
+                res.status(200).json(subscriptions);
+                return next();
             } catch (err) {
                 return next(err);
             }
         },
         saveSubscriptions: async (req, res, next) => {
             try {
-                await container.userService.saveSubscriptions(req.session.userId, req.body);
-    
-                return res.sendStatus(200);
+                await container.userService.saveSubscriptions(
+                    req.session.userId,
+                    req.body,
+                );
+
+                res.sendStatus(200);
+                return next();
             } catch (err) {
                 return next(err);
             }
         },
         getCredits: async (req, res, next) => {
             try {
-                let credits = await container.userService.getCredits(req.session.userId);
-    
-                return res.status(200).json({
-                    credits
+                let credits = await container.userService.getCredits(
+                    req.session.userId,
+                );
+
+                res.status(200).json({
+                    credits,
                 });
+                return next();
             } catch (err) {
                 return next(err);
             }
         },
         detailMe: async (req, res, next) => {
             try {
-                let user = await container.userService.getMe(req.session.userId);
-    
-                return res.status(200).json(user);
+                let user = await container.userService.getMe(
+                    req.session.userId,
+                );
+
+                if (!user) {
+                    res.sendStatus(404);
+                    return next();
+                }
+
+                req.session.userId = user._id;
+                req.session.username = user.username;
+                req.session.roles = user.roles;
+                req.session.userCredits = user.credits;
+
+                res.status(200).json(user);
+                return next();
             } catch (err) {
                 return next(err);
             }
         },
         listMyAvatars: async (req, res, next) => {
             try {
-                let avatars = await container.avatarService.listUserAvatars(req.session.userId);
-    
-                return res.status(200).json(avatars);
+                let avatars = await container.avatarService.listUserAvatars(
+                    req.session.userId,
+                );
+
+                res.status(200).json(avatars);
+                return next();
             } catch (err) {
                 return next(err);
             }
         },
         purchaseAvatar: async (req, res, next) => {
             try {
-                await container.avatarService.purchaseAvatar(req.session.userId, parseInt(req.params.avatarId));
-    
-                return res.sendStatus(200);
-            } catch (err) {
-                return next(err);
-            }
-        },
-        detail: async (req, res, next) => {
-            try {
-                let user = await container.userService.getInfoByIdLean(req.params.id);
-    
-                return res.status(200).json(user);
+                await container.avatarService.purchaseAvatar(
+                    req.session.userId,
+                    parseInt(req.params.avatarId),
+                );
+
+                res.sendStatus(200);
+                return next();
             } catch (err) {
                 return next(err);
             }
         },
         getAchievements: async (req, res, next) => {
             try {
-                let achievements = await container.achievementService.getAchievements(req.params.id);
-    
-                return res.status(200).json(achievements);
+                let achievements =
+                    await container.userAchievementService.getAchievements(
+                        req.params.id,
+                        req.session.userId,
+                    );
+
+                res.status(200).json(achievements);
+                return next();
             } catch (err) {
                 return next(err);
             }
@@ -150,10 +217,14 @@ export default (container: DependencyContainer) => {
         updateEmailPreference: async (req, res, next) => {
             try {
                 const reqObj = mapToUserUpdateEmailPreferenceRequest(req.body);
-    
-                await container.userService.updateEmailPreference(req.session.userId, reqObj.enabled);
-    
-                return res.sendStatus(200);
+
+                await container.userService.updateEmailPreference(
+                    req.session.userId,
+                    reqObj.enabled,
+                );
+
+                res.sendStatus(200);
+                return next();
             } catch (err) {
                 return next(err);
             }
@@ -161,46 +232,75 @@ export default (container: DependencyContainer) => {
         updateEmailOtherPreference: async (req, res, next) => {
             try {
                 const reqObj = mapToUserUpdateEmailPreferenceRequest(req.body);
-    
-                await container.userService.updateEmailOtherPreference(req.session.userId, reqObj.enabled);
-    
-                return res.sendStatus(200);
+
+                await container.userService.updateEmailOtherPreference(
+                    req.session.userId,
+                    reqObj.enabled,
+                );
+
+                res.sendStatus(200);
+                return next();
+            } catch (err) {
+                return next(err);
+            }
+        },
+        updateIsAnonymous: async (req, res, next) => {
+            try {
+                const reqObj = mapToUserUpdateEmailPreferenceRequest(req.body);
+
+                await container.userService.updateIsAnonymous(
+                    req.session.userId,
+                    reqObj.enabled,
+                );
+
+                res.sendStatus(200);
+                return next();
             } catch (err) {
                 return next(err);
             }
         },
         updateUsername: async (req, res, next) => {
             try {
-                const reqObj = mapToUserUpdateUsernameRequest(req.body);
-                
-                await container.userService.updateUsername(req.session.userId, reqObj.username);
-    
-                return res.sendStatus(200);
+                const reqObj = parseUserUpdateUserNameRequest(req.body);
+
+                await container.userService.updateUsername(
+                    req.session.userId,
+                    reqObj.username,
+                );
+
+                res.sendStatus(200);
+                return next();
             } catch (err) {
                 return next(err);
             }
         },
         updateEmailAddress: async (req, res, next) => {
             try {
-                const reqObj = mapToUserUpdateEmailRequest(req.body);
-                
-                await container.userService.updateEmailAddress(req.session.userId, reqObj.email);
-    
-                return res.sendStatus(200);
+                const reqObj = parseUserUpdateEmailRequest(req.body);
+
+                await container.userService.updateEmailAddress(
+                    req.session.userId,
+                    reqObj.email,
+                );
+
+                res.sendStatus(200);
+                return next();
             } catch (err) {
                 return next(err);
             }
         },
         updatePassword: async (req, res, next) => {
             try {
-                const reqObj = mapToUserUpdatePasswordRequest(req.body);
-                
+                const reqObj = parseUserUpdatePasswordRequest(req.body);
+
                 await container.userService.updatePassword(
                     req.session.userId,
                     reqObj.currentPassword,
-                    reqObj.newPassword);
-    
-                return res.sendStatus(200);
+                    reqObj.newPassword,
+                );
+
+                res.sendStatus(200);
+                return next();
             } catch (err) {
                 return next(err);
             }
@@ -208,18 +308,24 @@ export default (container: DependencyContainer) => {
         requestPasswordReset: async (req, res, next) => {
             try {
                 const reqObj = mapToUserRequestPasswordResetRequest(req.body);
-                
-                let token = await container.userService.requestResetPassword(reqObj.email);
-    
+
+                let token = await container.userService.requestResetPassword(
+                    reqObj.email,
+                );
+
                 try {
-                    await container.emailService.sendTemplate(reqObj.email, container.emailService.TEMPLATES.RESET_PASSWORD, [token]);
+                    await container.emailService.sendTemplate(
+                        reqObj.email,
+                        container.emailService.TEMPLATES.RESET_PASSWORD,
+                        [token],
+                    );
                 } catch (emailError) {
-                    console.error(emailError);
-    
-                    return res.sendStatus(500);
+                    log.error(emailError);
+                    res.sendStatus(500);
+                    return next(emailError);
                 }
-    
-                return res.sendStatus(200);
+                res.sendStatus(200);
+                return next();
             } catch (err) {
                 return next(err);
             }
@@ -227,10 +333,14 @@ export default (container: DependencyContainer) => {
         resetPassword: async (req, res, next) => {
             try {
                 const reqObj = mapToUserResetPasswordResetRequest(req.body);
-                
-                await container.userService.resetPassword(reqObj.token, reqObj.newPassword);
-    
-                return res.sendStatus(200);
+
+                await container.userService.resetPassword(
+                    reqObj.token,
+                    reqObj.newPassword,
+                );
+
+                res.sendStatus(200);
+                return next();
             } catch (err) {
                 return next(err);
             }
@@ -238,40 +348,54 @@ export default (container: DependencyContainer) => {
         requestUsername: async (req, res, next) => {
             try {
                 const reqObj = mapToUserRequestUsernameRequest(req.body);
-                
-                let username = await container.userService.getUsernameByEmail(reqObj.email);
-    
+
+                let username = await container.userService.getUsernameByEmail(
+                    reqObj.email,
+                );
+
                 try {
-                    await container.emailService.sendTemplate(reqObj.email, container.emailService.TEMPLATES.FORGOT_USERNAME, [username]);
+                    await container.emailService.sendTemplate(
+                        reqObj.email,
+                        container.emailService.TEMPLATES.FORGOT_USERNAME,
+                        [username],
+                    );
                 } catch (emailError) {
-                    console.error(emailError);
-    
-                    return res.sendStatus(500);
+                    log.error(emailError);
+
+                    res.sendStatus(500);
+                    return next(emailError);
                 }
-    
-                return res.sendStatus(200);
+
+                res.sendStatus(200);
+                return next();
             } catch (err) {
                 return next(err);
             }
         },
         delete: async (req, res, next) => {
             try {
-                await container.gameService.quitAllActiveGames(req.session.userId);
+                await container.gameService.quitAllActiveGames(
+                    req.session.userId,
+                    container.eventService,
+                );
                 await container.guildService.tryLeave(req.session.userId);
-                await container.guildService.declineAllInvitations(req.session.userId);
+                await container.guildService.declineAllInvitations(
+                    req.session.userId,
+                );
                 await container.userService.closeAccount(req.session.userId);
-    
+
                 // Delete the session object.
                 req.session.destroy((err) => {
                     if (err) {
                         return next(err);
                     }
-    
-                    return res.sendStatus(200);
+
+                    res.sendStatus(200);
+                    return next();
                 });
             } catch (err) {
                 return next(err);
             }
-        }
-    }
+        },
+    };
 };

@@ -1,82 +1,97 @@
 <template>
-<div>
+  <div>
     <div class="row bg-dark pt-2 pb-2 mb-1" v-if="carrier">
-        <div class="col">
-            <p class="mb-2">
-                Convert this Carrier into a gift.
-            </p>
-        </div>
-        <div v-if="!$isHistoricalMode() && canGiftCarrier" class="col-auto">
-            <button type="button" class="btn btn-success btn-sm" :disabled="isGiftingCarrier" @click="giftCarrier">
-                <i class="fas fa-gift"></i>
-                Gift Carrier
-            </button>
-        </div>
+      <div class="col">
+        <p class="mb-2">Convert this Carrier into a gift.</p>
+      </div>
+      <div v-if="!isHistoricalMode && canGiftCarrier" class="col-auto">
+        <button
+          type="button"
+          class="btn btn-success btn-sm"
+          :disabled="isGiftingCarrier"
+          @click="giftCarrier"
+        >
+          <i class="fas fa-gift"></i>
+          Gift Carrier
+        </button>
+      </div>
     </div>
-</div>
+  </div>
 </template>
 
-<script>
-import GameHelper from '../../../../services/gameHelper'
-import CarrierApiService from '../../../../services/api/carrier'
-import GameContainer from '../../../../game/container'
+<script setup lang="ts">
+import { useGameStore } from "@/stores/game";
+import { GameCommandEventBusEventNames } from "@solaris/map-rendering";
+import GameHelper from "../../../../services/gameHelper";
+import { inject, computed, ref } from "vue";
+import { eventBusInjectionKey } from "@/eventBus";
+import { formatError, httpInjectionKey, isOk } from "@/services/typedapi";
+import type { Game, Carrier } from "@/types/game";
+import { useConfirm } from "@/hooks/confirm.ts";
+import { gift } from "@/services/typedapi/carrier";
+import { useIsHistoricalMode } from "@/util/reactiveHooks";
 
-export default {
-  props: {
-    carrierId: String
-  },
-  data () {
-    return {
-      carrier: null,
-      canGiftCarrier: false,
-      isGiftingCarrier: false
-    }
-  },
-  mounted () {
-    this.carrier = GameHelper.getCarrierById(this.$store.state.game, this.carrierId)
+import { useToast } from "vue-toast-notification";
+const props = defineProps<{
+  carrierId: string;
+}>();
 
-    this.canGiftCarrier = !this.carrier.isGift
-  },
-  methods: {
-    async giftCarrier (e) {
-      if (!await this.$confirm('Gift carrier', `Are you sure you want to convert ${this.carrier.name} into a gift? If the carrier has a specialist, it will be retired when it arrives at the destination.`)) {
-        return
-      }
+const store = useGameStore();
+const confirm = useConfirm();
 
-      this.isGiftingCarrier = true
+const eventBus = inject(eventBusInjectionKey)!;
+const httpClient = inject(httpInjectionKey)!;
+const toast = useToast();
 
-      try {
-        let response = await CarrierApiService.convertToGift(this.$store.state.game._id, this.carrierId)
+const isGiftingCarrier = ref(false);
 
-        if (response.status === 200) {
-          // TODO: Maybe better to come from the server instead of repeating
-          // server side logic and client side logic?
-          this.carrier.isGift = true
-          this.carrier.waypointsLooped = false;
+const isHistoricalMode = useIsHistoricalMode(store);
 
-          if (this.carrier.waypoints && this.carrier.waypoints.length) {
-            let firstWaypoint = this.carrier.waypoints[0];
+const game = computed<Game>(() => store.game!);
+const carrier = computed<Carrier>(() =>
+  GameHelper.getCarrierById(game.value, props.carrierId)!,
+);
+const canGiftCarrier = computed<boolean>(() => !carrier.value.isGift);
 
-            firstWaypoint.action = 'nothing';
-            firstWaypoint.actionShips = 0;
-            firstWaypoint.delayTicks = 0;
-
-            this.carrier.waypoints = [firstWaypoint];
-          }
-
-          GameContainer.reloadCarrier(this.carrier)
-
-          this.$toasted.show(`${this.carrier.name} has been converted into a gift.`)
-        }
-      } catch (err) {
-        console.error(err)
-      }
-
-      this.isGiftingCarrier = false
-    }
+const giftCarrier = async () => {
+  if (
+    !(await confirm(
+      "Gift carrier",
+      `Are you sure you want to convert ${carrier.value.name} into a gift? If the carrier has a specialist, and the destination star does not belong to an ally, then it will be retired when it arrives at the destination.`,
+    ))
+  ) {
+    return;
   }
-}
+
+  isGiftingCarrier.value = true;
+
+  const response = await gift(httpClient)(game.value._id, carrier.value._id);
+
+  if (isOk(response)) {
+    carrier.value.isGift = true;
+    carrier.value.waypointsLooped = false;
+
+    if (carrier.value.waypoints && carrier.value.waypoints.length) {
+      const firstWaypoint = carrier.value.waypoints[0];
+
+      firstWaypoint.action = "nothing";
+      firstWaypoint.actionShips = 0;
+      firstWaypoint.delayTicks = 0;
+
+      carrier.value.waypoints = [firstWaypoint];
+    }
+
+    eventBus.emit(GameCommandEventBusEventNames.GameCommandReloadCarrier, {
+      carrier: carrier.value,
+    });
+
+    toast.default(`${carrier.value.name} has been converted into a gift.`);
+  } else {
+    console.error(formatError(response));
+  }
+
+  isGiftingCarrier.value = false;
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

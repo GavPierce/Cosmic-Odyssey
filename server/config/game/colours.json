@@ -1,370 +1,338 @@
 [
     {
-        "alias": "Admiral Blue",
-        "value": "0x051094"
-    },
-    {
-        "alias": "Amaranth",
-        "value": "0xE52B50"
-    },
-    {
-        "alias": "Amber",
-        "value": "0xFFBF00"
-    },
-    {
-        "alias": "Amethyst",
-        "value": "0x9966CC"
-    },
-    {
-        "alias": "Apple Green",
-        "value": "0x8DB600"
-    },
-    {
-        "alias": "Apricot",
-        "value": "0xFFD8B1"
-    },
-    {
-        "alias": "Aqua",
-        "value": "0x00FFFF"
-    },
-    {
-        "alias": "Aquamarine",
-        "value": "0x7FFFD4"
-    },
-    {
-        "alias": "Army Green",
-        "value": "0x4B5320"
-    },
-    {
-        "alias": "Arsenal Red",
-        "value": "0xDB0007"
-    },
-    {
-        "alias": "Arctic Blue",
-        "value": "0x82EEFD"
-    },
-    {
-        "alias": "Aubergine",
-        "value": "0x3D0734"
-    },
-    {
-        "alias": "Azure",
-        "value": "0x007FFF"
-    },
-    {
-        "alias": "Beige",
-        "value": "0xFFFAC8"
-    },
-    {
-        "alias": "Blue",
-        "value": "0x0000FF"
-    },
-    {
-        "alias": "Blue-Green",
-        "value": "0x31A39D"
-    },
-    {
-        "alias": "Blue-Violet",
-        "value": "0x8A2BE2"
-    },
-    {
-        "alias": "Brass",
-        "value": "0xB5A642"
-    },
-    {
-        "alias": "Bright Green",
-        "value": "0x66FF00"
-    },
-    {
-        "alias": "Bronze",
-        "value": "0xB2560D"
-    },
-    {
-        "alias": "Brown",
-        "value": "0x964B00"
-    },
-    {
-        "alias": "Capri",
-        "value": "0x00BFFF"
-    },
-    {
-        "alias": "Cerise",
-        "value": "0xDE3163"
-    },
-    {
-        "alias": "Cerulean",
-        "value": "0x2A52BE"
-    },
-    {
-        "alias": "Chartreuse",
-        "value": "0x7FFF00"
-    },
-    {
-        "alias": "Citrine Yellow",
-        "value": "0xE4D00A"
-    },
-    {
-        "alias": "Citron",
-        "value": "0x9FA91F"
-    },
-    {
-        "alias": "Cobalt",
-        "value": "0x0047AB"
-    },
-    {
-        "alias": "Copper",
-        "value": "0xB87333"
-    },
-    {
-        "alias": "Cornflower",
-        "value": "0x9ACEEB"
-    },
-    {
-        "alias": "Crimson",
-        "value": "0xDC143C"
-    },
-    {
-        "alias": "Cyan",
-        "value": "0x42D4F4"
-    },
-    {
-        "alias": "Dark Slate Gray",
-        "value": "0x2F4F4F"
-    },
-    {
-        "alias": "Deep Jungle Green",
-        "value": "0x004b49"
-    },
-    {
-        "alias": "Deep Pink",
-        "value": "0xFF1493"
-    },
-    {
-        "alias": "Emerald",
-        "value": "0x50C878"
-    },
-    {
-        "alias": "Erin",
-        "value": "0x00FF40"
-    },
-    {
-        "alias": "Fuchsia",
-        "value": "0xFF00FF"
-    },
-    {
-        "alias": "Golden Yellow",
-        "value": "0xFFDF00"
-    },
-    {
-        "alias": "Green",
-        "value": "0x008000"
-    },
-    {
-        "alias": "Harlequin",
-        "value": "0x3FFF00"
-    },
-    {
-        "alias": "Imperial Blue",
-        "value": "0x005A92"
-    },
-    {
-        "alias": "Imperial Red",
-        "value": "0xED2939"
-    },
-    {
-        "alias": "Indigo",
-        "value": "0x4B0082"
-    },
-    {
-        "alias": "Iris",
-        "value": "0x5A4FCF"
-    },
-    {
-        "alias": "Jade",
-        "value": "0x00A86B"
-    },
-    {
-        "alias": "Khaki",
-        "value": "0xC3B091"
-    },
-    {
-        "alias": "Lavender",
-        "value": "0xDCBEFF"
-    },
-    {
-        "alias": "Lemon-Lime",
-        "value": "0xE3FF00"
-    },
-    {
-        "alias": "Lime",
-        "value": "0x00FF00"
-    },
-    {
-        "alias": "Magenta",
-        "value": "0xF032E6"
-    },
-    {
-        "alias": "Maroon",
-        "value": "0x800000"
-    },
-    {
-        "alias": "Mint",
-        "value": "0xAAFFC3"
-    },
-    {
-        "alias": "Mocha",
-        "value": "0x967117"
-    },
-    {
-        "alias": "Navy Blue",
-        "value": "0x000080"
-    },
-    {
-        "alias": "Neon Green",
-        "value": "0x39FF14"
-    },
-    {
-        "alias": "Olive",
-        "value": "0x808000"
-    },
-    {
-        "alias": "Orange",
-        "value": "0xFFA500"
-    },
-    {
-        "alias": "Orange Peel",
-        "value": "0xFF9F00"
-    },
-    {
-        "alias": "Persimmon",
-        "value": "0xEC5800"
-    },
-    {
-        "alias": "Phlox",
-        "value": "0xDF00FF"
-    },
-    {
-        "alias": "Pink",
-        "value": "0xffb6c1"
-    },
-    {
-        "alias": "Plum",
-        "value": "0x673147"
-    },
-    {
-        "alias": "Purple",
-        "value": "0x800080"
-    },
-    {
-        "alias": "Raspberry",
-        "value": "0xE30B5D"
-    },
-    {
-        "alias": "Red",
-        "value": "0xFF0000"
-    },
-    {
-        "alias": "Red-Orange",
-        "value": "0xFF681F"
-    },
-    {
-        "alias": "Red-Violet",
-        "value": "0x922B3E"
-    },
-    {
-        "alias": "Rose",
-        "value": "0xFF007F"
-    },
-    {
-        "alias": "Russet",
-        "value": "0x80461B"
-    },
-    {
-        "alias": "Rust",
-        "value": "0x8D4004"
-    },
-    {
-        "alias": "Sage",
-        "value": "0xB2AC88"
-    },
-    {
-        "alias": "Sapphire",
-        "value": "0x0F52BA"
-    },
-    {
-        "alias": "Sand",
-        "value": "0xD8B863"
-    },
-    {
-        "alias": "Scarlet",
-        "value": "0xFF2400"
-    },
-    {
-        "alias": "Sky Blue",
-        "value": "0x87CEEB"
-    },
-    {
-        "alias": "Space Cadet Blue",
-        "value": "0x1D2951"
-    },
-    {
-        "alias": "Spring Bud",
-        "value": "0xA7FC00"
-    },
-    {
-        "alias": "Spring Green",
-        "value": "0x00FF7F"
-    },
-    {
-        "alias": "Steel",
-        "value": "0x4682B4"
-    },
-    {
-        "alias": "Swamp",
-        "value": "0xA8C090"
-    },
-    {
-        "alias": "Tan",
-        "value": "0xD2B48C"
-    },
-    {
-        "alias": "Teal",
-        "value": "0x008080"
-    },
-    {
-        "alias": "Turquoise",
-        "value": "0x40E0D0"
-    },
-    {
-        "alias": "Ultra Violet",
-        "value": "0x645394"
-    },
-    {
-        "alias": "Yellow",
-        "value": "0xFFFF00"
-    },
-    {
-        "alias": "Yellow-Green",
-        "value": "0xC5E17A"
-    },
-    {
-        "alias": "Yellow-Orange",
-        "value": "0xFFAE42"
-    },
-    {
-        "alias": "Vermilion",
-        "value": "0xE34234"
-    },
-    {
-        "alias": "Veronica",
-        "value": "0xA020F0"
-    },
-    {
-        "alias": "Violet",
-        "value": "0x922B3e"
-    },
-    {
-        "alias": "Viridian",
-        "value": "0x40826D"
+        "group": "Red",
+        "colours": [
+            {
+                "alias": "Red",
+                "value": "#ff0000"
+            },
+            {
+                "alias": "Scarlet",
+                "value": "#ff200d"
+            },
+            {
+                "alias": "Electric red",
+                "value": "#e60000"
+            },
+            {
+                "alias": "Coral red",
+                "value": "#ff4e2c"
+            }
+        ]
+    },
+    {
+        "group": "Blue",
+        "colours": [
+            {
+                "alias": "Blue",
+                "value": "#0000ff"
+            },
+            {
+                "alias": "Ultramarine",
+                "value": "#2c13ff"
+            },
+            {
+                "alias": "Rich blue",
+                "value": "#0000ea"
+            },
+            {
+                "alias": "Purplish blue",
+                "value": "#6337ff"
+            }
+        ]
+    },
+    {
+        "group": "Magenta",
+        "colours": [
+            {
+                "alias": "Magenta",
+                "value": "#ff00ff"
+            },
+            {
+                "alias": "Bright magenta",
+                "value": "#ff25ff"
+            },
+            {
+                "alias": "Piercing pink",
+                "value": "#e900ea"
+            },
+            {
+                "alias": "Pink flamingo",
+                "value": "#ff56ff"
+            }
+        ]
+    },
+    {
+        "group": "Green",
+        "colours": [
+            {
+                "alias": "Green",
+                "value": "#008000"
+            },
+            {
+                "alias": "Tree green",
+                "value": "#198a10"
+            },
+            {
+                "alias": "Moth green",
+                "value": "#007700"
+            },
+            {
+                "alias": "Apple",
+                "value": "#40a731"
+            }
+        ]
+    },
+    {
+        "group": "Aqua",
+        "colours": [
+            {
+                "alias": "Cyan",
+                "value": "#00ffff"
+            },
+            {
+                "alias": "Aqua",
+                "value": "#2dffff"
+            },
+            {
+                "alias": "Bright turquoise",
+                "value": "#00eaea"
+            },
+            {
+                "alias": "Dark turquoise",
+                "value": "#00d5d6"
+            }
+        ]
+    },
+    {
+        "group": "Gray",
+        "colours": [
+            {
+                "alias": "Gray",
+                "value": "#808080"
+            },
+            {
+                "alias": "Gunsmoke",
+                "value": "#898989"
+            },
+            {
+                "alias": "Steel wool",
+                "value": "#777777"
+            },
+            {
+                "alias": "Granite",
+                "value": "#867e80"
+            }
+        ]
+    },
+    {
+        "group": "Lime",
+        "colours": [
+            {
+                "alias": "Lime",
+                "value": "#00ff00"
+            },
+            {
+                "alias": "Neon green",
+                "value": "#2cff1e"
+            },
+            {
+                "alias": "Electric green",
+                "value": "#00ea00"
+            },
+            {
+                "alias": "Greenalicious",
+                "value": "#00d500"
+            }
+        ]
+    },
+    {
+        "group": "Maroon",
+        "colours": [
+            {
+                "alias": "Maroon",
+                "value": "#800000"
+            },
+            {
+                "alias": "Dark red",
+                "value": "#8b110a"
+            },
+            {
+                "alias": "Rusty red",
+                "value": "#ab3322"
+            },
+            {
+                "alias": "Chestnut red",
+                "value": "#c24732"
+            }
+        ]
+    },
+    {
+        "group": "Dull blue",
+        "colours": [
+            {
+                "alias": "Submarine blue",
+                "value": "#005080"
+            },
+            {
+                "alias": "Dusk blue",
+                "value": "#165889"
+            },
+            {
+                "alias": "Regal blue",
+                "value": "#004877"
+            },
+            {
+                "alias": "Dull blue",
+                "value": "#3c73a6"
+            }
+        ]
+    },
+    {
+        "group": "Purple",
+        "colours": [
+            {
+                "alias": "Purple",
+                "value": "#800080"
+            },
+            {
+                "alias": "Rich purple",
+                "value": "#760077"
+            },
+            {
+                "alias": "Medium orchid",
+                "value": "#a838a6"
+            },
+            {
+                "alias": "Deep fuchsia",
+                "value": "#bd4dba"
+            }
+        ]
+    },
+    {
+        "group": "Olive",
+        "colours": [
+            {
+                "alias": "Olive",
+                "value": "#808000"
+            },
+            {
+                "alias": "Reef gold",
+                "value": "#8a8911"
+            },
+            {
+                "alias": "Browny green",
+                "value": "#767700"
+            },
+            {
+                "alias": "Brass",
+                "value": "#a8a533"
+            }
+        ]
+    },
+    {
+        "group": "Silver",
+        "colours": [
+            {
+                "alias": "Silver",
+                "value": "#e0e0e0"
+            },
+            {
+                "alias": "White smoke",
+                "value": "#f5f5f5"
+            },
+            {
+                "alias": "Platinum",
+                "value": "#e7dee0"
+            },
+            {
+                "alias": "Pale pink",
+                "value": "#fcd7e1"
+            }
+        ]
+    },
+    {
+        "group": "Teal",
+        "colours": [
+            {
+                "alias": "Teal",
+                "value": "#008080"
+            },
+            {
+                "alias": "Blue chill",
+                "value": "#198989"
+            },
+            {
+                "alias": "Deep sea",
+                "value": "#007777"
+            },
+            {
+                "alias": "Metallic blue",
+                "value": "#377d7d"
+            }
+        ]
+    },
+    {
+        "group": "Yellow",
+        "colours": [
+            {
+                "alias": "Yellow",
+                "value": "#ffff00"
+            },
+            {
+                "alias": "Lemone",
+                "value": "#ffff20"
+            },
+            {
+                "alias": "Golden yellow",
+                "value": "#e9ea00"
+            },
+            {
+                "alias": "Citrine",
+                "value": "#d2d600"
+            }
+        ]
+    },
+    {
+        "group": "Pink",
+        "colours": [
+            {
+                "alias": "Light pink",
+                "value": "#ffb6c1"
+            },
+            {
+                "alias": "Pale rose",
+                "value": "#ffc0cb"
+            },
+            {
+                "alias": "Rose",
+                "value": "#f4acb7"
+            },
+            {
+                "alias": "Dull pink",
+                "value": "#d58f9a"
+            }
+        ]
+    },
+    {
+        "group": "Orange",
+        "colours": [
+            {
+                "alias": "Royal orange",
+                "value": "#ff7a2a"
+            },
+            {
+                "alias": "Mango orange",
+                "value": "#ff8434"
+            },
+            {
+                "alias": "Vivid orange",
+                "value": "#f37020"
+            },
+            {
+                "alias": "Tangerine",
+                "value": "#ffa150"
+            }
+        ]
     }
 ]
